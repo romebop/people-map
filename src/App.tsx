@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import produce from 'immer';
+
+import './App.scss';
+import { PersonCard } from './components/person';
+import { Person } from './types';
 
 function App() {
+
+  const [data, setData] = useState<Person[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const data = localStorage.getItem('data');
+      if (data !== null) {
+        return setData(JSON.parse(data));
+      }
+      return setData([]);
+    }
+  }, [])
+
+  const addNote = (name: string, note: string) => {
+    const nextState = produce(data, draftState => {
+      const person = draftState.find(p => p.name === name);
+      person?.notes.push(note);
+    });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('data', JSON.stringify(nextState));
+    }
+    setData(nextState);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {data.map((person: Person) => {
+        return <PersonCard
+          key={person.name}
+          name={person.name}
+          notes={person.notes}
+          addNote={addNote}
+        />
+      })}
+    </>
   );
 }
 
