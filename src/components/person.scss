@@ -1,0 +1,23 @@
+.person-card {
+  &:not(:first-child) {
+    margin-top: 20px;
+  }
+  box-shadow: var(--shadow-elevation-medium);
+  border-radius: 4px;
+  padding: 20px 20px 30px 20px;
+  border: 0.5px solid #eee;
+  background-color: #fff;
+  .name {
+    font-weight: 500;
+  }
+  .note-input-line {
+    margin: 10px 0;
+  }
+  .note {
+    display: flex;
+    margin-top: 8px;
+    .note-button {
+      margin-left: 8px;
+    }
+  }
+}
