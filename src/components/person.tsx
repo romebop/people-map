@@ -1,30 +1,39 @@
-import React from 'react';
+import React, { useRef } from 'react';
+
 import './person.scss';
 
 interface PersonCardProps {
   name: string;
   notes: string[];
+  deletePerson: (name: string) => void;
   addNote: (name: string, note: string) => void;
   deleteNote: (name: string, idx: number) => void;
 } 
 
 const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const addNote = () => {
-    const noteInput = document.querySelector(`#${props.name}-note-input`) as HTMLInputElement;
-    const note = noteInput.value.trim();
+    const note = inputRef.current!.value.trim();
     if (note) {
       props.addNote(props.name, note);
-      noteInput.value = '';
+      inputRef.current!.value = '';
     }
   }
 
   return(
     <div className="person-card">
-      <div className="name">{props.name}</div>
+      <div className="name-line">
+        <div className="name-text">{props.name}</div>
+        <button
+          className="delete-person-button"
+          onClick={() => props.deletePerson(props.name)}
+        >Delete person</button>
+      </div>
       <div className="note-input-line">
         <input
-          id={`${props.name}-note-input`}
+          ref={inputRef}
           type="text"
           placeholder="Enter note"
         />

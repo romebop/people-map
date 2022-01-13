@@ -37,6 +37,16 @@
   }
 }
 
-.add-person-line {
+#search-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#add-person-line {
+  width: 100%;
+  display: flex;
   margin-top: 20px;
+  #add-person-input {
+    flex-grow: 1;
+  }
 }

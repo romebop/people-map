@@ -1,6 +1,13 @@
 import Fuse from 'fuse.js';
 import produce from 'immer';
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import { debounce } from 'lodash';
+import {
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+ } from 'react';
 
 import './App.scss';
 import { PersonCard } from './components/person';
@@ -9,30 +16,42 @@ import { Person } from './types';
 function App() {
 
   const [allPersons, setAllPersons] = useState<Person[]>([]);
-  const [query, updateQuery] = useState('');
-
-  const fuse = new Fuse(allPersons, {
-    keys: ['name', 'notes'],
-  });
+  const [query, setQuery] = useState<string>('');
   
-  const searchResults: Fuse.FuseResult<Person>[] = fuse.search(query);
-  const filteredPersons: Person[] = query
-    ? searchResults.map(result => result.item)
-    : allPersons;
+  const addPersonInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (typeof window !== undefined) {
       const data = localStorage.getItem('data');
       if (data !== null) {
-        return setAllPersons(JSON.parse(data));
+        setAllPersons(JSON.parse(data));
       }
-      return setAllPersons([]);
     }
-  }, [])
+  }, []);
 
-  const onSearch = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
-    updateQuery(currentTarget.value);
+  const filteredPersons: Person[] = query
+    ? new Fuse(allPersons, { keys: ['name', 'notes'] })
+      .search(query)
+      .map(result => result.item)
+    : allPersons;
+
+  const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuery(e?.target?.value);
   }
+  const debouncedOnSearch = useMemo(() => (
+    debounce(onSearch, 200)
+  ), []);
+
+  const deletePerson = (name: string) => {
+    const nextState = produce(allPersons, draftState => {
+      const idx = draftState.findIndex(p => p.name === name);
+      draftState.splice(idx, 1);
+    });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('data', JSON.stringify(nextState));
+    }
+    setAllPersons(nextState);
+  };
 
   const addNote = (name: string, note: string) => {
     const nextState = produce(allPersons, draftState => {
@@ -57,8 +76,7 @@ function App() {
   };
 
   const addPerson = () => {
-    const personInput = document.querySelector('#add-person-input') as HTMLInputElement;
-    const name = personInput.value.trim();
+    const name = addPersonInputRef.current!.value.trim();
     if (name) {
       const nextState = produce(allPersons, draftState => {
         const newPerson: Person = {
@@ -71,28 +89,33 @@ function App() {
         localStorage.setItem('data', JSON.stringify(nextState));
       }
       setAllPersons(nextState);
+      addPersonInputRef.current!.value = '';
     }
-  }
+  };
 
   return (
     <>
       <input
+        id="search-input"
         type="text"
-        value={query}
-        onChange={onSearch}
+        placeholder="Search"
+        onChange={debouncedOnSearch}
       />
-      {filteredPersons.map((person: Person) => {
+      {filteredPersons.map((person: Person, idx: number) => {
         return <PersonCard
-        key={person.name}
-        name={person.name}
-        notes={person.notes}
-        addNote={addNote}
-        deleteNote={deleteNote}
+          key={idx}
+          name={person.name}
+          notes={person.notes}
+          deletePerson={deletePerson}
+          addNote={addNote}
+          deleteNote={deleteNote}
         />
       })}
-      <div className="add-person-line">
+      <div id="add-person-line">
         <input
+          ref={addPersonInputRef}
           id="add-person-input"
+          type="text"
           placeholder="Enter name"
         />
         <button onClick={addPerson}>Add person</button>

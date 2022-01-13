@@ -7,8 +7,14 @@
   padding: 20px 20px 30px 20px;
   border: 0.5px solid #eee;
   background-color: #fff;
-  .name {
-    font-weight: 500;
+  .name-line {
+    display: flex;
+    .name-text {
+      font-weight: 500;
+    }
+    .delete-person-button {
+      margin-left: 8px;
+    }
   }
   .note-input-line {
     margin: 10px 0;
