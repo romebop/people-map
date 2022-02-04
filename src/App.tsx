@@ -8,12 +8,13 @@ import {
   useState,
   useReducer,
  } from 'react';
-//  import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route,
-//   Link
-// } from "react-router-dom";
+ import {
+  BrowserRouter as Router,
+  Link,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
 import './App.scss';
@@ -134,12 +135,34 @@ function App() {
           onChange={debouncedOnSearch}
         />
       </div>
-      <Cards
-        people={filteredPeople}
-        hasQuery={hasQuery}
-        peopleDispatch={peopleDispatch}
-      >
-      </Cards>
+      <Router>
+        <nav>
+          <ul>
+            <li>
+              <Link to='/cards'>Cards</Link>
+            </li>
+            <li>
+              <Link to='/graph'>Graph</Link>
+            </li>
+          </ul>
+        </nav>
+        <Switch>
+          <Route path='/cards'>
+            <Cards
+              people={filteredPeople}
+              hasQuery={hasQuery}
+              peopleDispatch={peopleDispatch}
+            >
+            </Cards>
+          </Route>
+          <Route path='/graph'>
+            <div>under construction :3</div>
+          </Route>
+          <Route exact path='/'>
+            <Redirect to="/cards" />
+          </Route>
+        </Switch>
+      </Router>
     </>
   );
 }
