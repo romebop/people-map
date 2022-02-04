@@ -6,37 +6,99 @@ import {
   useEffect,
   useRef,
   useState,
+  useReducer,
  } from 'react';
- import { v4 as uuidv4 } from 'uuid';
+//  import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route,
+//   Link
+// } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
- import './App.scss';
- import { PersonCard } from './components';
- import { Person, Note } from './types';
- import { parseDates } from './util';
+import './App.scss';
+import { PersonCard } from './components';
+import { Person } from './types';
+import { parseDates } from './util';
+
+export enum PeopleActionType {
+  ADD_PERSON = 'ADD_PERSON',
+  DELETE_PERSON = 'DELETE_PERSON',
+  ADD_NOTE = 'ADD_NOTE',
+  DELETE_NOTE = 'DELETE_NOTE',
+  REORDER_NOTES = 'REORDER_NOTES',
+}
+
+export interface PeopleAction {
+  type: PeopleActionType;
+  payload?: any;
+}
+
+function init(initialVal: Person[]): Person[] {
+  const data = localStorage.getItem('data');
+  if (data !== null) {
+    const parsedData = JSON.parse(data);
+    parseDates(parsedData);
+    return parsedData;
+  }
+  return initialVal;
+}
+
+function peopleReducer(people: Person[], { type, payload }: PeopleAction): Person[] {
+  switch (type) {
+    case PeopleActionType.ADD_PERSON:
+      return produce(people, draftState => {
+        const newPerson: Person = {
+          id: uuidv4(),
+          name: payload.name,
+          notes: [],
+          createdDate: new Date(),
+        };
+        draftState.push(newPerson);
+      });
+    case PeopleActionType.DELETE_PERSON:
+      return produce(people, draftState => {
+        const idx = draftState.findIndex(p => p.id === payload.id);
+        draftState.splice(idx, 1);
+      });
+    case PeopleActionType.ADD_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        person?.notes.push(payload.note);
+      });
+    case PeopleActionType.DELETE_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId);
+        const noteIdx = person?.notes?.findIndex(n => n.id === payload.noteId);
+        person?.notes?.splice(noteIdx!, 1);
+      });
+    case PeopleActionType.REORDER_NOTES:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        const [removed] = person?.notes.splice(payload.startIdx, 1)!;
+        person?.notes.splice(payload.endIdx, 0, removed);
+      });
+    default:
+      return people;
+  }
+}
 
 function App() {
 
-  const [allPersons, setAllPersons] = useState<Person[]>([]);
+  const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
   const [personInputValue, setPersonInputValue] = useState<string>('');
-  
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      const data = localStorage.getItem('data');
-      if (data !== null) {
-        const parsedData = JSON.parse(data);
-        parseDates(parsedData);
-        setAllPersons(parsedData);
-      }
-    }
-  }, []);
 
-  const filteredPersons: Person[] = query
-    ? new Fuse(allPersons, { keys: ['name', 'notes.content'] })
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(people));
+  }, [people]);
+
+  const filteredPeople: Person[] = query
+    ? new Fuse(people, { keys: ['name', 'notes.content'] })
       .search(query)
       .map(result => result.item)
-    : allPersons;
+    : people;
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e?.target?.value);
@@ -45,68 +107,13 @@ function App() {
     debounce(onSearch, 150)
   ).current;
 
-  const deletePerson = (id: string) => {
-    const nextState = produce(allPersons, draftState => {
-      const idx = draftState.findIndex(p => p.id === id);
-      draftState.splice(idx, 1);
-    });
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('data', JSON.stringify(nextState));
-    }
-    setAllPersons(nextState);
-  };
-
-  const addNote = (id: string, note: Note) => {
-    const nextState = produce(allPersons, draftState => {
-      const person = draftState.find(p => p.id === id);
-      person?.notes.push(note);
-    });
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('data', JSON.stringify(nextState));
-    }
-    setAllPersons(nextState);
-  };
-
-  const deleteNote = (personId: string, noteId: string) => {
-    const nextState = produce(allPersons, draftState => {
-      const person = draftState.find(p => p.id === personId);
-      const noteIdx = person?.notes?.findIndex(n => n.id === noteId);
-      person?.notes?.splice(noteIdx!, 1);
-    });
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('data', JSON.stringify(nextState));
-    }
-    setAllPersons(nextState);
-  };
-
-  const reorderNotes = (personId: string, startIdx: number, endIdx: number) => {
-    const nextState = produce(allPersons, draftState => {
-      const person = draftState.find(p => p.id === personId);
-      const [removed] = person?.notes.splice(startIdx, 1)!;
-      person?.notes.splice(endIdx, 0, removed);
-    });
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('data', JSON.stringify(nextState));
-    }
-    setAllPersons(nextState);
-  };
-
-  const addPerson = () => {
+  const onAddPerson = () => {
     const name = personInputValue.trim();
     if (name) {
-      const nextState = produce(allPersons, draftState => {
-        const newPerson: Person = {
-          id: uuidv4(),
-          name,
-          notes: [],
-          createdDate: new Date(),
-        };
-        draftState.push(newPerson);
+      peopleDispatch({
+        type: PeopleActionType.ADD_PERSON,
+        payload: { name },
       });
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('data', JSON.stringify(nextState));
-      }
-      setAllPersons(nextState);
       setPersonInputValue('');
     }
   };
@@ -137,18 +144,15 @@ function App() {
         />
       </div>
       <div id="person-cards-container">
-        {filteredPersons.length > 0
-          ? filteredPersons.map((person: Person) => {
+        {filteredPeople.length > 0
+          ? filteredPeople.map((person: Person) => {
             return <PersonCard
               key={person.id}
               id={person.id}
               name={person.name}
               notes={person.notes}
               createdDate={person.createdDate}
-              deletePerson={deletePerson}
-              addNote={addNote}
-              deleteNote={deleteNote}
-              reorderNotes={reorderNotes}
+              peopleDispatch={peopleDispatch}
             />
           })
           : hasQuery
@@ -167,7 +171,7 @@ function App() {
         <button 
           id="add-person-button"
           type="submit"
-          onClick={addPerson}
+          onClick={onAddPerson}
           disabled={personInputValue.trim().length === 0}
           title="Add Person"
         >+ Person</button>

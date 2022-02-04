@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from 'uuid';
 
+import { PeopleAction, PeopleActionType } from '../App';
 import { Note } from '../types';
 
 import './PersonCard.scss';
@@ -12,17 +13,14 @@ interface PersonCardProps {
   name: string;
   notes: Note[];
   createdDate: Date;
-  deletePerson: (id: string) => void;
-  addNote: (id: string, note: Note) => void;
-  deleteNote: (personId: string, noteId: string) => void;
-  reorderNotes: (personId: string, startIdx: number, endIdx: number) => void;
+  peopleDispatch: React.Dispatch<PeopleAction>;
 } 
 
 const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
 
   const [inputValue, setInputValue] = useState<string>('');
 
-  const addNote = () => {
+  const onAddNote = () => {
     const content = inputValue.trim();
     if (content) {
       const newNote: Note = {
@@ -30,7 +28,10 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         content,
         createdDate: new Date(),
       };
-      props.addNote(props.id, newNote);
+      props.peopleDispatch({
+        type: PeopleActionType.ADD_NOTE,
+        payload: { id: props.id, note: newNote },
+      });
       setInputValue('');
     }
   };
@@ -38,7 +39,10 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
-    props.reorderNotes(props.id, result.source.index, result.destination.index);
+    props.peopleDispatch({
+      type: PeopleActionType.REORDER_NOTES,
+      payload: { id: props.id, startIdx: result.source.index, endIdx: result.destination.index },
+    });
   };
 
   return(
@@ -51,7 +55,10 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         <div
           className="delete-person-button"
           title="Delete person card"
-          onClick={() => props.deletePerson(props.id)}
+          onClick={() => props.peopleDispatch({
+            type: PeopleActionType.DELETE_PERSON,
+            payload: { id: props.id },
+          })}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +108,10 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
                             <div
                               className="delete-note-button"
                               title="Delete note"
-                              onClick={() => props.deleteNote(props.id, note.id)}
+                              onClick={() => props.peopleDispatch({
+                                type: PeopleActionType.DELETE_NOTE,
+                                payload: { personId: props.id, noteId: note.id },
+                              })}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +154,7 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         <button
           className="add-note-button"
           type="submit"
-          onClick={addNote}
+          onClick={onAddNote}
           disabled={inputValue.trim().length === 0}
           title="Add note"
         >+ Note</button>
