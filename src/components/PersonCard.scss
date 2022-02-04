@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     background-color: #f5f7f9;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #efefef;
     padding: 12px 20px;
     &:hover .delete-person-button {
       visibility: visible;
@@ -99,14 +99,14 @@
     }
   }
   .note-input-section {
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #efefef;
     padding: 12px 20px 16px 20px;
     background-color: #f5f7f9;
     display: flex;
     font-size: 12px;
     .note-input {
       box-sizing: border-box;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       background-color: #fff;
       border-radius: 3px;
       padding: 4px 10px;
@@ -116,7 +116,7 @@
         border: 1px solid #0095ffcc;
       }
       &::placeholder {
-        opacity: 0.3;
+        opacity: 0.4;
       }
     }
     .add-note-button {
@@ -135,7 +135,7 @@
       cursor: pointer;
       word-spacing: 2px;
       &[disabled] {
-        background-color: #dcdcdc;
+        background-color: #d0d0d0;
         cursor: default;
       }
     }

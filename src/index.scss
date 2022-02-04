@@ -23,19 +23,34 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  background-color: hsla(206, 24%, 94%, 0.2);
-  margin: 0;
-
+  margin: 0;  
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px;
   color: #454545;
+  // background-color: hsla(206, 24%, 94%, 0.2);
+  background-image: linear-gradient(
+    130deg,
+    white 0%,
+    white 18%,
+    white 26%,
+    white 33%,
+    white 39%,
+    #fcfdfd 44%,
+    #fcfdfd 50%,
+    #fcfdfd 56%,
+    #fcfdfd 61%,
+    #fcfdfd 67%,
+    #fcfdfd 74%,
+    #fcfdfd 82%,
+    #fcfdfd 100%
+  );
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro,
+  Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 #root {

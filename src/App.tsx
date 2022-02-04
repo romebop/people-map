@@ -19,7 +19,7 @@ function App() {
   const [allPersons, setAllPersons] = useState<Person[]>([]);
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
-  const [personValue, setPersonValue] = useState<string>('');
+  const [personInputValue, setPersonInputValue] = useState<string>('');
   
   useEffect(() => {
     if (typeof window !== undefined) {
@@ -79,8 +79,20 @@ function App() {
     setAllPersons(nextState);
   };
 
+  const reorderNotes = (personId: string, startIdx: number, endIdx: number) => {
+    const nextState = produce(allPersons, draftState => {
+      const person = draftState.find(p => p.id === personId);
+      const [removed] = person?.notes.splice(startIdx, 1)!;
+      person?.notes.splice(endIdx, 0, removed);
+    });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('data', JSON.stringify(nextState));
+    }
+    setAllPersons(nextState);
+  };
+
   const addPerson = () => {
-    const name = personValue.trim();
+    const name = personInputValue.trim();
     if (name) {
       const nextState = produce(allPersons, draftState => {
         const newPerson: Person = {
@@ -95,7 +107,7 @@ function App() {
         localStorage.setItem('data', JSON.stringify(nextState));
       }
       setAllPersons(nextState);
-      setPersonValue('');
+      setPersonInputValue('');
     }
   };
 
@@ -120,7 +132,7 @@ function App() {
         <input
           id="search-input"
           type="text"
-          placeholder="Search by Name, Note"
+          placeholder="Search by name, note"
           onChange={debouncedOnSearch}
         />
       </div>
@@ -136,26 +148,27 @@ function App() {
               deletePerson={deletePerson}
               addNote={addNote}
               deleteNote={deleteNote}
+              reorderNotes={reorderNotes}
             />
           })
           : hasQuery
-            ? <div className="no-people-placeholder">Search didn't find anything</div>
-            : <div className="no-people-placeholder">Add a new Person!</div>
+            ? <div className="no-people-placeholder">We didn't find anything</div>
+            : <div className="no-people-placeholder">Add a new person!</div>
         }
       </div>
       <form id="add-person-line">
         <input
           id="add-person-input"
           type="text"
-          placeholder="Enter a Name"
-          value={personValue}
-          onChange={e => setPersonValue(e.target.value)}
+          placeholder="Enter a name"
+          value={personInputValue}
+          onChange={e => setPersonInputValue(e.target.value)}
         />
         <button 
           id="add-person-button"
           type="submit"
           onClick={addPerson}
-          disabled={personValue.trim().length === 0}
+          disabled={personInputValue.trim().length === 0}
           title="Add Person"
         >+ Person</button>
       </form>

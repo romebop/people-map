@@ -1,5 +1,6 @@
 import { format } from 'date-fns'; 
 import React, { useState } from 'react';
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from 'uuid';
 
 import { Note } from '../types';
@@ -14,6 +15,7 @@ interface PersonCardProps {
   deletePerson: (id: string) => void;
   addNote: (id: string, note: Note) => void;
   deleteNote: (personId: string, noteId: string) => void;
+  reorderNotes: (personId: string, startIdx: number, endIdx: number) => void;
 } 
 
 const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
@@ -31,7 +33,13 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
       props.addNote(props.id, newNote);
       setInputValue('');
     }
-  }
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    if (result.destination.index === result.source.index) return;
+    props.reorderNotes(props.id, result.source.index, result.destination.index);
+  };
 
   return(
     <div className="person-card">
@@ -42,7 +50,7 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         >{props.name}</div>
         <div
           className="delete-person-button"
-          title="Delete Person Card"
+          title="Delete person card"
           onClick={() => props.deletePerson(props.id)}
         >
           <svg
@@ -61,48 +69,75 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
           </svg>
         </div>
       </div>
-      <div className="notes">
-        {props.notes.length
-          ? props.notes.map((note: Note) => {
-            return (
-              <div key={note.id} className="note">
-                <div
-                  className="note-text"
-                  title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
-                >{note.content}</div>
-                <div className="delete-note-button-container">
-                  <div
-                    className="delete-note-button"
-                    title="Delete Note"
-                    onClick={() => props.deleteNote(props.id, note.id)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 delete-note-icon"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="#444"
+
+      {props.notes.length
+        ? <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId={props.id}>
+            {provided => (
+              <div
+                className="notes"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {props.notes.map((note: Note, idx: number) => {
+                  return (
+                    <Draggable
+                      key={note.id}
+                      draggableId={note.id}
+                      index={idx}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                      {provided => (
+                        <div
+                          className="note"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <div
+                            className="note-text"
+                            title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
+                          >{note.content}</div>
+                          <div className="delete-note-button-container">
+                            <div
+                              className="delete-note-button"
+                              title="Delete note"
+                              onClick={() => props.deleteNote(props.id, note.id)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6 delete-note-icon"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="#444"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
               </div>
-            )
-          })
-          : <div className="no-notes-placeholder">You have no notes for this person</div>
-        }
-      </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        : <div className="notes">
+          <div className="no-notes-placeholder">You have no notes for this person</div>
+        </div> 
+      }
       <form className="note-input-section">
         <input
           className="note-input"
           type="text"
-          placeholder="Write a Note"
+          placeholder="Write a note"
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
         />
@@ -111,7 +146,7 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
           type="submit"
           onClick={addNote}
           disabled={inputValue.trim().length === 0}
-          title="Add Note"
+          title="Add note"
         >+ Note</button>
       </form>
     </div>
