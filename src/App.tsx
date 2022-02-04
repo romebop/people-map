@@ -9,7 +9,7 @@ import {
   useReducer,
  } from 'react';
  import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Link,
   Redirect,
   Route,
