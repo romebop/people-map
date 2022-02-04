@@ -1,22 +1,19 @@
 import { format } from 'date-fns'; 
-import React, { useState } from 'react';
+import { Dispatch, FC, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from 'uuid';
 
 import { PeopleAction, PeopleActionType } from '../App';
-import { Note } from '../types';
+import { Note, Person } from '../types';
 
 import './PersonCard.scss';
 
 interface PersonCardProps {
-  id: string;
-  name: string;
-  notes: Note[];
-  createdDate: Date;
-  peopleDispatch: React.Dispatch<PeopleAction>;
+  person: Person;
+  peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
+const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardProps) => {
 
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -28,9 +25,9 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         content,
         createdDate: new Date(),
       };
-      props.peopleDispatch({
+      peopleDispatch({
         type: PeopleActionType.ADD_NOTE,
-        payload: { id: props.id, note: newNote },
+        payload: { id: person.id, note: newNote },
       });
       setInputValue('');
     }
@@ -39,9 +36,9 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
-    props.peopleDispatch({
+    peopleDispatch({
       type: PeopleActionType.REORDER_NOTES,
-      payload: { id: props.id, startIdx: result.source.index, endIdx: result.destination.index },
+      payload: { id: person.id, startIdx: result.source.index, endIdx: result.destination.index },
     });
   };
 
@@ -50,14 +47,14 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
       <div className="name-section">
         <div
           className="name-text"
-          title={format(props.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
-        >{props.name}</div>
+          title={format(person.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
+        >{person.name}</div>
         <div
           className="delete-person-button"
           title="Delete person card"
-          onClick={() => props.peopleDispatch({
+          onClick={() => peopleDispatch({
             type: PeopleActionType.DELETE_PERSON,
-            payload: { id: props.id },
+            payload: { id: person.id },
           })}
         >
           <svg
@@ -77,16 +74,16 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
         </div>
       </div>
 
-      {props.notes.length
+      {person.notes.length
         ? <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId={props.id}>
+          <Droppable droppableId={person.id}>
             {provided => (
               <div
                 className="notes"
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                {props.notes.map((note: Note, idx: number) => {
+                {person.notes.map((note: Note, idx: number) => {
                   return (
                     <Draggable
                       key={note.id}
@@ -108,9 +105,9 @@ const PersonCard: React.FC<PersonCardProps> = (props: PersonCardProps) => {
                             <div
                               className="delete-note-button"
                               title="Delete note"
-                              onClick={() => props.peopleDispatch({
+                              onClick={() => peopleDispatch({
                                 type: PeopleActionType.DELETE_NOTE,
-                                payload: { personId: props.id, noteId: note.id },
+                                payload: { personId: person.id, noteId: note.id },
                               })}
                             >
                               <svg

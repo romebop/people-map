@@ -17,7 +17,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 import './App.scss';
-import { PersonCard } from './components';
+import { Cards } from './cards';
 import { Person } from './types';
 import { parseDates } from './util';
 
@@ -88,14 +88,16 @@ function App() {
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
-  const [personInputValue, setPersonInputValue] = useState<string>('');
 
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(people));
   }, [people]);
 
   const filteredPeople: Person[] = query
-    ? new Fuse(people, { keys: ['name', 'notes.content'] })
+    ? new Fuse(people, {
+        keys: ['name', 'notes.content'],
+        threshold: 0.4,
+      })
       .search(query)
       .map(result => result.item)
     : people;
@@ -106,17 +108,6 @@ function App() {
   const debouncedOnSearch = useRef(
     debounce(onSearch, 150)
   ).current;
-
-  const onAddPerson = () => {
-    const name = personInputValue.trim();
-    if (name) {
-      peopleDispatch({
-        type: PeopleActionType.ADD_PERSON,
-        payload: { name },
-      });
-      setPersonInputValue('');
-    }
-  };
 
   return (
     <>
@@ -143,39 +134,12 @@ function App() {
           onChange={debouncedOnSearch}
         />
       </div>
-      <div id="person-cards-container">
-        {filteredPeople.length > 0
-          ? filteredPeople.map((person: Person) => {
-            return <PersonCard
-              key={person.id}
-              id={person.id}
-              name={person.name}
-              notes={person.notes}
-              createdDate={person.createdDate}
-              peopleDispatch={peopleDispatch}
-            />
-          })
-          : hasQuery
-            ? <div className="no-people-placeholder">We didn't find anything</div>
-            : <div className="no-people-placeholder">Add a new person!</div>
-        }
-      </div>
-      <form id="add-person-line">
-        <input
-          id="add-person-input"
-          type="text"
-          placeholder="Enter a name"
-          value={personInputValue}
-          onChange={e => setPersonInputValue(e.target.value)}
-        />
-        <button 
-          id="add-person-button"
-          type="submit"
-          onClick={onAddPerson}
-          disabled={personInputValue.trim().length === 0}
-          title="Add Person"
-        >+ Person</button>
-      </form>
+      <Cards
+        people={filteredPeople}
+        hasQuery={hasQuery}
+        peopleDispatch={peopleDispatch}
+      >
+      </Cards>
     </>
   );
 }
