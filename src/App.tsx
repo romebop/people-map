@@ -28,6 +28,7 @@ export enum PeopleActionType {
   ADD_NOTE = 'ADD_NOTE',
   DELETE_NOTE = 'DELETE_NOTE',
   REORDER_NOTES = 'REORDER_NOTES',
+  // UPLOAD_PEOPLE = 'UPLOAD_PEOPLE',
 }
 
 export interface PeopleAction {
@@ -110,6 +111,15 @@ function App() {
     debounce(onSearch, 150)
   ).current;
 
+  // const onDataUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const [file] = e.target.files!;
+  //   const reader = new FileReader();
+  //   reader.readAsText(file);
+  //   reader.onload = (e: ProgressEvent<FileReader>) => {
+  //     console.log(e.target?.result);
+  //   };
+  // }
+
   return (
     <>
       <div id="search-container">
@@ -163,6 +173,18 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      {/* <a
+        style={{ marginTop: 40, display: 'block' }}
+        href={`data:text/json;charset=utf-8,${encodeURIComponent(
+          JSON.stringify(people, null, 2)
+        )}`}
+        download="people-data.json"
+      >Export Data</a>
+      <input
+        style={{ marginTop: 20 }}
+        type="file"
+        onChange={onDataUpload}
+      /> */}
     </>
   );
 }
