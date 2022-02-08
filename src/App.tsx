@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import './App.scss';
 import { Cards } from './cards';
+import { Graph } from './graph';
 import { Person } from './types';
 import { parseDates } from './util';
 
@@ -166,7 +167,9 @@ function App() {
             </Cards>
           </Route>
           <Route path='/graph'>
-            <div>under construction :3</div>
+            <Graph
+              people={filteredPeople}
+            ></Graph>
           </Route>
           <Route exact path='/'>
             <Redirect to="/cards" />
