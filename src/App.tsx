@@ -9,12 +9,12 @@ import {
   useReducer,
  } from 'react';
  import {
-  HashRouter as Router,
   NavLink,
   Redirect,
   Route,
   Switch,
-} from "react-router-dom";
+  useLocation,
+} from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import './App.scss';
@@ -92,6 +92,9 @@ function App() {
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
 
+  const path = useLocation().pathname.slice(1);
+  console.log(path);
+
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(people));
   }, [people]);
@@ -123,79 +126,78 @@ function App() {
 
   return (
     <>
-      <Router>
-        <div id="top-container">
-          <div id="search-container">
-            <svg
-              id="search-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-6 w-6 ${hasQuery ? 'active' : ''}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke={hasQuery ? '#0095ffcc' : 'black'}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              id="search-input"
-              type="text"
-              placeholder="Search by name, note"
-              onChange={debouncedOnSearch}
+      <div id='top-container'>
+        <div id='search-container'>
+          <svg
+            id='search-icon'
+            xmlns='http://www.w3.org/2000/svg'
+            className={`h-6 w-6 ${hasQuery ? 'active' : ''}`}
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke={hasQuery ? '#0095ffcc' : 'black'}
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={3}
+              d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
             />
-          </div>
-          <div id="links-container">
-            <NavLink
-              to='/cards'
-              title='Card View'
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fff">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </NavLink>
-            <NavLink
-              to='/graph'
-              title='Graph View'
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fff">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-            </svg>
-            </NavLink>
-          </div>
+          </svg>
+          <input
+            id='search-input'
+            type='text'
+            placeholder='Search by name, note'
+            onChange={debouncedOnSearch}
+          />
         </div>
-        <Switch>
-          <Route path='/cards'>
-            <Cards
-              people={filteredPeople}
-              hasQuery={hasQuery}
-              peopleDispatch={peopleDispatch}
-            >
-            </Cards>
-          </Route>
-          <Route path='/graph'>
-            <Graph
-              people={filteredPeople}
-            ></Graph>
-          </Route>
-          <Route exact path='/'>
-            <Redirect to="/cards" />
-          </Route>
-        </Switch>
-      </Router>
+        <div id='links-container'>
+          <NavLink
+            to='/cards'
+            title='Card View'
+          >
+            <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#000'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' />
+            </svg>
+          </NavLink>
+          <NavLink
+            to='/graph'
+            title='Graph View'
+          >
+            <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#000'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5' />
+            </svg>
+          </NavLink>
+          <div className={`active-route-highlight ${path}`}></div>
+        </div>
+      </div>
+      <Switch>
+        <Route path='/cards'>
+          <Cards
+            people={filteredPeople}
+            hasQuery={hasQuery}
+            peopleDispatch={peopleDispatch}
+          >
+          </Cards>
+        </Route>
+        <Route path='/graph'>
+          <Graph
+            people={filteredPeople}
+          ></Graph>
+        </Route>
+        <Route exact path='/'>
+          <Redirect to='/cards' />
+        </Route>
+      </Switch>
       {/* <a
         style={{ marginTop: 40, display: 'block' }}
         href={`data:text/json;charset=utf-8,${encodeURIComponent(
           JSON.stringify(people, null, 2)
         )}`}
-        download="people-data.json"
+        download='people-data.json'
       >Export Data</a>
       <input
         style={{ marginTop: 20 }}
-        type="file"
+        type='file'
         onChange={onDataUpload}
       /> */}
     </>
