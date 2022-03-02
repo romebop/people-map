@@ -27,8 +27,6 @@ const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
 
   useEffect(() => {
 
-    console.log('rendering graph:');
-
     const { nodes, links } = getGraph(people);
     
     const svg = d3.select(svgRef.current);

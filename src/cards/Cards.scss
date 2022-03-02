@@ -1,6 +1,7 @@
 #person-cards-container {
   display: flex;
   flex-direction: column;
+  width: var(--standard-width);
   .no-people-placeholder {
     font-style: italic;
     opacity: 0.4;
@@ -10,9 +11,9 @@
 }
 
 #add-person-line {
-  width: 100%;
   display: flex;
   margin-top: 40px;
+  width: var(--standard-width);
   #add-person-input {
     flex-grow: 1;
     box-sizing: border-box;

@@ -1,16 +1,16 @@
 .person-card {
   &:not(:first-child) {
-    margin-top: 20px;
+    margin-top: 40px;
   }
-  box-shadow: var(--shadow-elevation-medium);
+  box-shadow: var(--shadow-elevation-low);
   border-radius: 4px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
   background-color: #fff;
   overflow: hidden;
   .name-section {
     display: flex;
     align-items: center;
-    background-color: #f5f7f9;
+    background-color: var(--card-shade);
     border-bottom: 1px solid #efefef;
     padding: 12px 20px;
     &:hover .delete-person-button {
@@ -101,7 +101,7 @@
   .note-input-section {
     border-top: 1px solid #efefef;
     padding: 12px 20px 16px 20px;
-    background-color: #f5f7f9;
+    background-color: var(--card-shade);
     display: flex;
     font-size: 12px;
     .note-input {

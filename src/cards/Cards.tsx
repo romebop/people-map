@@ -1,4 +1,4 @@
-import { Dispatch, FC, useState } from 'react';
+import { Dispatch, FC, useEffect, useRef, useState } from 'react';
 
 import { PeopleAction, PeopleActionType } from '../App';
 import { Person } from '../types';
@@ -15,6 +15,15 @@ interface CardsProps {
 const Cards: FC<CardsProps> = ({ people, hasQuery, peopleDispatch }: CardsProps) => {
 
   const [personInputValue, setPersonInputValue] = useState<string>('');
+  const [shouldScroll, setShouldScroll] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!shouldScroll) return;
+    addPersonFormRef.current!.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    setShouldScroll(false);
+  }, [shouldScroll])
+
+  const addPersonFormRef = useRef<HTMLFormElement>(null);
 
   const onAddPerson = () => {
     const name = personInputValue.trim();
@@ -24,6 +33,7 @@ const Cards: FC<CardsProps> = ({ people, hasQuery, peopleDispatch }: CardsProps)
         payload: { name },
       });
       setPersonInputValue('');
+      setShouldScroll(true);
     }
   };
 
@@ -43,7 +53,10 @@ const Cards: FC<CardsProps> = ({ people, hasQuery, peopleDispatch }: CardsProps)
             : <div className="no-people-placeholder">Add a new person!</div>
         }
       </div>
-      <form id="add-person-line">
+      <form
+        ref={addPersonFormRef}
+        id="add-person-line"
+      >
         <input
           id="add-person-input"
           type="text"

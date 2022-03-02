@@ -10,7 +10,7 @@ import {
  } from 'react';
  import {
   HashRouter as Router,
-  Link,
+  NavLink,
   Redirect,
   Route,
   Switch,
@@ -123,40 +123,50 @@ function App() {
 
   return (
     <>
-      <div id="search-container">
-        <svg
-          id="search-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-6 w-6 ${hasQuery ? 'active' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke={hasQuery ? '#0095ffcc' : 'black'}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={3}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-        <input
-          id="search-input"
-          type="text"
-          placeholder="Search by name, note"
-          onChange={debouncedOnSearch}
-        />
-      </div>
       <Router>
-        <nav>
-          <ul>
-            <li>
-              <Link to='/cards'>Cards</Link>
-            </li>
-            <li>
-              <Link to='/graph'>Graph</Link>
-            </li>
-          </ul>
-        </nav>
+        <div id="top-container">
+          <div id="search-container">
+            <svg
+              id="search-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-6 w-6 ${hasQuery ? 'active' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke={hasQuery ? '#0095ffcc' : 'black'}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search by name, note"
+              onChange={debouncedOnSearch}
+            />
+          </div>
+          <div id="links-container">
+            <NavLink
+              to='/cards'
+              title='Card View'
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fff">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </NavLink>
+            <NavLink
+              to='/graph'
+              title='Graph View'
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fff">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+            </svg>
+            </NavLink>
+          </div>
+        </div>
         <Switch>
           <Route path='/cards'>
             <Cards
