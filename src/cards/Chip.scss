@@ -1,0 +1,36 @@
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  user-select: none;
+  &:focus {
+    .chip-text {
+      padding-right: 2px;
+    }
+    .delete-chip-button {
+      display: flex;
+    }
+  }
+  .chip-text {
+    color: #555;
+    font-size: 12px;
+    padding: 4px 8px 6px 8px;
+    cursor: pointer;
+  }
+  .delete-chip-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    padding: 0 8px 0 2px;
+    cursor: pointer;
+    .delete-chip-icon {
+      width: 12px;
+      height: 12px;
+      stroke: #777;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { Menu, MenuItem } from '@szhsin/react-menu';
 
 import { PeopleAction, PeopleActionType } from '../App';
 import { Note, Person } from '../types';
+import { Chip } from '.';
 
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
@@ -49,10 +50,9 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
   const moreItemClassName = ({ hover, active }: { hover: boolean, active: boolean }) =>
     active ? 'more-item-active' : hover ? 'more-item-hover' : '';
 
-  return(
+  return (
     <div className='person-card'>
       <div className='top-section'>
-
         {person.isPinned && <button
           className='pin-button'
           title='Unpin'
@@ -91,12 +91,10 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
             d='M17 4v7l2 3v2h-6v5l-1 1-1-1v-5H5v-2l2-3V4c0-1.1.9-2 2-2h6c1.11 0 2 .89 2 2zM9 4v7.75L7.5 14h9L15 11.75V4H9z'
           />
         </svg> */}
-
         <div
           className='name-text'
           title={format(person.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
         >{person.name}</div>
-
         <Menu
           menuButton={
             <button
@@ -126,14 +124,14 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
                   type: PeopleActionType.UNPIN_PERSON,
                   payload: { id: person.id },
                 })}
-              >Unpin</MenuItem>
+              >Unpin card</MenuItem>
               : <MenuItem
                 className={moreItemClassName}
                 onClick={() => peopleDispatch({
                   type: PeopleActionType.PIN_PERSON,
                   payload: { id: person.id },
                 })}
-              >Pin</MenuItem>
+              >Pin card</MenuItem>
           }
           <MenuItem
             className={moreItemClassName}
@@ -141,10 +139,24 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
               type: PeopleActionType.DELETE_PERSON,
               payload: { id: person.id },
             })}
-          >Delete</MenuItem>
+          >Show connections</MenuItem>
+          <MenuItem
+            className={moreItemClassName}
+            onClick={() => peopleDispatch({
+              type: PeopleActionType.DELETE_PERSON,
+              payload: { id: person.id },
+            })}
+          >Delete card</MenuItem>
         </Menu>
       </div>
-
+      <div className='connections'>
+        {['Sarah Cho', 'Garritt Moede', 'Aaron Chin'].map((name, idx) => {
+          return <Chip
+            key={idx}
+            name={name}
+          />
+        })}
+      </div>
       {person.notes.length
         ? <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId={person.id}>
@@ -167,8 +179,8 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                         >
-                          <button
-                            className='drag-note-button'
+                          <div
+                            className='drag-note-handle'
                             {...provided.dragHandleProps}
                           >
                             <svg
@@ -182,7 +194,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
                               <path d='M20.4706 17.6471C20.4706 19.2064 19.2063 20.4707 17.647 20.4707C16.0876 20.4707 14.8236 19.2064 14.8236 17.6471C14.8236 16.0877 16.0876 14.8235 17.647 14.8235C19.2063 14.8235 20.4706 16.0877 20.4706 17.6471Z'/>
                               <path d='M20.4706 27.9414C20.4706 29.5008 19.2063 30.7647 17.647 30.7647C16.0876 30.7647 14.8236 29.5008 14.8236 27.9414C14.8236 26.382 16.0876 25.1178 17.647 25.1178C19.2063 25.1178 20.4706 26.382 20.4706 27.9414Z'/>
                             </svg>
-                          </button>
+                          </div>
                           <div
                             className='note-text'
                             title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
