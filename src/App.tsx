@@ -26,6 +26,8 @@ import { parseDates } from './util';
 export enum PeopleActionType {
   ADD_PERSON = 'ADD_PERSON',
   DELETE_PERSON = 'DELETE_PERSON',
+  PIN_PERSON = 'PIN_PERSON',
+  UNPIN_PERSON = 'UNPIN_PERSON',
   ADD_NOTE = 'ADD_NOTE',
   DELETE_NOTE = 'DELETE_NOTE',
   REORDER_NOTES = 'REORDER_NOTES',
@@ -56,6 +58,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
           name: payload.name,
           notes: [],
           createdDate: new Date(),
+          isPinned: false,
         };
         draftState.push(newPerson);
       });
@@ -63,6 +66,16 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const idx = draftState.findIndex(p => p.id === payload.id);
         draftState.splice(idx, 1);
+      });
+    case PeopleActionType.PIN_PERSON:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        person!.isPinned = true;
+      });
+    case PeopleActionType.UNPIN_PERSON:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        person!.isPinned = false;
       });
     case PeopleActionType.ADD_NOTE:
       return produce(people, draftState => {
@@ -93,7 +106,6 @@ function App() {
   const hasQuery = query.trim().length > 0;
 
   const path = useLocation().pathname.slice(1);
-  console.log(path);
 
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(people));
@@ -107,6 +119,11 @@ function App() {
       .search(query)
       .map(result => result.item)
     : people;
+
+  const sortedPeople: Person[] = [
+    ...filteredPeople.filter(p => p.isPinned),
+    ...filteredPeople.filter(p => !p.isPinned),
+  ]
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e?.target?.value);
@@ -130,11 +147,9 @@ function App() {
         <div id='search-container'>
           <svg
             id='search-icon'
-            xmlns='http://www.w3.org/2000/svg'
-            className={`h-6 w-6 ${hasQuery ? 'active' : ''}`}
+            className={`${hasQuery ? 'active' : ''}`}
             fill='none'
             viewBox='0 0 24 24'
-            stroke={hasQuery ? '#0095ffcc' : 'black'}
           >
             <path
               strokeLinecap='round'
@@ -155,16 +170,34 @@ function App() {
             to='/cards'
             title='Card View'
           >
-            <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#000'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' />
+            <svg
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='#000'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+              />
             </svg>
           </NavLink>
           <NavLink
             to='/graph'
             title='Graph View'
           >
-            <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#000'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5' />
+            <svg
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='#000'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5'
+              />
             </svg>
           </NavLink>
           <div className={`active-route-highlight ${path}`}></div>
@@ -173,7 +206,7 @@ function App() {
       <Switch>
         <Route path='/cards'>
           <Cards
-            people={filteredPeople}
+            people={sortedPeople}
             hasQuery={hasQuery}
             peopleDispatch={peopleDispatch}
           >
@@ -181,7 +214,7 @@ function App() {
         </Route>
         <Route path='/graph'>
           <Graph
-            people={filteredPeople}
+            people={sortedPeople}
           ></Graph>
         </Route>
         <Route exact path='/'>

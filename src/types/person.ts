@@ -5,4 +5,5 @@ export interface Person {
   name: string;
   notes: Note[];
   createdDate: Date;
+  isPinned: boolean;
 }

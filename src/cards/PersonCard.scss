@@ -6,15 +6,36 @@
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: #fff;
-  overflow: hidden;
-  .name-section {
+  // overflow: hidden;
+  .top-section {
     display: flex;
     align-items: center;
-    background-color: var(--card-shade);
+    // background-color: var(--card-shade);
     border-bottom: 1px solid #efefef;
     padding: 12px 20px;
-    &:hover .delete-person-button {
+    &:hover .more-button {
       visibility: visible;
+    }
+    .pin-button {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      &:active {
+        .pin-icon .pin-icon-path {
+          fill: var(--active-color);
+        }
+      }
+      .pin-icon {
+        width: 18px;
+        height: 18px;
+        .pin-icon-path {
+          fill: var(--highlight-color);
+        }
+      }
     }
     .name-text {
       font-weight: 500;
@@ -24,25 +45,37 @@
       text-overflow: ellipsis;
       margin-right: 6px;
     }
-    .delete-person-button {
+    .more-item-active {
+      background-color: var(--highlight-color);
+    }
+    .more-item-hover {
+      background-color: var(--gray-highlight-color);
+    }
+    .more-button {
       display: flex;
       visibility: hidden;
       box-sizing: border-box;
       margin-left: auto;
-      width: 24px;
+      width: 26px;
       height: 24px;
       border-radius: 3px;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
+      border: 0;
+      padding: 0;
+      background: transparent;
       &:hover {
         background-color: #fff;
         border: 1px solid #ccc;
       }
-      .delete-person-icon {
-        width: 14px;
-        height: 14px;
+      &:active {
+        background-color: var(--gray-highlight-color);
+      }
+      .more-icon {
+        width: 16px;
+        height: 16px;
       }
     }
   }
@@ -51,41 +84,72 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    &:not(.dragging-over) {
+      .note:hover {
+        background-color: var(--gray-highlight-color);
+        .drag-note-button {
+          visibility: visible;
+        }
+        .delete-note-button {
+          visibility: visible;
+        }
+      }
+    }
     .note {
       display: flex;
       align-items: flex-start;
       padding: 10px;
       box-sizing: border-box;
-      &:not(:last-child) {
-        border-bottom: 1px solid #e0e0e0;
+      border-radius: 4px;
+      &.dragging {
+        background-color: var(--gray-highlight-color);
       }
-      &:hover .delete-note-button-container .delete-note-button {
-        visibility: visible;
+      .drag-note-button {
+        visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 18px;
+        height: 19.6px;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        margin-right: 6px;
+        .drag-note-icon {
+          width: 14px;
+          height: 14px;
+          path {
+            fill: #aaa;
+          }
+        }
       }
       .note-text {
         line-height: 1.4;
       }
-      .delete-note-button-container {
-        margin-left: auto;
+      .delete-note-button {
+        visibility: hidden;
         display: flex;
+        box-sizing: border-box;
+        width: 18px;
+        height: 19.6px;
         align-items: center;
         justify-content: center;
-        height: 19.6px;
-        .delete-note-button {
-          display: flex;
-          visibility: hidden;
-          box-sizing: border-box;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          flex-shrink: 0;
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        margin-left: auto;
+        &:active {
           .delete-note-icon {
-            width: 14px;
-            height: 14px;
+            stroke: #444;
           }
+        }
+        .delete-note-icon {
+          width: 14px;
+          height: 14px;
+          stroke: #777;
         }
       }
     }
@@ -101,7 +165,7 @@
   .note-input-section {
     border-top: 1px solid #efefef;
     padding: 12px 20px 16px 20px;
-    background-color: var(--card-shade);
+    // background-color: var(--card-shade);
     display: flex;
     font-size: 12px;
     .note-input {
@@ -111,16 +175,16 @@
       border-radius: 3px;
       padding: 4px 10px;
       flex-grow: 1;
-      margin-right: 6px;
+      margin-right: 8px;
       &:focus {
-        border: 1px solid #0095ffcc;
+        border: 1px solid var(--highlight-color);
       }
       &::placeholder {
         opacity: 0.4;
       }
     }
     .add-note-button {
-      background-color: #0095ffcc;
+      background-color: var(--highlight-color);
       color: #fff;
       box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
       border: 1px solid transparent;
@@ -137,6 +201,10 @@
       &[disabled] {
         background-color: #d0d0d0;
         cursor: default;
+      }
+      &:active {
+        box-shadow: unset;
+        background-color: var(--active-color);
       }
     }
   }

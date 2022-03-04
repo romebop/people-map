@@ -49,16 +49,18 @@
     background-color: #fff;
     border-radius: 4px;
     padding: 8px 18px;
-    margin-right: 6px;
+    margin-right: 8px;
     &:focus-within {
-      border: 2px solid #0095ffcc;
+      border: 2px solid var(--highlight-color);
     }
     #search-icon {
       width: 14px;
       margin-right: 12px;
       opacity: 0.25;
+      stroke: #000;
       &.active {
         opacity: 1;
+        stroke: var(--strong-highlight-color);
       }
     }
     #search-input {
@@ -88,9 +90,12 @@
       height: 40px;
       width: 40px;
       text-decoration: none;
-      border-radius: 50%;
-      // border: 1px solid;
-      // box-sizing: border-box;
+      border-radius: 4px;
+      // &:active {
+      //   svg {
+      //     stroke: #0095ff;
+      //   }
+      // }
       &.active {
         svg {
           stroke: #fff;
@@ -106,7 +111,7 @@
     }
     .active-route-highlight {
       border-radius: 4px;
-      background-color: #0095ffb0;
+      background-color: var(--highlight-color);
       position: absolute;
       width: 40px;
       height: 40px;
