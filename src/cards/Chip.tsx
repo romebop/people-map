@@ -8,37 +8,27 @@ interface ChipProps {
 
 const Chip: FC<ChipProps> = ({ name }: ChipProps) => {
 
-  const [isFocused, setisFocused] = useState(false);
-  const [isActivated, setisActivated] = useState(false);
+  const [isActivated, setisActivated] = useState<boolean>(false);
 
   const onPersonClick = () => {
-    console.log('onPersonClick trigger!');
     if (!isActivated) return;
     console.log('--> nav to person card')
   };
 
   const onDeleteClick = () => {
-    console.log('onDeleteClick trigger!');
     console.log('❌ clicked');
   };
 
   return (
     <div
-      className='chip'
+      className={`chip ${isActivated ? 'activated' : ''}`}
       tabIndex={0}
-      onFocus={() => {
-        console.log('onFocus trigger!');
-        if (isFocused) setisActivated(true);
-        setisFocused(true);
-      }}
-      onBlur={() => {
-        console.log('onBlur Trigger!');
-        setisFocused(false);
-        setisActivated(false);
-      }}
+      onClick={() => setisActivated(true)}
+      onBlur={() => setisActivated(false)}
     >
       <div
         className='chip-text'
+        title='Search connection'
         onClick={onPersonClick}
       >{name}</div>
       <div 

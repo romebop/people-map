@@ -6,7 +6,9 @@
   box-sizing: border-box;
   border-radius: 4px;
   user-select: none;
-  &:focus {
+  &.activated {
+    background-color: #0095ff0d;
+    border: 1px solid #0095ff5c;
     .chip-text {
       padding-right: 2px;
     }
