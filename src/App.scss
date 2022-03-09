@@ -48,7 +48,7 @@
     border: 2px solid rgba(0, 0, 0, 0.16);
     background-color: #fff;
     border-radius: 4px;
-    padding: 8px 18px;
+    padding: 8px 16px;
     margin-right: 8px;
     &:focus-within {
       border: 2px solid var(--highlight-color);
@@ -68,6 +68,24 @@
       &::placeholder {
         opacity: 0.4;
         // font-weight: 500;
+      }
+    }
+    #delete-query-button {
+      display: none;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      align-items: center;
+      margin-left: 12px;
+      margin-right: -2px;
+      &.show {
+        display: flex;
+      }
+      #delete-query-icon {
+        width: 14px;
+        height: 14px;
+        stroke: #aaa;
       }
     }
   }

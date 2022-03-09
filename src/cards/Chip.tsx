@@ -1,23 +1,19 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, useState } from 'react';
 
+import { PeopleAction, PeopleActionType } from '../App';
+import { Connection } from '../types';
 import './Chip.scss';
 
 interface ChipProps {
-  name: string;
+  personId: string;
+  connection: Connection;
+  setSearchInputValue: (name: string) => void;
+  peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const Chip: FC<ChipProps> = ({ name }: ChipProps) => {
+const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue, peopleDispatch }: ChipProps) => {
 
   const [isActivated, setisActivated] = useState<boolean>(false);
-
-  const onPersonClick = () => {
-    if (!isActivated) return;
-    console.log('--> nav to person card')
-  };
-
-  const onDeleteClick = () => {
-    console.log('❌ clicked');
-  };
 
   return (
     <div
@@ -29,12 +25,18 @@ const Chip: FC<ChipProps> = ({ name }: ChipProps) => {
       <div
         className='chip-text'
         title='Search connection'
-        onClick={onPersonClick}
-      >{name}</div>
+        onClick={() => {
+          if (!isActivated) return;
+          setSearchInputValue(connection.name);
+        }}
+      >{connection.name}</div>
       <div 
         className='delete-chip-button'
         title='Delete connection'
-        onClick={onDeleteClick}
+        onClick={() => peopleDispatch({
+          type: PeopleActionType.DELETE_CONNECTION,
+          payload: { personId, connectionId: connection.id },
+        })}
       >
         <svg
           fill='none'

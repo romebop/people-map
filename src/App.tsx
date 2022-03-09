@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './App.scss';
 import { Cards } from './cards';
 import { Graph } from './graph';
-import { Person } from './types';
+import { Connection, Person } from './types';
 import { parseDates } from './util';
 
 export enum PeopleActionType {
@@ -28,6 +28,10 @@ export enum PeopleActionType {
   DELETE_PERSON = 'DELETE_PERSON',
   PIN_PERSON = 'PIN_PERSON',
   UNPIN_PERSON = 'UNPIN_PERSON',
+  SHOW_CONNECTIONS = 'SHOW_CONNECTIONS',
+  HIDE_CONNECTIONS = 'HIDE_CONNECTIONS',
+  ADD_CONNECTION = 'ADD_CONNECTION',
+  DELETE_CONNECTION = 'DELETE_CONNECTION',
   ADD_NOTE = 'ADD_NOTE',
   DELETE_NOTE = 'DELETE_NOTE',
   REORDER_NOTES = 'REORDER_NOTES',
@@ -59,6 +63,8 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
           notes: [],
           createdDate: new Date(),
           isPinned: false,
+          showConnections: false,
+          connections: [],
         };
         draftState.push(newPerson);
       });
@@ -76,6 +82,33 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const person = draftState.find(p => p.id === payload.id);
         person!.isPinned = false;
+      });
+    case PeopleActionType.SHOW_CONNECTIONS:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        person!.showConnections = true;
+      });
+    case PeopleActionType.HIDE_CONNECTIONS:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id);
+        person!.showConnections = false;
+      });
+    case PeopleActionType.ADD_CONNECTION:
+      return produce(people, draftState => {
+        const person1 = draftState.find(p => p.id === payload.id);
+        person1?.connections.push(payload.connection);
+        const person2 = draftState.find(p => p.id === payload.connection.id);
+        person2?.connections.push({ name: person1?.name!, id: payload.id });
+        // TODO: sort?
+      });
+    case PeopleActionType.DELETE_CONNECTION:
+      return produce(people, draftState => {
+        const person1 = draftState.find(p => p.id === payload.personId);
+        const connectionIdx1 = person1?.connections?.findIndex(c => c.id === payload.connectionId);
+        person1?.connections?.splice(connectionIdx1!, 1);
+        const person2 = draftState.find(p => p.id === payload.connectionId);
+        const connectionIdx2 = person2?.connections?.findIndex(c => c.id === payload.personId);
+        person2?.connections?.splice(connectionIdx2!, 1);
       });
     case PeopleActionType.ADD_NOTE:
       return produce(people, draftState => {
@@ -102,10 +135,13 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
 function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
+  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }));
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
 
   const path = useLocation().pathname.slice(1);
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(people));
@@ -131,6 +167,11 @@ function App() {
   const debouncedOnSearch = useRef(
     debounce(onSearch, 150)
   ).current;
+
+  const setSearchInputValue = (name: string) => {
+    searchInputRef.current!.value = name;
+    setQuery(name);
+  };
 
   // const onDataUpload = (e: ChangeEvent<HTMLInputElement>) => {
   //   const [file] = e.target.files!;
@@ -159,11 +200,31 @@ function App() {
             />
           </svg>
           <input
+            ref={searchInputRef}
             id='search-input'
             type='text'
             placeholder='Search by name, note'
             onChange={debouncedOnSearch}
           />
+          <button
+            id='delete-query-button'
+            title='Clear'
+            className={`${hasQuery ? 'show' : ''}`}
+            onClick={() => setSearchInputValue('')}
+          >
+            <svg
+              fill='none'
+              viewBox='0 0 24 24'
+              id='delete-query-icon'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={3}
+                d='M6 18L18 6M6 6l12 12'
+              />
+            </svg>
+          </button>
         </div>
         <div id='links-container'>
           <NavLink
@@ -207,7 +268,9 @@ function App() {
         <Route path='/cards'>
           <Cards
             people={sortedPeople}
+            allConnections={allConnections}
             hasQuery={hasQuery}
+            setSearchInputValue={setSearchInputValue}
             peopleDispatch={peopleDispatch}
           >
           </Cards>

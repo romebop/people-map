@@ -1,2 +1,3 @@
-export * from './Person';
+export * from './Connection';
 export * from './Note';
+export * from './Person';

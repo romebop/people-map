@@ -1,3 +1,4 @@
+import { Connection } from './Connection';
 import { Note } from './Note';
 
 export interface Person {
@@ -6,4 +7,6 @@ export interface Person {
   notes: Note[];
   createdDate: Date;
   isPinned: boolean;
+  showConnections: boolean;
+  connections: Connection[]
 }

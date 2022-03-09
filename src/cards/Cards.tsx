@@ -1,18 +1,26 @@
-import { Dispatch, FC, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  FC,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { PeopleAction, PeopleActionType } from '../App';
-import { Person } from '../types';
+import { Connection, Person } from '../types';
 import { PersonCard } from '.';
 
 import './Cards.scss';
 
 interface CardsProps {
   people: Person[];
+  allConnections: Connection[];
   hasQuery: boolean;
+  setSearchInputValue: (name: string) => void;
   peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const Cards: FC<CardsProps> = ({ people, hasQuery, peopleDispatch }: CardsProps) => {
+const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInputValue, peopleDispatch }: CardsProps) => {
 
   const [personInputValue, setPersonInputValue] = useState<string>('');
   const [shouldScroll, setShouldScroll] = useState<boolean>(false);
@@ -45,6 +53,8 @@ const Cards: FC<CardsProps> = ({ people, hasQuery, peopleDispatch }: CardsProps)
             return <PersonCard
               key={person.id}
               person={person}
+              allConnections={allConnections}
+              setSearchInputValue={setSearchInputValue}
               peopleDispatch={peopleDispatch}
             />
           })

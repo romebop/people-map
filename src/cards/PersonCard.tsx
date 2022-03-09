@@ -1,11 +1,12 @@
 import { format } from 'date-fns'; 
+import Fuse from 'fuse.js';
 import { Dispatch, FC, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import { Menu, MenuItem } from '@szhsin/react-menu';
+import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
 import { PeopleAction, PeopleActionType } from '../App';
-import { Note, Person } from '../types';
+import { Connection, Note, Person } from '../types';
 import { Chip } from '.';
 
 import '@szhsin/react-menu/dist/index.css';
@@ -15,15 +16,30 @@ import './PersonCard.scss';
 
 interface PersonCardProps {
   person: Person;
+  allConnections: Connection[];
+  setSearchInputValue: (name: string) => void;
   peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardProps) => {
+const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }: PersonCardProps) => {
 
-  const [inputValue, setInputValue] = useState<string>('');
+  const [connectionFilter, setConnectionFilter] = useState<string>('');
+  const searchableConnections = allConnections.filter(ac =>
+    ac.id !== person.id
+    && !person.connections.map(pc => pc.id).includes(ac.id)
+  );
+  const filteredConnections: Connection[] = connectionFilter
+    ? new Fuse(searchableConnections, {
+        keys: ['name'],
+        threshold: 0.4,
+      })
+      .search(connectionFilter)
+      .map(result => result.item)
+    : searchableConnections;
+  const [noteInputValue, setNoteInputValue] = useState<string>('');
 
   const onAddNote = () => {
-    const content = inputValue.trim();
+    const content = noteInputValue.trim();
     if (content) {
       const newNote: Note = {
         id: uuidv4(),
@@ -34,7 +50,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
         type: PeopleActionType.ADD_NOTE,
         payload: { id: person.id, note: newNote },
       });
-      setInputValue('');
+      setNoteInputValue('');
     }
   };
 
@@ -47,8 +63,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
     });
   };
 
-  const moreItemClassName = ({ hover, active }: { hover: boolean, active: boolean }) =>
-    active ? 'more-item-active' : hover ? 'more-item-hover' : '';
+  const menuItemClassName = ({ hover }: { hover: boolean }) => hover ? 'menu-item hover' : 'menu-item';
 
   return (
     <div className='person-card'>
@@ -96,52 +111,65 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
           title={format(person.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
         >{person.name}</div>
         <Menu
+          menuClassName='menu'
           menuButton={
-            <button
-              className='more-button'
-            >
-              <svg
-                className='more-icon'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='#444'
+            ({ open }) =>
+              <button
+                className={`more-button ${open ? 'show' : ''}`}
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z'
-                />
-              </svg>
-            </button>
+                <svg
+                  className='more-icon'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='#444'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z'
+                  />
+                </svg>
+              </button>
           }
+          position='anchor'
         > 
           {
             person.isPinned
               ? <MenuItem
-                className={moreItemClassName}
-                onClick={() => peopleDispatch({
-                  type: PeopleActionType.UNPIN_PERSON,
-                  payload: { id: person.id },
-                })}
-              >Unpin card</MenuItem>
+                  className={menuItemClassName}
+                  onClick={() => peopleDispatch({
+                    type: PeopleActionType.UNPIN_PERSON,
+                    payload: { id: person.id },
+                  })}
+                >Unpin card</MenuItem>
               : <MenuItem
-                className={moreItemClassName}
-                onClick={() => peopleDispatch({
-                  type: PeopleActionType.PIN_PERSON,
-                  payload: { id: person.id },
-                })}
-              >Pin card</MenuItem>
+                  className={menuItemClassName}
+                  onClick={() => peopleDispatch({
+                    type: PeopleActionType.PIN_PERSON,
+                    payload: { id: person.id },
+                  })}
+                >Pin card</MenuItem>
+          }
+          {
+            person.showConnections
+              ? <MenuItem
+                  className={menuItemClassName}
+                  onClick={() => peopleDispatch({
+                    type: PeopleActionType.HIDE_CONNECTIONS,
+                    payload: { id: person.id },
+                  })}
+                >Hide connections</MenuItem>
+              : <MenuItem
+                  className={menuItemClassName}
+                  onClick={() => peopleDispatch({
+                    type: PeopleActionType.SHOW_CONNECTIONS,
+                    payload: { id: person.id },
+                  })}
+                >Show connections</MenuItem>
           }
           <MenuItem
-            className={moreItemClassName}
-            onClick={() => peopleDispatch({
-              type: PeopleActionType.DELETE_PERSON,
-              payload: { id: person.id },
-            })}
-          >Show connections</MenuItem>
-          <MenuItem
-            className={moreItemClassName}
+            className={menuItemClassName}
             onClick={() => peopleDispatch({
               type: PeopleActionType.DELETE_PERSON,
               payload: { id: person.id },
@@ -149,104 +177,161 @@ const PersonCard: FC<PersonCardProps> = ({ person, peopleDispatch }: PersonCardP
           >Delete card</MenuItem>
         </Menu>
       </div>
-      <div className='connections'>
-        {['Sarah Cho', 'Garritt Moede', 'Aaron Chin'].map((name, idx) => {
+      <div className={`connections ${person.showConnections ? 'show' : ''}`}>
+        {person.connections.map(connection => {
           return <Chip
-            key={idx}
-            name={name}
+            key={connection.id}
+            personId={person.id}
+            connection={connection}
+            setSearchInputValue={setSearchInputValue}
+            peopleDispatch={peopleDispatch}
           />
         })}
+        <Menu
+          menuClassName='menu'
+          menuButton={
+            ({ open }) =>
+              <button
+                className={`add-connection-button ${(person.connections.length === 0 || open) ? 'show' : ''}`}
+                title='Add connection'
+              >
+                <svg
+                  className='add-connection-icon'
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 4v16m8-8H4'
+                  />
+                </svg>  
+              </button>
+          }
+          overflow='auto'
+          setDownOverflow
+          position='anchor'
+          onMenuChange={e => e.open && setConnectionFilter('')}
+        >
+          <FocusableItem>
+            {({ ref }) => (
+              <input
+                autoFocus
+                ref={ref}
+                className='connection-filter-input'
+                type='text'
+                placeholder='Filter connections'
+                value={connectionFilter}
+                onChange={e => setConnectionFilter(e.target.value)}
+              />
+            )}
+          </FocusableItem>
+          {filteredConnections.length
+            ? <MenuGroup takeOverflow>
+                {filteredConnections.map(({ name, id }) =>
+                  <MenuItem
+                    key={id}
+                    className={menuItemClassName}
+                    onClick={() => peopleDispatch({
+                      type: PeopleActionType.ADD_CONNECTION,
+                      payload: { id: person.id, connection: { name, id } },
+                    })}
+                  >{name}</MenuItem>)}
+              </MenuGroup>
+            : (searchableConnections.length && connectionFilter.trim().length)
+              ? <div className='no-connections-placeholder'>Person not found</div>
+              : <div className='no-connections-placeholder'>None available</div>}
+        </Menu>
       </div>
       {person.notes.length
         ? <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId={person.id}>
-            {(provided, snapshot) => (
-              <div
-                className={`notes ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {person.notes.map((note: Note, idx: number) => {
-                  return (
-                    <Draggable
-                      key={note.id}
-                      draggableId={note.id}
-                      index={idx}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          className={`note ${snapshot.isDragging ? 'dragging' : ''}`}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                        >
+            <Droppable droppableId={person.id}>
+              {(provided, snapshot) => (
+                <div
+                  className={`notes ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {person.notes.map((note: Note, idx: number) => {
+                    return (
+                      <Draggable
+                        key={note.id}
+                        draggableId={note.id}
+                        index={idx}
+                      >
+                        {(provided, snapshot) => (
                           <div
-                            className='drag-note-handle'
-                            {...provided.dragHandleProps}
+                            className={`note ${snapshot.isDragging ? 'dragging' : ''}`}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
                           >
-                            <svg
-                              className='drag-note-icon'
-                              viewBox='0 0 24 36'
+                            <div
+                              className='drag-note-handle'
+                              {...provided.dragHandleProps}
                             >
-                              <path d='M9.17627 7.35286C9.17627 8.91224 7.91228 10.1765 6.35291 10.1765C4.79353 10.1765 3.5293 8.91224 3.5293 7.35286C3.5293 5.79349 4.79353 4.52949 6.35291 4.52949C7.91228 4.52949 9.17627 5.79349 9.17627 7.35286Z'/>
-                              <path d='M9.17627 17.6471C9.17627 19.2064 7.91228 20.4707 6.35291 20.4707C4.79353 20.4707 3.5293 19.2064 3.5293 17.6471C3.5293 16.0877 4.79353 14.8235 6.35291 14.8235C7.91228 14.8235 9.17627 16.0877 9.17627 17.6471Z'/>
-                              <path d='M9.17627 27.9414C9.17627 29.5008 7.91228 30.7647 6.35291 30.7647C4.79353 30.7647 3.5293 29.5008 3.5293 27.9414C3.5293 26.382 4.79353 25.1178 6.35291 25.1178C7.91228 25.1178 9.17627 26.382 9.17627 27.9414Z'/>
-                              <path d='M20.4706 7.35286C20.4706 8.91224 19.2063 10.1765 17.647 10.1765C16.0876 10.1765 14.8236 8.91224 14.8236 7.35286C14.8236 5.79349 16.0876 4.52949 17.647 4.52949C19.2063 4.52949 20.4706 5.79349 20.4706 7.35286Z'/>
-                              <path d='M20.4706 17.6471C20.4706 19.2064 19.2063 20.4707 17.647 20.4707C16.0876 20.4707 14.8236 19.2064 14.8236 17.6471C14.8236 16.0877 16.0876 14.8235 17.647 14.8235C19.2063 14.8235 20.4706 16.0877 20.4706 17.6471Z'/>
-                              <path d='M20.4706 27.9414C20.4706 29.5008 19.2063 30.7647 17.647 30.7647C16.0876 30.7647 14.8236 29.5008 14.8236 27.9414C14.8236 26.382 16.0876 25.1178 17.647 25.1178C19.2063 25.1178 20.4706 26.382 20.4706 27.9414Z'/>
-                            </svg>
+                              <svg
+                                className='drag-note-icon'
+                                viewBox='0 0 24 36'
+                              >
+                                <path d='M9.17627 7.35286C9.17627 8.91224 7.91228 10.1765 6.35291 10.1765C4.79353 10.1765 3.5293 8.91224 3.5293 7.35286C3.5293 5.79349 4.79353 4.52949 6.35291 4.52949C7.91228 4.52949 9.17627 5.79349 9.17627 7.35286Z'/>
+                                <path d='M9.17627 17.6471C9.17627 19.2064 7.91228 20.4707 6.35291 20.4707C4.79353 20.4707 3.5293 19.2064 3.5293 17.6471C3.5293 16.0877 4.79353 14.8235 6.35291 14.8235C7.91228 14.8235 9.17627 16.0877 9.17627 17.6471Z'/>
+                                <path d='M9.17627 27.9414C9.17627 29.5008 7.91228 30.7647 6.35291 30.7647C4.79353 30.7647 3.5293 29.5008 3.5293 27.9414C3.5293 26.382 4.79353 25.1178 6.35291 25.1178C7.91228 25.1178 9.17627 26.382 9.17627 27.9414Z'/>
+                                <path d='M20.4706 7.35286C20.4706 8.91224 19.2063 10.1765 17.647 10.1765C16.0876 10.1765 14.8236 8.91224 14.8236 7.35286C14.8236 5.79349 16.0876 4.52949 17.647 4.52949C19.2063 4.52949 20.4706 5.79349 20.4706 7.35286Z'/>
+                                <path d='M20.4706 17.6471C20.4706 19.2064 19.2063 20.4707 17.647 20.4707C16.0876 20.4707 14.8236 19.2064 14.8236 17.6471C14.8236 16.0877 16.0876 14.8235 17.647 14.8235C19.2063 14.8235 20.4706 16.0877 20.4706 17.6471Z'/>
+                                <path d='M20.4706 27.9414C20.4706 29.5008 19.2063 30.7647 17.647 30.7647C16.0876 30.7647 14.8236 29.5008 14.8236 27.9414C14.8236 26.382 16.0876 25.1178 17.647 25.1178C19.2063 25.1178 20.4706 26.382 20.4706 27.9414Z'/>
+                              </svg>
+                            </div>
+                            <div
+                              className='note-text'
+                              title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
+                            >{note.content}</div>
+                            <button
+                              className='delete-note-button'
+                              title='Delete note'
+                              onClick={() => peopleDispatch({
+                                type: PeopleActionType.DELETE_NOTE,
+                                payload: { personId: person.id, noteId: note.id },
+                              })}
+                            >
+                              <svg
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                className='delete-note-icon'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth={2}
+                                  d='M6 18L18 6M6 6l12 12'
+                                />
+                              </svg>
+                            </button>
                           </div>
-                          <div
-                            className='note-text'
-                            title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
-                          >{note.content}</div>
-                          <button
-                            className='delete-note-button'
-                            title='Delete note'
-                            onClick={() => peopleDispatch({
-                              type: PeopleActionType.DELETE_NOTE,
-                              payload: { personId: person.id, noteId: note.id },
-                            })}
-                          >
-                            <svg
-                              fill='none'
-                              viewBox='0 0 24 24'
-                              className='delete-note-icon'
-                            >
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth={2}
-                                d='M6 18L18 6M6 6l12 12'
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         : <div className='notes'>
-          <div className='no-notes-placeholder'>You have no notes for this person</div>
-        </div> 
-      }
+            <div className='no-notes-placeholder'>You currently have no notes for this person</div>
+          </div>}
       <form className='note-input-section'>
         <input
           className='note-input'
           type='text'
           placeholder='Write a note'
-          value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
+          value={noteInputValue}
+          onChange={e => setNoteInputValue(e.target.value)}
         />
         <button
           className='add-note-button'
           type='submit'
           onClick={onAddNote}
-          disabled={inputValue.trim().length === 0}
+          disabled={noteInputValue.trim().length === 0}
           title='Add note'
         >+ Note</button>
       </form>

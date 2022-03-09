@@ -1,4 +1,16 @@
 .person-card {
+  .menu {
+    padding: 8px 0 10px 0;
+    .menu-item {
+      &:active {
+        background-color: var(--highlight-color) !important;
+        color: #fff;
+      }
+      &.hover {
+        background-color: var(--gray-highlight-color);
+      }
+    }
+  }
   &:not(:first-child) {
     margin-top: 40px;
   }
@@ -45,12 +57,6 @@
       text-overflow: ellipsis;
       margin-right: 6px;
     }
-    .more-item-active {
-      background-color: var(--highlight-color);
-    }
-    .more-item-hover {
-      background-color: var(--gray-highlight-color);
-    }
     .more-button {
       display: flex;
       visibility: hidden;
@@ -66,6 +72,9 @@
       border: 0;
       padding: 0;
       background: transparent;
+      &.show {
+        visibility: visible;
+      }
       &:hover {
         background-color: #fff;
         border: 1px solid #ccc;
@@ -80,11 +89,64 @@
     }
   }
   .connections {
-    display: flex;
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
     border-bottom: 1px solid #efefef;
     padding: 12px 20px 14px 20px;
-    .chip:not(:first-child) {
-      margin-left: 6px;
+    min-height: 55.09px;
+    box-sizing: border-box;
+    &.show {
+      display: flex;
+    }
+    &:hover {
+      .add-connection-button {
+        display: flex;
+      }
+    }
+    .add-connection-button {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      border: 1px solid #ccc;
+      background: transparent;
+      width: 30px;
+      height: 28px;
+      border-radius: 4px;
+      cursor: pointer;
+      &:active {
+        background-color: #0095ff08;
+        border: 1px solid #0095ff5c;
+        .add-connection-icon {
+          stroke: #0095ff;
+        }
+      }
+      &.show {
+        display: flex;
+      }
+      .add-connection-icon {
+        stroke: #888;
+        width: 12px;
+        height: 12px;
+      }
+    }
+    .connection-filter-input {
+      cursor: text;
+      border-bottom: 1px solid #0095ff;
+      padding-bottom: 2px;
+      width: 100%;
+      &::placeholder {
+        opacity: 0.4;
+      }
+    }
+    .no-connections-placeholder {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 0.375rem 1.5rem;
+      font-style: italic;
+      opacity: 0.3;
     }
   }
   .notes {
@@ -167,7 +229,7 @@
     }
     .no-notes-placeholder {
       font-style: italic;
-      opacity: 0.4;
+      opacity: 0.3;
       display: flex;
       align-items: center;
       padding: 8px 10px 10px 36px;
