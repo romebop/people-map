@@ -5,9 +5,9 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import { v4 as uuidv4 } from 'uuid';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
-import { PeopleAction, PeopleActionType } from '../App';
-import { Connection, Note, Person } from '../types';
-import { Chip } from '.';
+import { PeopleAction, PeopleActionType } from 'src/App';
+import { Chip } from 'src/cards';
+import { Connection, Note, Person } from 'src/types';
 
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
@@ -115,7 +115,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
           menuButton={
             ({ open }) =>
               <button
-                className={`more-button ${open ? 'show' : ''}`}
+                className={`more-button ${open ? 'show opening' : ''}`}
               >
                 <svg
                   className='more-icon'
@@ -192,7 +192,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
           menuButton={
             ({ open }) =>
               <button
-                className={`add-connection-button ${(person.connections.length === 0 || open) ? 'show' : ''}`}
+                className={`add-connection-button ${open ? 'show opening' : (person.connections.length === 0 ? 'show' : '')}`}
                 title='Add connection'
               >
                 <svg

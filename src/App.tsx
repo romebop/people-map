@@ -17,11 +17,12 @@ import {
 } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Cards } from 'src/cards';
+import { Graph } from 'src/graph';
+import { Connection, Person } from 'src/types';
+import { parseDates } from 'src/util';
+
 import './App.scss';
-import { Cards } from './cards';
-import { Graph } from './graph';
-import { Connection, Person } from './types';
-import { parseDates } from './util';
 
 export enum PeopleActionType {
   ADD_PERSON = 'ADD_PERSON',
@@ -72,6 +73,9 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const idx = draftState.findIndex(p => p.id === payload.id);
         draftState.splice(idx, 1);
+        draftState.forEach(p => {
+          p.connections = p.connections.filter(c => c.id !== payload.id);
+        });
       });
     case PeopleActionType.PIN_PERSON:
       return produce(people, draftState => {

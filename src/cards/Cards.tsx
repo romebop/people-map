@@ -6,9 +6,9 @@ import {
   useState,
 } from 'react';
 
-import { PeopleAction, PeopleActionType } from '../App';
-import { Connection, Person } from '../types';
-import { PersonCard } from '.';
+import { PeopleAction, PeopleActionType } from 'src/App';
+import { Connection, Person } from 'src/types';
+import { PersonCard } from 'src/cards';
 
 import './Cards.scss';
 

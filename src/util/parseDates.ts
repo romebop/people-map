@@ -6,7 +6,7 @@ function isIsoDateString(value: any): boolean {
     && isoDateFormat.test(value);
 }
 
-export function parseDates(obj: any) {
+function parseDates(obj: any): void {
   for (const [key, value] of Object.entries(obj)) {
     if (isIsoDateString(value)) {
       obj[key] = new Date(value as string);
@@ -16,3 +16,5 @@ export function parseDates(obj: any) {
     }
   }
 }
+
+export { parseDates };

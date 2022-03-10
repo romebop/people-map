@@ -1,6 +1,7 @@
 .person-card {
   .menu {
-    padding: 8px 0 10px 0;
+    font-size: 13px;
+    padding: 8px 0;
     .menu-item {
       &:active {
         background-color: var(--highlight-color) !important;
@@ -75,6 +76,10 @@
       &.show {
         visibility: visible;
       }
+      &.opening {
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
       &:hover {
         background-color: #fff;
         border: 1px solid #ccc;
@@ -109,12 +114,14 @@
       justify-content: center;
       align-items: center;
       padding: 0;
-      border: 1px solid #ccc;
+      border: 0;
       background: transparent;
       width: 30px;
       height: 28px;
       border-radius: 4px;
       cursor: pointer;
+      color: #aaa;
+      font-size: 16px;
       &:active {
         background-color: #0095ff08;
         border: 1px solid #0095ff5c;
@@ -122,8 +129,14 @@
           stroke: #0095ff;
         }
       }
+      &:hover {
+        border: 1px solid #ccc;
+      }
       &.show {
         display: flex;
+      }
+      &.opening {
+        border: 1px solid #ccc;
       }
       .add-connection-icon {
         stroke: #888;

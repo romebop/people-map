@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { FC, useEffect, useRef } from 'react';
 
-import { Person } from '../types';
+import { Person } from 'src/types';
 
 import './Graph.scss';
 

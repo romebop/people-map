@@ -1,7 +1,8 @@
 import { Dispatch, FC, useState } from 'react';
 
-import { PeopleAction, PeopleActionType } from '../App';
-import { Connection } from '../types';
+import { PeopleAction, PeopleActionType } from 'src/App';
+import { Connection } from 'src/types';
+
 import './Chip.scss';
 
 interface ChipProps {
