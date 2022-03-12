@@ -14,22 +14,43 @@ const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
 
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const width = 980;
+  const height = 680;
+
   const getGraph = (people: Person[]) => ({
     nodes: [
       { name: 'me' },
       ...people.map(({ name }) => ({ name })),
     ],
-    links: people.map(({ name }) => ({
-      source: 'me',
-      target: name,
-    })),
+    links: [
+      ...people.map(({ name }) => ({
+        source: 'me',
+        target: name,
+      })),
+      ...people.map(
+        p => p.connections.map(
+          c => ({ source: p.name, target: c.name })
+        )
+      )
+      .flat()
+      .map(({ source, target }) =>
+        source.localeCompare(target) < 0
+          ? { source, target }
+          : { source: target, target: source }
+      )
+      .map(o => JSON.stringify(o))
+      .filter((e, i, a) => i === a.indexOf(e))
+      .map(s => JSON.parse(s)),
+    ],
   });
 
   useEffect(() => {
 
+
     const { nodes, links } = getGraph(people);
     
     const svg = d3.select(svgRef.current);
+    // svg.selectAll('g').remove();
     const width = 540;
     const height = 400;
     const color = d3.scaleOrdinal(d3.schemePastel2);
@@ -50,15 +71,24 @@ const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
       .join('line');
     
     const node = svg.append('g')
-        .attr('stroke', '#ccc')
         .attr('stroke-opacity', 1)
-        .attr('stroke-width', 1.5)
       .selectAll('circle')
       // .selectAll('g')
       .data(nodes)
       .join('circle')
-        .attr('r', 10)
-        .attr('fill', d => color(d.name))
+        .attr('stroke', '#ccc')
+        .attr('r', d => {
+          if (d.name === 'me') return 16;
+          return 10;
+        })
+        .attr('stroke-width', d => {
+          if (d.name === 'me') return 2;
+          return 1.5;
+        })
+        .attr('fill', d => {
+          if (d.name === 'me') return '#fff';
+          return color(d.name);
+        })
         .call(drag(simulation) as any);
 
     node.append('title').text((d: any) => d.name);
@@ -99,6 +129,9 @@ const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
     <svg
       id='d3-svg'
       ref={svgRef}
+      width={width}
+      height={height}
+      viewBox={`${-width / 5} ${-height / 5} ${width} ${height}`}
     ></svg>
   );
 }

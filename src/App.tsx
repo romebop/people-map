@@ -139,7 +139,8 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
 function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
-  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }));
+  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const [query, setQuery] = useState<string>('');
   const hasQuery = query.trim().length > 0;
 
