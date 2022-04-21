@@ -1,6 +1,6 @@
 {
   "homepage": "https://peoplemap.romebop.io",
-  "name": "people-map",
+  "name": "peoplemap",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
