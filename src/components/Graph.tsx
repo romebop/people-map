@@ -1,16 +1,21 @@
 import * as d3 from 'd3';
 import { FC, useEffect, useRef } from 'react';
+import styled from 'styled-components/macro';
 
 import { Person } from 'src/types';
 
-import './Graph.scss';
+const RootSvg = styled.svg`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+`;
 
 interface GraphProps {
   people: Person[];
 } 
 
 // eslint-disable-next-line no-empty-pattern
-const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
+const Graph: FC<GraphProps> = ({ people }) => {
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -126,13 +131,12 @@ const Graph: FC<GraphProps> = ({ people }: GraphProps) => {
   }, [people]);
 
   return (
-    <svg
-      id='d3-svg'
+    <RootSvg
       ref={svgRef}
       width={width}
       height={height}
       viewBox={`${-width / 5} ${-height / 5} ${width} ${height}`}
-    ></svg>
+    ></RootSvg>
   );
 }
 
