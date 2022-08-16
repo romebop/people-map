@@ -245,7 +245,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
   }
 }
 
-function App() {
+export default function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }))
@@ -411,5 +411,3 @@ function App() {
     </>
   );
 }
-
-export default App;

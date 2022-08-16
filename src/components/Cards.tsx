@@ -140,4 +140,7 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
   )
 }
 
-export { Cards };
+export {
+  Cards,
+  type CardsProps,
+}

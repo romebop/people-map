@@ -88,4 +88,7 @@ const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue, people
   );
 }
 
-export { Chip };
+export {
+  Chip,
+  type ChipProps,
+}

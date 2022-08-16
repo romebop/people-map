@@ -140,4 +140,7 @@ const Graph: FC<GraphProps> = ({ people }) => {
   );
 }
 
-export { Graph };
+export {
+  Graph,
+  type GraphProps,
+}

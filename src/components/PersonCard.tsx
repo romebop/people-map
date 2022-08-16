@@ -330,7 +330,7 @@ interface PersonCardProps {
   peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }: PersonCardProps) => {
+const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }) => {
 
   const [connectionFilter, setConnectionFilter] = useState<string>('');
   const searchableConnections = allConnections.filter(ac =>
@@ -633,4 +633,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
   )
 }
 
-export { PersonCard };
+export {
+  PersonCard,
+  type PersonCardProps,
+}
