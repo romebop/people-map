@@ -1,8 +1,8 @@
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
 import Fuse from 'fuse.js';
 import { Dispatch, FC, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
@@ -95,7 +95,7 @@ const MoreButton = styled.button<{ isOpen: boolean }>`
   border: 0;
   padding: 0;
   background: transparent;
-  ${({ isOpen }) => isOpen && css`
+  ${({ isOpen }) => isOpen && `
     background-color: #fff;
     border: 1px solid #ccc;  
   `}
@@ -126,7 +126,7 @@ const Connections = styled.div<{ show: boolean }>`
   box-sizing: border-box;
 `;
 
-const AddConnectionButton = styled.input<{ isOpen: boolean, show: boolean }>`
+const AddConnectionButton = styled.button<{ isOpen: boolean, show: boolean }>`
   display: ${({ show }) => show ? 'flex' : 'none'};
   justify-content: center;
   align-items: center;
@@ -143,7 +143,7 @@ const AddConnectionButton = styled.input<{ isOpen: boolean, show: boolean }>`
     background-color: #0095ff08;
     border: 1px solid #0095ff5c;
   }
-  ${({ isOpen }) => isOpen && css`
+  ${({ isOpen }) => isOpen && `
     border: 1px solid #ccc;
   `};
   &:hover {
@@ -199,7 +199,7 @@ const StyledNote = styled.div<{ isDragging: boolean, isDraggingOver: boolean }>`
   ::selection {
     background-color: papayawhip;
   }
-  ${({ isDraggingOver }) => !isDraggingOver && css`
+  ${({ isDraggingOver }) => !isDraggingOver && `
     &:hover {
       background-color: var(--gray-highlight-color);
     }
@@ -216,7 +216,7 @@ const DragNoteHandle = styled.div<{ isDragging: boolean, isDraggingOver: boolean
   padding-left: 10px;
   margin-right: 8px;
   align-self: stretch;
-  ${({ isDraggingOver }) => !isDraggingOver && css`
+  ${({ isDraggingOver }) => !isDraggingOver && `
     ${StyledNote}:hover & {
       visibility: visible;
     }
@@ -258,7 +258,7 @@ const DeleteNoteButton = styled.button<{ isDraggingOver: boolean }>`
   padding: 0;
   background: transparent;
   margin-left: auto;
-  ${({ isDraggingOver }) => !isDraggingOver && css`
+  ${({ isDraggingOver }) => !isDraggingOver && `
     ${StyledNote}:hover & {
       visibility: visible;
     }
@@ -323,14 +323,14 @@ const AddNoteButton = styled.button`
   }
 `;
 
-interface PersonCardProps {
+interface ViewCardProps {
   person: Person;
   allConnections: Connection[];
   setSearchInputValue: (name: string) => void;
   peopleDispatch: Dispatch<PeopleAction>;
-} 
+}
 
-const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }) => {
+const ViewCard: FC<ViewCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }) => {
 
   const [connectionFilter, setConnectionFilter] = useState<string>('');
   const searchableConnections = allConnections.filter(ac =>
@@ -339,9 +339,9 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
   );
   const filteredConnections: Connection[] = connectionFilter
     ? new Fuse(searchableConnections, {
-        keys: ['name'],
-        threshold: 0.4,
-      })
+      keys: ['name'],
+      threshold: 0.4,
+    })
       .search(connectionFilter)
       .map(result => result.item)
     : searchableConnections;
@@ -433,40 +433,40 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
               </MoreButton>
           }
           position='anchor'
-        > 
+        >
           {
             person.isPinned
               ? <StyledMenuItem
-                  className={menuItemClassName}
-                  onClick={() => peopleDispatch({
-                    type: PeopleActionType.UNPIN_PERSON,
-                    payload: { id: person.id },
-                  })}
-                >Unpin card</StyledMenuItem>
+                className={menuItemClassName}
+                onClick={() => peopleDispatch({
+                  type: PeopleActionType.UNPIN_PERSON,
+                  payload: { id: person.id },
+                })}
+              >Unpin card</StyledMenuItem>
               : <StyledMenuItem
-                  className={menuItemClassName}
-                  onClick={() => peopleDispatch({
-                    type: PeopleActionType.PIN_PERSON,
-                    payload: { id: person.id },
-                  })}
-                >Pin card</StyledMenuItem>
+                className={menuItemClassName}
+                onClick={() => peopleDispatch({
+                  type: PeopleActionType.PIN_PERSON,
+                  payload: { id: person.id },
+                })}
+              >Pin card</StyledMenuItem>
           }
           {
             person.showConnections
               ? <StyledMenuItem
-                  className={menuItemClassName}
-                  onClick={() => peopleDispatch({
-                    type: PeopleActionType.HIDE_CONNECTIONS,
-                    payload: { id: person.id },
-                  })}
-                >Hide connections</StyledMenuItem>
+                className={menuItemClassName}
+                onClick={() => peopleDispatch({
+                  type: PeopleActionType.HIDE_CONNECTIONS,
+                  payload: { id: person.id },
+                })}
+              >Hide connections</StyledMenuItem>
               : <StyledMenuItem
-                  className={menuItemClassName}
-                  onClick={() => peopleDispatch({
-                    type: PeopleActionType.SHOW_CONNECTIONS,
-                    payload: { id: person.id },
-                  })}
-                >Show connections</StyledMenuItem>
+                className={menuItemClassName}
+                onClick={() => peopleDispatch({
+                  type: PeopleActionType.SHOW_CONNECTIONS,
+                  payload: { id: person.id },
+                })}
+              >Show connections</StyledMenuItem>
           }
           <StyledMenuItem
             className={menuItemClassName}
@@ -506,7 +506,7 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
                     strokeLinejoin='round'
                     d='M12 4v16m8-8H4'
                   />
-                </AddConnectionIcon>  
+                </AddConnectionIcon>
               </AddConnectionButton>
           }
           overflow='auto'
@@ -528,16 +528,16 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
           </FocusableItem>
           {filteredConnections.length
             ? <MenuGroup takeOverflow>
-                {filteredConnections.map(({ name, id }) =>
-                  <StyledMenuItem
-                    key={id}
-                    className={menuItemClassName}
-                    onClick={() => peopleDispatch({
-                      type: PeopleActionType.ADD_CONNECTION,
-                      payload: { id: person.id, connection: { name, id } },
-                    })}
-                  >{name}</StyledMenuItem>)}
-              </MenuGroup>
+              {filteredConnections.map(({ name, id }) =>
+                <StyledMenuItem
+                  key={id}
+                  className={menuItemClassName}
+                  onClick={() => peopleDispatch({
+                    type: PeopleActionType.ADD_CONNECTION,
+                    payload: { id: person.id, connection: { name, id } },
+                  })}
+                >{name}</StyledMenuItem>)}
+            </MenuGroup>
             : (searchableConnections.length && connectionFilter.trim().length)
               ? <NoConnectionsPlaceholder>Person not found</NoConnectionsPlaceholder>
               : <NoConnectionsPlaceholder>None available</NoConnectionsPlaceholder>}
@@ -545,74 +545,74 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
       </Connections>
       {person.notes.length
         ? <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={person.id}>
-              {(provided, droppableSnapshot) => (
-                <Notes
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {person.notes.map((note: Note, idx: number) => {
-                    return (
-                      <Draggable
-                        key={note.id}
-                        draggableId={note.id}
-                        index={idx}
-                      >
-                        {(provided, draggableSnapshot) => (
-                          <StyledNote
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
+          <Droppable droppableId={person.id}>
+            {(provided, droppableSnapshot) => (
+              <Notes
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {person.notes.map((note: Note, idx: number) => {
+                  return (
+                    <Draggable
+                      key={note.id}
+                      draggableId={note.id}
+                      index={idx}
+                    >
+                      {(provided, draggableSnapshot) => (
+                        <StyledNote
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          isDragging={draggableSnapshot.isDragging}
+                          isDraggingOver={droppableSnapshot.isDraggingOver}
+                        >
+                          <DragNoteHandle
+                            {...provided.dragHandleProps}
                             isDragging={draggableSnapshot.isDragging}
                             isDraggingOver={droppableSnapshot.isDraggingOver}
                           >
-                            <DragNoteHandle
-                              {...provided.dragHandleProps}
-                              isDragging={draggableSnapshot.isDragging}
-                              isDraggingOver={droppableSnapshot.isDraggingOver}
+                            <DragNoteIcon viewBox='0 0 24 36'>
+                              <path d='M9.17627 7.35286C9.17627 8.91224 7.91228 10.1765 6.35291 10.1765C4.79353 10.1765 3.5293 8.91224 3.5293 7.35286C3.5293 5.79349 4.79353 4.52949 6.35291 4.52949C7.91228 4.52949 9.17627 5.79349 9.17627 7.35286Z' />
+                              <path d='M9.17627 17.6471C9.17627 19.2064 7.91228 20.4707 6.35291 20.4707C4.79353 20.4707 3.5293 19.2064 3.5293 17.6471C3.5293 16.0877 4.79353 14.8235 6.35291 14.8235C7.91228 14.8235 9.17627 16.0877 9.17627 17.6471Z' />
+                              <path d='M9.17627 27.9414C9.17627 29.5008 7.91228 30.7647 6.35291 30.7647C4.79353 30.7647 3.5293 29.5008 3.5293 27.9414C3.5293 26.382 4.79353 25.1178 6.35291 25.1178C7.91228 25.1178 9.17627 26.382 9.17627 27.9414Z' />
+                              <path d='M20.4706 7.35286C20.4706 8.91224 19.2063 10.1765 17.647 10.1765C16.0876 10.1765 14.8236 8.91224 14.8236 7.35286C14.8236 5.79349 16.0876 4.52949 17.647 4.52949C19.2063 4.52949 20.4706 5.79349 20.4706 7.35286Z' />
+                              <path d='M20.4706 17.6471C20.4706 19.2064 19.2063 20.4707 17.647 20.4707C16.0876 20.4707 14.8236 19.2064 14.8236 17.6471C14.8236 16.0877 16.0876 14.8235 17.647 14.8235C19.2063 14.8235 20.4706 16.0877 20.4706 17.6471Z' />
+                              <path d='M20.4706 27.9414C20.4706 29.5008 19.2063 30.7647 17.647 30.7647C16.0876 30.7647 14.8236 29.5008 14.8236 27.9414C14.8236 26.382 16.0876 25.1178 17.647 25.1178C19.2063 25.1178 20.4706 26.382 20.4706 27.9414Z' />
+                            </DragNoteIcon>
+                          </DragNoteHandle>
+                          <NoteText title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}>{note.content}</NoteText>
+                          <DeleteNoteButton
+                            isDraggingOver={droppableSnapshot.isDraggingOver}
+                            onClick={() => peopleDispatch({
+                              type: PeopleActionType.DELETE_NOTE,
+                              payload: { personId: person.id, noteId: note.id },
+                            })}
+                            title='Delete note'
+                          >
+                            <DeleteNoteIcon
+                              fill='none'
+                              viewBox='0 0 24 24'
                             >
-                              <DragNoteIcon viewBox='0 0 24 36'>
-                                <path d='M9.17627 7.35286C9.17627 8.91224 7.91228 10.1765 6.35291 10.1765C4.79353 10.1765 3.5293 8.91224 3.5293 7.35286C3.5293 5.79349 4.79353 4.52949 6.35291 4.52949C7.91228 4.52949 9.17627 5.79349 9.17627 7.35286Z'/>
-                                <path d='M9.17627 17.6471C9.17627 19.2064 7.91228 20.4707 6.35291 20.4707C4.79353 20.4707 3.5293 19.2064 3.5293 17.6471C3.5293 16.0877 4.79353 14.8235 6.35291 14.8235C7.91228 14.8235 9.17627 16.0877 9.17627 17.6471Z'/>
-                                <path d='M9.17627 27.9414C9.17627 29.5008 7.91228 30.7647 6.35291 30.7647C4.79353 30.7647 3.5293 29.5008 3.5293 27.9414C3.5293 26.382 4.79353 25.1178 6.35291 25.1178C7.91228 25.1178 9.17627 26.382 9.17627 27.9414Z'/>
-                                <path d='M20.4706 7.35286C20.4706 8.91224 19.2063 10.1765 17.647 10.1765C16.0876 10.1765 14.8236 8.91224 14.8236 7.35286C14.8236 5.79349 16.0876 4.52949 17.647 4.52949C19.2063 4.52949 20.4706 5.79349 20.4706 7.35286Z'/>
-                                <path d='M20.4706 17.6471C20.4706 19.2064 19.2063 20.4707 17.647 20.4707C16.0876 20.4707 14.8236 19.2064 14.8236 17.6471C14.8236 16.0877 16.0876 14.8235 17.647 14.8235C19.2063 14.8235 20.4706 16.0877 20.4706 17.6471Z'/>
-                                <path d='M20.4706 27.9414C20.4706 29.5008 19.2063 30.7647 17.647 30.7647C16.0876 30.7647 14.8236 29.5008 14.8236 27.9414C14.8236 26.382 16.0876 25.1178 17.647 25.1178C19.2063 25.1178 20.4706 26.382 20.4706 27.9414Z'/>
-                              </DragNoteIcon>
-                            </DragNoteHandle>
-                            <NoteText title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}>{note.content}</NoteText>
-                            <DeleteNoteButton
-                              isDraggingOver={droppableSnapshot.isDraggingOver}
-                              onClick={() => peopleDispatch({
-                                type: PeopleActionType.DELETE_NOTE,
-                                payload: { personId: person.id, noteId: note.id },
-                              })}
-                              title='Delete note'
-                            >
-                              <DeleteNoteIcon
-                                fill='none'
-                                viewBox='0 0 24 24'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={2}
-                                  d='M6 18L18 6M6 6l12 12'
-                                />
-                              </DeleteNoteIcon>
-                            </DeleteNoteButton>
-                          </StyledNote>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </Notes>
-              )}
-            </Droppable>
-          </DragDropContext>
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth={2}
+                                d='M6 18L18 6M6 6l12 12'
+                              />
+                            </DeleteNoteIcon>
+                          </DeleteNoteButton>
+                        </StyledNote>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </Notes>
+            )}
+          </Droppable>
+        </DragDropContext>
         : <Notes>
-            <NoNotesPlaceholder>You currently have no notes for this person</NoNotesPlaceholder>
-          </Notes>}
+          <NoNotesPlaceholder>You currently have no notes for this person</NoNotesPlaceholder>
+        </Notes>}
       <NoteInputSection>
         <NoteInput
           type='text'
@@ -634,6 +634,6 @@ const PersonCard: FC<PersonCardProps> = ({ person, allConnections, setSearchInpu
 }
 
 export {
-  PersonCard,
-  type PersonCardProps,
+  ViewCard,
+  type ViewCardProps,
 }

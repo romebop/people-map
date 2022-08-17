@@ -15,7 +15,7 @@ import {
   Routes,
   useLocation,
 } from 'react-router-dom';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Cards, Graph } from 'src/components';
@@ -52,12 +52,10 @@ const ActiveRouteHighlight = styled.div<{ path: string }>`
   z-index: -1;
   ${({ path }) => {
     switch (path) {
-      case 'cards': {
-        return css`left: 0`;
-      }
-      case 'graph': {
-        return css`left: 40`;
-      }
+      case 'cards':
+        return `left: 0`;
+      case 'graph':
+        return `left: 40px`;
     }
   }}
 `;
@@ -102,7 +100,7 @@ const SearchIcon = styled.svg<{ isActive: boolean }>`
   margin-right: 12px;
   opacity: 0.25;
   stroke: #000;
-  ${({ isActive }) => isActive && css`
+  ${({ isActive }) => isActive && `
     opacity: 1;
     stroke: var(--strong-highlight-color);
   `}
@@ -245,7 +243,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
   }
 }
 
-export default function App() {
+function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }))
@@ -411,3 +409,5 @@ export default function App() {
     </>
   );
 }
+
+export default App;

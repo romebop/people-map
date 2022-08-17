@@ -9,7 +9,7 @@ import styled from 'styled-components/macro';
 
 import { PeopleAction, PeopleActionType } from 'src/App';
 import { Connection, Person } from 'src/types';
-import { PersonCard } from 'src/components';
+import { EditCard } from 'src/components';
 
 const Container = styled.div`
   display: flex;
@@ -109,7 +109,7 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
       <Container>
         {people.length > 0
           ? people.map((person: Person) => {
-            return <PersonCard
+            return <EditCard
               key={person.id}
               person={person}
               allConnections={allConnections}
@@ -134,7 +134,9 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
           onClick={onAddPerson}
           disabled={personInputValue.trim().length === 0}
           title="Add Person"
-        >+ Person</AddPersonButton>
+        >
+          + Person
+        </AddPersonButton>
       </AddPersonLine>
     </>
   )
