@@ -1,4 +1,5 @@
 import { format } from 'date-fns'; 
+import { motion } from 'framer-motion';
 import Fuse from 'fuse.js';
 import { Dispatch, FC, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -6,14 +7,13 @@ import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
-import { PeopleAction, PeopleActionType } from 'src/App';
 import { Chip } from 'src/components';
-import { Connection, Note, Person } from 'src/types';
+import { Connection, Note, PeopleAction, PeopleActionType, Person } from 'src/types';
 
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   box-shadow: var(--shadow-elevation-low);
   border-radius: 4px;
   border: 1px solid #ddd;
@@ -21,6 +21,12 @@ const Container = styled.div`
   &:not(:first-child) {
     margin-top: 40px;
   }
+  z-index: 1;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const StyledMenu = styled(Menu)`
@@ -375,7 +381,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
   const menuItemClassName = ({ hover }: { hover: boolean }) => hover ? 'hover' : '';
 
   return (
-    <Container>
+    <Container layoutId={person.id}>
       <TopSection>
         {person.isPinned &&
           <PinButton

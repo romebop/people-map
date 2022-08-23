@@ -58,15 +58,11 @@ const Graph: FC<GraphProps> = ({ people }) => {
     const height = 400;
     const color = d3.scaleOrdinal(d3.schemePastel2);
 
-    console.log('checkpoint 1');
-
     const simulation = d3.forceSimulation(nodes as any)
       .force('link', d3.forceLink(links).id((d: any) => d.name))
       .force('charge', d3.forceManyBody().strength(-500))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .on('tick', ticked);
-
-    console.log('checkpoint 2');
 
     const link = svg.append('g')
         .attr('stroke', '#999')

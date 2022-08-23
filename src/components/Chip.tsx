@@ -1,8 +1,7 @@
 import { Dispatch, FC, useState } from 'react';
 import styled from 'styled-components/macro';
 
-import { PeopleAction, PeopleActionType } from 'src/App';
-import { Connection } from 'src/types';
+import { Connection, PeopleAction, PeopleActionType } from 'src/types';
 
 const Container = styled.div<{ isActivated: boolean }>`
   display: flex;

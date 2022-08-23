@@ -5,11 +5,11 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useMatch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
-import { PeopleAction, PeopleActionType } from 'src/App';
-import { Connection, Person } from 'src/types';
-import { EditCard } from 'src/components';
+import { Connection, PeopleAction, PeopleActionType, Person } from 'src/types';
+import { Card } from 'src/components';
 
 const Container = styled.div`
   display: flex;
@@ -81,6 +81,8 @@ interface CardsProps {
 
 const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInputValue, peopleDispatch }) => {
 
+  const match = useMatch('/cards/:id');
+
   const [personInputValue, setPersonInputValue] = useState<string>('');
   const [shouldScroll, setShouldScroll] = useState<boolean>(false);
 
@@ -108,15 +110,16 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
     <>
       <Container>
         {people.length > 0
-          ? people.map((person: Person) => {
-            return <EditCard
+          ? people.map((person: Person) =>
+            <Card
               key={person.id}
               person={person}
               allConnections={allConnections}
               setSearchInputValue={setSearchInputValue}
               peopleDispatch={peopleDispatch}
+              isSelected={match?.params.id === person.id}
             />
-          })
+          )
           : hasQuery
             ? <Placeholder>We didn't find anything</Placeholder>
             : <Placeholder>Add a new person!</Placeholder>
