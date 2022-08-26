@@ -47,8 +47,6 @@ const Graph: FC = () => {
   });
 
   useEffect(() => {
-
-    console.log(JSON.stringify(people));
     
     const { nodes, links } = getGraph(people);
     

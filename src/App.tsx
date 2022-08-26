@@ -3,6 +3,7 @@ import { debounce } from 'lodash';
 import {
   ChangeEvent,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useReducer,
@@ -143,19 +144,25 @@ function App() {
     localStorage.setItem('data', JSON.stringify(people));
   }, [people]);
 
-  const filteredPeople: Person[] = query
-    ? new Fuse(people, {
-        keys: ['name', 'notes.content'],
-        threshold: 0.4,
-      })
-      .search(query)
-      .map(result => result.item)
-    : people;
+  const sortedFilteredPeople = useMemo(() => {
+  
+    const filteredPeople: Person[] = query
+      ? new Fuse(people, {
+          keys: ['name', 'notes.content'],
+          threshold: 0.4,
+        })
+        .search(query)
+        .map(result => result.item)
+      : people;
+  
+    const sortedFilteredPeople: Person[] = [
+      ...filteredPeople.filter(p => p.isPinned),
+      ...filteredPeople.filter(p => !p.isPinned),
+    ];
 
-  const sortedPeople: Person[] = [
-    ...filteredPeople.filter(p => p.isPinned),
-    ...filteredPeople.filter(p => !p.isPinned),
-  ]
+    return sortedFilteredPeople;
+
+  }, [people, query]);
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e?.target?.value);
@@ -183,7 +190,7 @@ function App() {
   // }
 
   return (
-    <PeopleCtx.Provider value={{ state: sortedPeople, dispatch: peopleDispatch }}>
+    <PeopleCtx.Provider value={{ state: sortedFilteredPeople, dispatch: peopleDispatch }}>
       <TopContainer>
         <SearchContainer>
           <SearchIcon
