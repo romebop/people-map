@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
-import { FC, useEffect, useRef } from 'react';
+import { FC, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
 
 import { Person } from 'src/types';
+import { PeopleCtx } from 'src/util';
 
 const RootSvg = styled.svg`
   border: 1px solid #ccc;
@@ -10,12 +11,9 @@ const RootSvg = styled.svg`
   background-color: #fff;
 `;
 
-interface GraphProps {
-  people: Person[];
-} 
+const Graph: FC = () => {
 
-const Graph: FC<GraphProps> = ({ people }) => {
-
+  const { state: people } = useContext(PeopleCtx)!;
   const svgRef = useRef<SVGSVGElement>(null);
 
   const width = 980;
@@ -50,6 +48,8 @@ const Graph: FC<GraphProps> = ({ people }) => {
 
   useEffect(() => {
 
+    console.log(JSON.stringify(people));
+    
     const { nodes, links } = getGraph(people);
     
     const svg = d3.select(svgRef.current);
@@ -136,9 +136,6 @@ const Graph: FC<GraphProps> = ({ people }) => {
       viewBox={`${-width / 5} ${-height / 5} ${width} ${height}`}
     ></RootSvg>
   );
-}
+};
 
-export {
-  Graph,
-  type GraphProps,
-}
+export { Graph };

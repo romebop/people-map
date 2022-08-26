@@ -1,7 +1,8 @@
-import { Dispatch, FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 
-import { Connection, PeopleAction, PeopleActionType } from 'src/types';
+import { Connection, PeopleActionType } from 'src/types';
+import { PeopleCtx } from 'src/util';
 
 const Container = styled.div<{ isActivated: boolean }>`
   display: flex;
@@ -44,12 +45,12 @@ interface ChipProps {
   personId: string;
   connection: Connection;
   setSearchInputValue: (name: string) => void;
-  peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue, peopleDispatch }) => {
+const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue }) => {
 
   const [isActivated, setisActivated] = useState<boolean>(false);
+  const { dispatch } = useContext(PeopleCtx)!;
 
   return (
     <Container
@@ -66,7 +67,7 @@ const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue, people
       <DeleteChipButton
         {...{ isActivated }}
         title='Delete connection'
-        onClick={() => peopleDispatch({
+        onClick={() => dispatch({
           type: PeopleActionType.DELETE_CONNECTION,
           payload: { personId, connectionId: connection.id },
         })}
@@ -85,9 +86,9 @@ const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue, people
       </DeleteChipButton>
     </Container>
   );
-}
+};
 
 export {
   Chip,
   type ChipProps,
-}
+};

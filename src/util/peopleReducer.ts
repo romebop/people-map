@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { createContext, Dispatch } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { parseDates } from 'src/util';
@@ -96,4 +97,11 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
   }
 }
 
-export { init, peopleReducer };
+interface PeopleCtxInterface {
+  state: Person[];
+  dispatch: Dispatch<PeopleAction>;
+}
+
+const PeopleCtx = createContext<PeopleCtxInterface | null>(null);
+
+export { init, PeopleCtx, peopleReducer };

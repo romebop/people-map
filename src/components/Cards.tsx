@@ -1,6 +1,6 @@
 import {
-  Dispatch,
   FC,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -8,8 +8,9 @@ import {
 import { useMatch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
-import { Connection, PeopleAction, PeopleActionType, Person } from 'src/types';
+import { Connection, PeopleActionType, Person } from 'src/types';
 import { Card } from 'src/components';
+import { PeopleCtx } from 'src/util';
 
 const Container = styled.div`
   display: flex;
@@ -72,19 +73,18 @@ const AddPersonButton = styled.button`
 `;
 
 interface CardsProps {
-  people: Person[];
   allConnections: Connection[];
   hasQuery: boolean;
   setSearchInputValue: (name: string) => void;
-  peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInputValue, peopleDispatch }) => {
+const Cards: FC<CardsProps> = ({ allConnections, hasQuery, setSearchInputValue }) => {
 
   const match = useMatch('/cards/:id');
 
   const [personInputValue, setPersonInputValue] = useState<string>('');
   const [shouldScroll, setShouldScroll] = useState<boolean>(false);
+  const { state: people, dispatch } = useContext(PeopleCtx)!;
 
   useEffect(() => {
     if (!shouldScroll) return;
@@ -97,7 +97,7 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
   const onAddPerson = () => {
     const name = personInputValue.trim();
     if (name) {
-      peopleDispatch({
+      dispatch({
         type: PeopleActionType.ADD_PERSON,
         payload: { name },
       });
@@ -116,7 +116,6 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
               person={person}
               allConnections={allConnections}
               setSearchInputValue={setSearchInputValue}
-              peopleDispatch={peopleDispatch}
               isSelected={match?.params.id === person.id}
             />
           )
@@ -125,7 +124,7 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
             : <Placeholder>Add a new person!</Placeholder>
         }
       </Container>
-      <AddPersonLine ref={addPersonFormRef}>
+      {/* <AddPersonLine ref={addPersonFormRef}>
         <AddPersonInput
           type="text"
           placeholder="Enter a name"
@@ -140,12 +139,12 @@ const Cards: FC<CardsProps> = ({ people, allConnections, hasQuery, setSearchInpu
         >
           + Person
         </AddPersonButton>
-      </AddPersonLine>
+      </AddPersonLine> */}
     </>
   )
-}
+};
 
 export {
   Cards,
   type CardsProps,
-}
+};

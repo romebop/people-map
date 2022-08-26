@@ -8,18 +8,25 @@ import * as serviceWorkerRegistration from 'src/serviceWorkerRegistration';
 
 const GlobalStyle = createGlobalStyle`
   :root {
-    --shadow-color: 206deg 8% 70%;
+    --shadow-color: 0deg 0% 65%;
     --shadow-elevation-low:
-      0px 0.3px 0.4px hsl(var(--shadow-color) / 0.25),
-      0px 0.9px 1.1px -1.9px hsl(var(--shadow-color) / 0.34);
+      0px 0.1px 0.1px hsl(var(--shadow-color) / 0.15),
+      0px 0.2px 0.3px -0.6px hsl(var(--shadow-color) / 0.26),
+      0px 0.3px 0.4px -1.2px hsl(var(--shadow-color) / 0.36);
     --shadow-elevation-medium:
-      0px 0.3px 0.4px hsl(var(--shadow-color) / 0.36),
-      -0.1px 4.4px 5.3px -1.9px hsl(var(--shadow-color) / 0.47);
+      0px 0.1px 0.1px hsl(var(--shadow-color) / 0.16),
+      0px 0.4px 0.5px -0.4px hsl(var(--shadow-color) / 0.24),
+      0px 0.8px 1.1px -0.8px hsl(var(--shadow-color) / 0.32),
+      0px 1.7px 2.2px -1.2px hsl(var(--shadow-color) / 0.4);
     --shadow-elevation-high:
-      0px 0.3px 0.4px hsl(var(--shadow-color) / 0.33),
-      -0.1px 2.7px 3.3px -0.6px hsl(var(--shadow-color) / 0.38),
-      -0.1px 7.1px 8.6px -1.3px hsl(var(--shadow-color) / 0.44),
-      -0.3px 17.4px 21.1px -1.9px hsl(var(--shadow-color) / 0.49);
+      0px 0.1px 0.1px hsl(var(--shadow-color) / 0.15),
+      0px 0.7px 0.9px -0.2px hsl(var(--shadow-color) / 0.19),
+      0px 1.2px 1.6px -0.4px hsl(var(--shadow-color) / 0.23),
+      0px 1.8px 2.4px -0.5px hsl(var(--shadow-color) / 0.26),
+      0.1px 2.7px 3.5px -0.7px hsl(var(--shadow-color) / 0.3),
+      0.1px 3.9px 5.1px -0.9px hsl(var(--shadow-color) / 0.34),
+      0.1px 5.7px 7.5px -1.1px hsl(var(--shadow-color) / 0.38),
+      0.2px 8.1px 10.6px -1.2px hsl(var(--shadow-color) / 0.41);
     --standard-width: 600px;
     font-size: 0.875em;
     height: 100%;
@@ -55,7 +62,7 @@ const GlobalStyle = createGlobalStyle`
       top: 0;
       width: 100%;
       min-height: 100%;
-      opacity: 0.4;
+      opacity: 0.6;
       background-image: url(${process.env.PUBLIC_URL}/grid.png);
       z-index: -2;
     }

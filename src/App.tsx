@@ -19,7 +19,7 @@ import styled from 'styled-components/macro';
 
 import { Cards, Graph } from 'src/components';
 import { Connection, Person } from 'src/types';
-import { init, peopleReducer } from 'src/util';
+import { init, PeopleCtx, peopleReducer } from 'src/util';
 
 const TopContainer = styled.div`
   display: flex;
@@ -43,7 +43,7 @@ const LinksContainer = styled.div`
 
 const ActiveRouteHighlight = styled.div<{ path: string }>`
   border-radius: 4px;
-  background-color: var(--highlight-color);
+  background-color: #0095ffa3;
   position: absolute;
   width: 40px;
   height: 40px;
@@ -129,11 +129,11 @@ const DeleteQueryIcon = styled.svg`
 function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
-  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id  }))
+  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const [query, setQuery] = useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState<string>(searchParams.get('search') ?? '');
   const hasQuery = query.trim().length > 0;
-  const [, setSearchParams] = useSearchParams();
 
   const path = useLocation().pathname.slice(1);
 
@@ -159,7 +159,8 @@ function App() {
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e?.target?.value);
-    setSearchParams(e?.target?.value.replaceAll(' ', '-'));
+    const params = new URLSearchParams(e?.target?.value === '' ? {} : { search: e?.target?.value });
+    setSearchParams(params);
   }
   const debouncedOnSearch = useRef(
     debounce(onSearch, 150)
@@ -168,7 +169,8 @@ function App() {
   const setSearchInputValue = (name: string) => {
     searchInputRef.current!.value = name;
     setQuery(name);
-    setSearchParams(name.replaceAll(' ', '-'));
+    const params = new URLSearchParams(name === '' ? {} : { search: name });
+    setSearchParams(params);
   };
 
   // const onDataUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +183,7 @@ function App() {
   // }
 
   return (
-    <>
+    <PeopleCtx.Provider value={{ state: sortedPeople, dispatch: peopleDispatch }}>
       <TopContainer>
         <SearchContainer>
           <SearchIcon
@@ -198,6 +200,7 @@ function App() {
           </SearchIcon>
           <SearchInput
             ref={searchInputRef}
+            defaultValue={query}
             type='text'
             placeholder='Search by name, note'
             onChange={debouncedOnSearch}
@@ -265,18 +268,16 @@ function App() {
             path={path}
             element={
               <Cards
-                people={sortedPeople}
                 allConnections={allConnections}
                 hasQuery={hasQuery}
                 setSearchInputValue={setSearchInputValue}
-                peopleDispatch={peopleDispatch}
               />
             }
           />
         )}
         <Route
           path='/graph'
-          element={<Graph people={sortedPeople} />}
+          element={<Graph />}
         />
         <Route
           path='/'
@@ -295,8 +296,8 @@ function App() {
         type='file'
         onChange={onDataUpload}
       /> */}
-    </>
+    </PeopleCtx.Provider>
   );
-}
+};
 
 export default App;

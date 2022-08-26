@@ -46,4 +46,4 @@ const Overlay: FC<OverlayProps> = ({ isSelected }) => (
 export {
   Overlay,
   type OverlayProps,
-}
+};

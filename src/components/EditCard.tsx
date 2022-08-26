@@ -1,14 +1,15 @@
 import { format } from 'date-fns'; 
 import { motion } from 'framer-motion';
 import Fuse from 'fuse.js';
-import { Dispatch, FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
 import { Chip } from 'src/components';
-import { Connection, Note, PeopleAction, PeopleActionType, Person } from 'src/types';
+import { Connection, Note, PeopleActionType, Person } from 'src/types';
+import { PeopleCtx } from 'src/util';
 
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
@@ -18,9 +19,6 @@ const Container = styled(motion.div)`
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: #fff;
-  &:not(:first-child) {
-    margin-top: 40px;
-  }
   z-index: 1;
 
   position: fixed;
@@ -333,10 +331,9 @@ interface EditCardProps {
   person: Person;
   allConnections: Connection[];
   setSearchInputValue: (name: string) => void;
-  peopleDispatch: Dispatch<PeopleAction>;
 } 
 
-const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputValue, peopleDispatch }) => {
+const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputValue }) => {
 
   const [connectionFilter, setConnectionFilter] = useState<string>('');
   const searchableConnections = allConnections.filter(ac =>
@@ -352,6 +349,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
       .map(result => result.item)
     : searchableConnections;
   const [noteInputValue, setNoteInputValue] = useState<string>('');
+  const { dispatch } = useContext(PeopleCtx)!;
 
   const onAddNote = () => {
     const content = noteInputValue.trim();
@@ -361,7 +359,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
         content,
         createdDate: new Date(),
       };
-      peopleDispatch({
+      dispatch({
         type: PeopleActionType.ADD_NOTE,
         payload: { id: person.id, note: newNote },
       });
@@ -372,7 +370,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
-    peopleDispatch({
+    dispatch({
       type: PeopleActionType.REORDER_NOTES,
       payload: { id: person.id, startIdx: result.source.index, endIdx: result.destination.index },
     });
@@ -385,7 +383,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
       <TopSection>
         {person.isPinned &&
           <PinButton
-            onClick={() => peopleDispatch({
+            onClick={() => dispatch({
               type: PeopleActionType.UNPIN_PERSON,
               payload: { id: person.id },
             })}
@@ -444,14 +442,14 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
             person.isPinned
               ? <StyledMenuItem
                   className={menuItemClassName}
-                  onClick={() => peopleDispatch({
+                  onClick={() => dispatch({
                     type: PeopleActionType.UNPIN_PERSON,
                     payload: { id: person.id },
                   })}
                 >Unpin card</StyledMenuItem>
               : <StyledMenuItem
                   className={menuItemClassName}
-                  onClick={() => peopleDispatch({
+                  onClick={() => dispatch({
                     type: PeopleActionType.PIN_PERSON,
                     payload: { id: person.id },
                   })}
@@ -461,14 +459,14 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
             person.showConnections
               ? <StyledMenuItem
                   className={menuItemClassName}
-                  onClick={() => peopleDispatch({
+                  onClick={() => dispatch({
                     type: PeopleActionType.HIDE_CONNECTIONS,
                     payload: { id: person.id },
                   })}
                 >Hide connections</StyledMenuItem>
               : <StyledMenuItem
                   className={menuItemClassName}
-                  onClick={() => peopleDispatch({
+                  onClick={() => dispatch({
                     type: PeopleActionType.SHOW_CONNECTIONS,
                     payload: { id: person.id },
                   })}
@@ -476,7 +474,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
           }
           <StyledMenuItem
             className={menuItemClassName}
-            onClick={() => peopleDispatch({
+            onClick={() => dispatch({
               type: PeopleActionType.DELETE_PERSON,
               payload: { id: person.id },
             })}
@@ -490,7 +488,6 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
             personId={person.id}
             connection={connection}
             setSearchInputValue={setSearchInputValue}
-            peopleDispatch={peopleDispatch}
           />
         )}
         <Menu
@@ -538,7 +535,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
                   <StyledMenuItem
                     key={id}
                     className={menuItemClassName}
-                    onClick={() => peopleDispatch({
+                    onClick={() => dispatch({
                       type: PeopleActionType.ADD_CONNECTION,
                       payload: { id: person.id, connection: { name, id } },
                     })}
@@ -588,7 +585,7 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
                             <NoteText title={format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}>{note.content}</NoteText>
                             <DeleteNoteButton
                               isDraggingOver={droppableSnapshot.isDraggingOver}
-                              onClick={() => peopleDispatch({
+                              onClick={() => dispatch({
                                 type: PeopleActionType.DELETE_NOTE,
                                 payload: { personId: person.id, noteId: note.id },
                               })}
@@ -637,9 +634,9 @@ const EditCard: FC<EditCardProps> = ({ person, allConnections, setSearchInputVal
       </NoteInputSection>
     </Container>
   )
-}
+};
 
 export {
   EditCard,
   type EditCardProps,
-}
+};
