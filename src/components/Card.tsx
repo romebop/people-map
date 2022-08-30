@@ -94,7 +94,7 @@ const Note = styled.div`
 const Card: FC<CardProps> = ({ person, allConnections, setSearchInputValue, isSelected }) => {
   return (
     <Container>
-      {/* <Overlay {...{ isSelected }}></Overlay> */}
+      <Overlay {...{ isSelected }}></Overlay>
       <TitleSection>
         <Name>{person.name}</Name>
       </TitleSection>

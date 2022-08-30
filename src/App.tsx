@@ -130,22 +130,12 @@ const DeleteQueryIcon = styled.svg`
 function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
-  const allConnections: Connection[] = people.map(({ name, id }) => ({ name, id }))
-    .sort((a, b) => a.name.localeCompare(b.name));
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState<string>(searchParams.get('search') ?? '');
-  const hasQuery = query.trim().length > 0;
-
-  const path = useLocation().pathname.slice(1);
-
+  const path = useLocation().pathname;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    localStorage.setItem('data', JSON.stringify(people));
-  }, [people]);
-
-  const sortedFilteredPeople = useMemo(() => {
-  
+  const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
       ? new Fuse(people, {
           keys: ['name', 'notes.content'],
@@ -154,15 +144,23 @@ function App() {
         .search(query)
         .map(result => result.item)
       : people;
-  
     const sortedFilteredPeople: Person[] = [
       ...filteredPeople.filter(p => p.isPinned),
       ...filteredPeople.filter(p => !p.isPinned),
     ];
-
     return sortedFilteredPeople;
-
   }, [people, query]);
+  const allConnections: Connection[] = useMemo(() => {
+    return people.map(({ name, id }) => ({ name, id }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [people]);
+  const hasQuery = useMemo(() => {
+    return query.trim().length > 0;
+  }, [query]);
+
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(people));
+  }, [people]);
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e?.target?.value);
@@ -273,13 +271,7 @@ function App() {
           <Route
             key={path}
             path={path}
-            element={
-              <Cards
-                allConnections={allConnections}
-                hasQuery={hasQuery}
-                setSearchInputValue={setSearchInputValue}
-              />
-            }
+            element={<Cards {...{ allConnections, hasQuery, setSearchInputValue }} />}
           />
         )}
         <Route
