@@ -12,9 +12,8 @@ const StyledOverlay = styled(({ isSelected, ...props }) => (
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 100vw;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 100%;
+  left: 0;
   pointer-events: ${({ isSelected }) => isSelected ? 'auto' : 'none'};
 `;
 

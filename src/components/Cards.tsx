@@ -73,12 +73,10 @@ const AddPersonButton = styled.button`
 `;
 
 interface CardsProps {
-  allConnections: Connection[];
   hasQuery: boolean;
-  setSearchInputValue: (name: string) => void;
 } 
 
-const Cards: FC<CardsProps> = ({ allConnections, hasQuery, setSearchInputValue }) => {
+const Cards: FC<CardsProps> = ({ hasQuery }) => {
 
   const match = useMatch('/cards/:id');
 
@@ -114,8 +112,6 @@ const Cards: FC<CardsProps> = ({ allConnections, hasQuery, setSearchInputValue }
             <Card
               key={person.id}
               person={person}
-              allConnections={allConnections}
-              setSearchInputValue={setSearchInputValue}
               isSelected={match?.params.id === person.id}
             />
           )

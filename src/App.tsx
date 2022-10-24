@@ -271,7 +271,7 @@ function App() {
           <Route
             key={path}
             path={path}
-            element={<Cards {...{ allConnections, hasQuery, setSearchInputValue }} />}
+            element={<Cards {...{ hasQuery }} />}
           />
         )}
         <Route

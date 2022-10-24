@@ -1,24 +1,25 @@
-// import { motion } from 'framer-motion';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
-import { Connection, Person } from 'src/types';
-import { Overlay } from 'src/components';
+import { Person } from 'src/types';
 
 const sidePadding = 20;
 const Container = styled.div`
+  pointer-events: auto;
   position: relative;
+  overflow: hidden;
+  width: var(--standard-width);
+  margin: 0 auto;
   box-shadow: var(--shadow-elevation-medium);
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: #fff;
   padding: 24px ${sidePadding}px 34px ${sidePadding}px;
+  box-sizing: border-box;
   &:not(:first-child) {
-    margin-top: 20px;
+    margin-top: 30px;
   }
-  position: relative;
-  z-index: 0;
 `;
 
 const TitleSection = styled.div`
@@ -31,9 +32,8 @@ const Name = styled.div`
   color: #333;
 `;
 
-const sectionMargin = 14;
 const ConnectionSection = styled.div`
-  margin-top: ${sectionMargin}px;
+  margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -48,7 +48,7 @@ const Chip = styled.div`
 `;
 
 const NoteSection = styled.div`
-  margin-top: ${sectionMargin}px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
 `;
@@ -76,39 +76,36 @@ const Note = styled.div`
   }
 `;
 
-// const StyledLink = styled(Link)`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-// `;
+const StyledLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
 
- interface CardProps {
+interface CardProps {
   person: Person;
-  allConnections: Connection[];
-  setSearchInputValue: (name: string) => void;
   isSelected: boolean;
 }
 
-const Card: FC<CardProps> = ({ person, allConnections, setSearchInputValue, isSelected }) => {
+const Card: FC<CardProps> = ({ person, isSelected }) => {
   return (
     <Container>
-      <Overlay {...{ isSelected }}></Overlay>
       <TitleSection>
         <Name>{person.name}</Name>
       </TitleSection>
       <ConnectionSection>
         {person.connections.map(c =>
-          <Chip key={c.id}>{c.name}</Chip>)
-        }
+          <Chip key={c.id}>{c.name}</Chip>
+        )}
       </ConnectionSection>
       <NoteSection>
         {person.notes.map(n =>
           <Note key={n.id}>{n.content}</Note>
         )}
       </NoteSection>
-      {/* <StyledLink to={person.id} />*/}
+      <StyledLink to={person.id} />
     </Container>
   )
 };
