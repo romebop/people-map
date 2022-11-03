@@ -29,14 +29,15 @@ const StyledLink = styled(Link)`
 
 interface OverlayProps {
   isSelected: boolean;
+  transitionDuration: number;
 } 
 
-const Overlay: FC<OverlayProps> = ({ isSelected }) => (
+const Overlay: FC<OverlayProps> = ({ isSelected, transitionDuration }) => (
   <StyledOverlay
     {...{ isSelected }}
     initial={false}
     animate={{ opacity: isSelected ? 1 : 0 }}
-    transition={{ duration: 0.2 }}
+    transition={{ delay: transitionDuration * 0.1, duration: transitionDuration }}
   >
     <StyledLink to="/cards" />
   </StyledOverlay>

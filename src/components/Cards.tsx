@@ -74,7 +74,7 @@ const AddPersonButton = styled.button`
 
 interface CardsProps {
   hasQuery: boolean;
-} 
+}
 
 const Cards: FC<CardsProps> = ({ hasQuery }) => {
 
