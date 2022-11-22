@@ -7,7 +7,7 @@ const StyledOverlay = styled(({ isSelected, ...props }) => (
   <motion.div {...props} />
 ))<{ isSelected: boolean }>`
   z-index: 1;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.5);
   will-change: opacity;
   position: fixed;
   top: 0;

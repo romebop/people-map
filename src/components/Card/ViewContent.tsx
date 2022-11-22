@@ -34,6 +34,7 @@ const ContentContainer = styled(motion.div)``;
 
 const TitleSection = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const Name = styled.div`
@@ -87,11 +88,30 @@ const Note = styled.div`
 `;
 
 const StyledLink = styled(Link)`
+  display: none;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 18px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  &:hover {
+    background-color: #eaf2fd;
+  }
+  ${Wrapper}:hover & {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+const EditIcon = styled.svg`
+  width: 14px;
+  height: 14px;
+`;
+
+const EditIconPath = styled.path`
+  fill: #1c65d2;
 `;
 
 interface ViewContentProps {
@@ -140,8 +160,12 @@ const ViewContent: FC<ViewContentProps> = ({ person, isShadow, transitionDuratio
             <Note key={n.id}>{n.content}</Note>
           )}
         </NoteSection>
+        <StyledLink to={person.id}>
+          <EditIcon viewBox='0 0 20 20'>
+            <EditIconPath d='M19.7858 4.60461L15.3955 0.214286C15.1293 -0.0518161 14.7303 -0.0518161 14.4642 0.214286L0.229304 14.4492C0.096369 14.5821 0.0297852 14.7819 0.0297852 14.9814L0.462225 18.9393C0.4954 19.2385 0.728328 19.5046 1.06077 19.5378L5.01866 19.9703H5.08525C5.25159 19.9703 5.41793 19.9037 5.55086 19.7707L19.7858 5.53584C19.9187 5.40291 19.9853 5.23656 19.9853 5.07023C19.9853 4.90388 19.9187 4.73754 19.7858 4.60461L19.7858 4.60461ZM4.85244 18.6067L1.72602 18.274L1.39334 15.1476L14.9298 1.61113L18.3886 5.06996L4.85244 18.6067Z' fill='black' />
+          </EditIcon>
+        </StyledLink>
       </ContentContainer>
-      <StyledLink to={person.id} />
     </Wrapper>
   );
 };
