@@ -34,13 +34,24 @@ const ContentContainer = styled(motion.div)``;
 
 const TitleSection = styled.div`
   display: flex;
-  align-items: center;
+`;
+
+const PinIcon = styled.svg`
+  width: 18px;
+  height: 18px;
+`;
+
+const PinIconPath = styled.path`
+  fill: var(--highlight-color);
 `;
 
 const Name = styled.div`
   font-weight: 500;
   font-size: 14px;
   color: #333;
+  &:not(:first-child) {
+    margin-left: 4px;
+  }
 `;
 
 const ConnectionSection = styled.div`
@@ -148,6 +159,19 @@ const ViewContent: FC<ViewContentProps> = ({ person, isShadow, transitionDuratio
         }}
       >
         <TitleSection>
+          {person.isPinned &&
+            <PinIcon
+              width='24'
+              height='24'
+              viewBox='0 0 24 24'
+            >
+              <path
+                fill='none'
+                d='M0 0h24v24H0z'
+              />
+              <PinIconPath d='M17 4a2 2 0 0 0-2-2H9c-1.1 0-2 .9-2 2v7l-2 3v2h6v5l1 1 1-1v-5h6v-2l-2-3V4z' />
+            </PinIcon>
+          }
           <Name>{person.name}</Name>
         </TitleSection>
         <ConnectionSection>
@@ -160,7 +184,10 @@ const ViewContent: FC<ViewContentProps> = ({ person, isShadow, transitionDuratio
             <Note key={n.id}>{n.content}</Note>
           )}
         </NoteSection>
-        <StyledLink to={person.id}>
+        <StyledLink
+          to={person.id}
+          title='Edit Card'
+        >
           <EditIcon viewBox='0 0 20 20'>
             <EditIconPath d='M19.7858 4.60461L15.3955 0.214286C15.1293 -0.0518161 14.7303 -0.0518161 14.4642 0.214286L0.229304 14.4492C0.096369 14.5821 0.0297852 14.7819 0.0297852 14.9814L0.462225 18.9393C0.4954 19.2385 0.728328 19.5046 1.06077 19.5378L5.01866 19.9703H5.08525C5.25159 19.9703 5.41793 19.9037 5.55086 19.7707L19.7858 5.53584C19.9187 5.40291 19.9853 5.23656 19.9853 5.07023C19.9853 4.90388 19.9187 4.73754 19.7858 4.60461L19.7858 4.60461ZM4.85244 18.6067L1.72602 18.274L1.39334 15.1476L14.9298 1.61113L18.3886 5.06996L4.85244 18.6067Z' fill='black' />
           </EditIcon>
