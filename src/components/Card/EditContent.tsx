@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import styled from 'styled-components/macro';
 
 import { Person } from 'src/types';
@@ -19,36 +19,56 @@ const Wrapper = styled(motion.div)`
   align-items: center;
 `;
 
-const ContentContainer = styled(motion.div)``;
+const ContentContainer = styled(motion.div)`
+  width: 100%;
+`;
+
+const InputField = styled.div`
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+
+  background-color: aliceblue;
+`;
 
 interface EditContentProps {
   person: Person;
   transitionDuration: number;
 }
 
-const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => (
-  <Wrapper
-    layoutId={person.id}
-    transition={{ duration: transitionDuration }}
-    style={{
-      border: '1px solid #ddd',
-      borderRadius: '4px',
-      boxShadow: 'var(--shadow-elevation-medium)',
-    }}
-  >
-    <ContentContainer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{
-        delay: transitionDuration / 2,
-        duration: transitionDuration,
-        ease: 'easeOut',
+const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
+
+  const myRef = useRef<HTMLDivElement>(null);
+  
+  return (
+    <Wrapper
+      layoutId={person.id}
+      transition={{ duration: transitionDuration }}
+      style={{
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        boxShadow: 'var(--shadow-elevation-medium)',
       }}
     >
-      More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content More Content
-    </ContentContainer>
-  </Wrapper>
-);
+      <ContentContainer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          delay: transitionDuration / 2,
+          duration: transitionDuration,
+          ease: 'easeOut',
+        }}
+      >
+        <InputField
+          ref={myRef}
+          placeholder='hello'
+          contentEditable='true'
+        />
+        <button onClick={() => alert(myRef.current?.innerText)}>click me</button>
+      </ContentContainer>
+    </Wrapper>
+  );
+};
 
 export {
   EditContent,
