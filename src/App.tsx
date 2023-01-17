@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { debounce } from 'lodash';
+// import { debounce } from 'lodash';
 import {
   ChangeEvent,
   useEffect,
@@ -132,8 +132,11 @@ function App() {
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState<string>(searchParams.get('search') ?? '');
-  const path = useLocation().pathname;
+  const location = useLocation();
+  const path = location.pathname;
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const isEditingRegex = /\/cards\/.*/;
+  const isEditing = isEditingRegex.test(path);
 
   const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
@@ -150,10 +153,10 @@ function App() {
     ];
     return sortedFilteredPeople;
   }, [people, query]);
-  const allConnections: Connection[] = useMemo(() => {
-    return people.map(({ name, id }) => ({ name, id }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [people]);
+  // const allConnections: Connection[] = useMemo(() => {
+  //   return people.map(({ name, id }) => ({ name, id }))
+  //     .sort((a, b) => a.name.localeCompare(b.name));
+  // }, [people]);
   const hasQuery = useMemo(() => {
     return query.trim().length > 0;
   }, [query]);
@@ -167,9 +170,9 @@ function App() {
     const params = new URLSearchParams(e?.target?.value === '' ? {} : { search: e?.target?.value });
     setSearchParams(params);
   }
-  const debouncedOnSearch = useRef(
-    debounce(onSearch, 150)
-  ).current;
+  // const debouncedOnSearch = useRef(
+  //   debounce(onSearch, 150)
+  // ).current;
 
   const setSearchInputValue = (name: string) => {
     searchInputRef.current!.value = name;
@@ -208,7 +211,7 @@ function App() {
             defaultValue={query}
             type='text'
             placeholder='Search by name, note'
-            onChange={debouncedOnSearch}
+            onChange={onSearch}
           />
           <DeleteQueryButton
             show={hasQuery}
