@@ -82,7 +82,7 @@ const Cards: FC<CardsProps> = ({ hasQuery }) => {
 
   const [personInputValue, setPersonInputValue] = useState<string>('');
   const [shouldScroll, setShouldScroll] = useState<boolean>(false);
-  const { state: people, dispatch } = useContext(PeopleCtx)!;
+  const { staleState: people, dispatch } = useContext(PeopleCtx)!;
 
   useEffect(() => {
     if (!shouldScroll) return;

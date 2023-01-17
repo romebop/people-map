@@ -13,7 +13,7 @@ const RootSvg = styled.svg`
 
 const Graph: FC = () => {
 
-  const { state: people } = useContext(PeopleCtx)!;
+  const { staleState: people } = useContext(PeopleCtx)!;
   const svgRef = useRef<SVGSVGElement>(null);
 
   const width = 980;

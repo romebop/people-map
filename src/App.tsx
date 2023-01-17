@@ -130,6 +130,7 @@ const DeleteQueryIcon = styled.svg`
 function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
+  const [stalePeople, setStalePeople] = useState<Person[]>(people);
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState<string>(searchParams.get('search') ?? '');
   const location = useLocation();
@@ -138,21 +139,25 @@ function App() {
   const isEditingRegex = /\/cards\/.*/;
   const isEditing = isEditingRegex.test(path);
 
+  useEffect(() => {
+    if (!isEditing) setStalePeople(people);
+  }, [people, isEditing])
+
   const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
-      ? new Fuse(people, {
+      ? new Fuse(stalePeople, {
           keys: ['name', 'notes.content'],
           threshold: 0.4,
         })
         .search(query)
         .map(result => result.item)
-      : people;
+      : stalePeople;
     const sortedFilteredPeople: Person[] = [
       ...filteredPeople.filter(p => p.isPinned),
       ...filteredPeople.filter(p => !p.isPinned),
     ];
     return sortedFilteredPeople;
-  }, [people, query]);
+  }, [stalePeople, query]);
   // const allConnections: Connection[] = useMemo(() => {
   //   return people.map(({ name, id }) => ({ name, id }))
   //     .sort((a, b) => a.name.localeCompare(b.name));
@@ -191,7 +196,7 @@ function App() {
   // }
 
   return (
-    <PeopleCtx.Provider value={{ state: sortedFilteredPeople, dispatch: peopleDispatch }}>
+    <PeopleCtx.Provider value={{ state: people, staleState: sortedFilteredPeople, dispatch: peopleDispatch }}>
       <TopContainer>
         <SearchContainer>
           <SearchIcon

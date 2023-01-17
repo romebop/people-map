@@ -99,6 +99,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
 
 interface PeopleCtxInterface {
   state: Person[];
+  staleState: Person[];
   dispatch: Dispatch<PeopleAction>;
 }
 

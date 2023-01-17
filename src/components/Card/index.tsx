@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import styled from 'styled-components/macro';
 
 import { Overlay } from './Overlay';
 import { EditContent } from './EditContent';
 import { ViewContent } from './ViewContent';
 import { Person } from 'src/types';
+import { PeopleCtx } from 'src/util';
 
 const Container = styled.div`
   position: relative;
@@ -20,6 +21,10 @@ interface CardProps {
 
 const transitionDuration = 0.2;
 const Card: FC<CardProps> = ({ person, isSelected }) => {
+
+  const { state: people } = useContext(PeopleCtx)!;
+  const livePerson = people.find(p => p.id === person.id)!;
+
   return (
     <Container>
       <Overlay {...{ isSelected, transitionDuration }} />
@@ -28,7 +33,7 @@ const Card: FC<CardProps> = ({ person, isSelected }) => {
         isShadow
       />
       {isSelected
-        ? <EditContent {...{ person, transitionDuration }} /> 
+        ? <EditContent {...{ person: livePerson, transitionDuration }} /> 
         : <ViewContent
             {...{ person, transitionDuration }}
             isShadow={false}
