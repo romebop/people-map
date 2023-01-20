@@ -1,9 +1,14 @@
 import produce from 'immer';
-import { createContext, Dispatch } from 'react';
+import { createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { parseDates } from 'src/util';
-import { Person, PeopleAction, PeopleActionType } from 'src/types';
+import {
+  Person,
+  PeopleAction,
+  PeopleActionType,
+  PeopleCtxInterface,
+ } from 'src/types';
 
 function init(initialVal: Person[]): Person[] {
   const data = localStorage.getItem('data');
@@ -40,67 +45,60 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       });
     case PeopleActionType.PIN_PERSON:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        person!.isPinned = true;
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.isPinned = true;
       });
     case PeopleActionType.UNPIN_PERSON:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        person!.isPinned = false;
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.isPinned = false;
       });
     case PeopleActionType.SHOW_CONNECTIONS:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        person!.showConnections = true;
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.showConnections = true;
       });
     case PeopleActionType.HIDE_CONNECTIONS:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        person!.showConnections = false;
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.showConnections = false;
       });
     case PeopleActionType.ADD_CONNECTION:
       return produce(people, draftState => {
-        const person1 = draftState.find(p => p.id === payload.id);
-        person1?.connections.push(payload.connection);
-        const person2 = draftState.find(p => p.id === payload.connection.id);
-        person2?.connections.push({ name: person1?.name!, id: payload.id });
+        const person1 = draftState.find(p => p.id === payload.id)!;
+        person1.connections.push(payload.connection);
+        const person2 = draftState.find(p => p.id === payload.connection.zid)!;
+        person2.connections.push({ name: person1.name!, id: payload.id });
         // TODO: sort?
       });
     case PeopleActionType.DELETE_CONNECTION:
       return produce(people, draftState => {
-        const person1 = draftState.find(p => p.id === payload.personId);
-        const connectionIdx1 = person1?.connections?.findIndex(c => c.id === payload.connectionId);
-        person1?.connections?.splice(connectionIdx1!, 1);
-        const person2 = draftState.find(p => p.id === payload.connectionId);
-        const connectionIdx2 = person2?.connections?.findIndex(c => c.id === payload.personId);
-        person2?.connections?.splice(connectionIdx2!, 1);
+        const person1 = draftState.find(p => p.id === payload.personId)!;
+        const connectionIdx1 = person1.connections.findIndex(c => c.id === payload.connectionId);
+        person1.connections.splice(connectionIdx1!, 1);
+        const person2 = draftState.find(p => p.id === payload.connectionId)!;
+        const connectionIdx2 = person2.connections.findIndex(c => c.id === payload.personId);
+        person2.connections.splice(connectionIdx2!, 1);
       });
     case PeopleActionType.ADD_NOTE:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        person?.notes.push(payload.note);
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.notes.push(payload.note);
       });
     case PeopleActionType.DELETE_NOTE:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.personId);
-        const noteIdx = person?.notes?.findIndex(n => n.id === payload.noteId);
-        person?.notes?.splice(noteIdx!, 1);
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const noteIdx = person.notes.findIndex(n => n.id === payload.noteId);
+        person.notes.splice(noteIdx, 1);
       });
     case PeopleActionType.REORDER_NOTES:
       return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id);
-        const [removed] = person?.notes.splice(payload.startIdx, 1)!;
-        person?.notes.splice(payload.endIdx, 0, removed);
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.notes = payload.notes;
       });
     default:
       return people;
   }
-}
-
-interface PeopleCtxInterface {
-  state: Person[];
-  staleState: Person[];
-  dispatch: Dispatch<PeopleAction>;
 }
 
 const PeopleCtx = createContext<PeopleCtxInterface | null>(null);

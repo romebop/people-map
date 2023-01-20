@@ -1,3 +1,5 @@
+import { Dispatch } from 'react';
+
 interface Connection {
   id: string;
   name: string;
@@ -39,10 +41,18 @@ interface PeopleAction {
   payload?: any;
 }
 
+interface PeopleCtxInterface {
+  state: Person[];
+  staleState: Person[];
+  allConnections: Connection[];
+  dispatch: Dispatch<PeopleAction>;
+}
+
 export {
   type Connection,
   type Note,
   type PeopleAction,
   PeopleActionType,
+  type PeopleCtxInterface,
   type Person,
 }

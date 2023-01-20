@@ -158,10 +158,10 @@ function App() {
     ];
     return sortedFilteredPeople;
   }, [stalePeople, query]);
-  // const allConnections: Connection[] = useMemo(() => {
-  //   return people.map(({ name, id }) => ({ name, id }))
-  //     .sort((a, b) => a.name.localeCompare(b.name));
-  // }, [people]);
+  const allConnections: Connection[] = useMemo(() => {
+    return people.map(({ name, id }) => ({ name, id }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [people]);
   const hasQuery = useMemo(() => {
     return query.trim().length > 0;
   }, [query]);
@@ -196,7 +196,12 @@ function App() {
   // }
 
   return (
-    <PeopleCtx.Provider value={{ state: people, staleState: sortedFilteredPeople, dispatch: peopleDispatch }}>
+    <PeopleCtx.Provider value={{
+      state: people,
+      staleState: sortedFilteredPeople,
+      allConnections,
+      dispatch: peopleDispatch,
+    }}>
       <TopContainer>
         <SearchContainer>
           <SearchIcon

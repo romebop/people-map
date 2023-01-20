@@ -22,7 +22,7 @@ const Container = styled.div<{ isActivated: boolean }>`
 const ChipText = styled.div<{ isActivated: boolean }>`
   color: ${({ isActivated }) => isActivated ? '#0095ff' : '#666'};
   font-size: 12px;
-  padding: 4px ${({ isActivated }) => isActivated ? '2px' : '8px'} 6px 8px;
+  padding: 2px ${({ isActivated }) => isActivated ? '0px' : '6px'} 2px 6px;
   cursor: pointer;
 `;
 
@@ -31,7 +31,7 @@ const DeleteChipButton = styled.div<{ isActivated: boolean}>`
   align-items: center;
   justify-content: center;
   align-self: stretch;
-  padding: 0 8px 0 2px;
+  padding: 0 6px 0 4px;
   cursor: pointer;
 `;
 
@@ -44,10 +44,9 @@ const DeleteChipIcon = styled.svg`
 interface ChipProps {
   personId: string;
   connection: Connection;
-  setSearchInputValue: (name: string) => void;
 } 
 
-const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue }) => {
+const Chip: FC<ChipProps> = ({ personId, connection }) => {
 
   const [isActivated, setisActivated] = useState<boolean>(false);
   const { dispatch } = useContext(PeopleCtx)!;
@@ -61,8 +60,6 @@ const Chip: FC<ChipProps> = ({ personId, connection, setSearchInputValue }) => {
     >
       <ChipText
         {...{ isActivated }}
-        title='Search connection'
-        onClick={() => isActivated && setSearchInputValue(connection.name)}
       >{connection.name}</ChipText>
       <DeleteChipButton
         {...{ isActivated }}

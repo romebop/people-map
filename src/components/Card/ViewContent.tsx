@@ -105,7 +105,7 @@ const StyledLink = styled(Link)`
   right: 20px;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
+  border-radius: 4px;
   &:hover {
     background-color: #eaf2fdd1;
   }
@@ -127,11 +127,11 @@ const EditIconPath = styled.path`
 
 interface ViewContentProps {
   person: Person;
-  isShadow: boolean;
   transitionDuration: number;
+  isShadow: boolean;
 }
 
-const ViewContent: FC<ViewContentProps> = ({ person, isShadow, transitionDuration }) => {
+const ViewContent: FC<ViewContentProps> = ({ person, transitionDuration, isShadow }) => {
   const controls = useAnimationControls();
   const { search } = useLocation();
   return (
