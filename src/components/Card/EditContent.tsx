@@ -1,7 +1,7 @@
 import { format } from 'date-fns'; 
 import { motion, Reorder } from 'framer-motion';
 import Fuse from 'fuse.js';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
@@ -186,12 +186,13 @@ const NoConnectionsPlaceholder = styled.div`
 `;
 
 const Notes = styled(Reorder.Group)`
-  margin-top: 14px;
+  margin-top: 100px;
+  margin-bottom: 100px;
   display: flex;
   flex-direction: column;
   padding-inline-start: 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
+  /* margin-block-start: 0;
+  margin-block-end: 0; */
   box-shadow: inset 0 0 0 1000px rgb(0 0 0 / 5%);
 `;
 
@@ -232,7 +233,8 @@ const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
       .map(result => result.item)
     : searchableConnections;
 
-  
+  const dragConstraintsRef = useRef(null)
+
   return (
     <Wrapper
       layoutId={person.id}
@@ -383,6 +385,7 @@ const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
           </Menu>
         </Connections>
         <Notes
+          ref={dragConstraintsRef}
           axis='y'
           values={person.notes}
           onReorder={notes => dispatch({
@@ -391,16 +394,10 @@ const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
           })}
         >
           {person.notes.map(note => (
-            <Note {...{ note }} key={note.id} />
+            <Note {...{ note, dragConstraintsRef }} key={note.id} personId={person.id} />
           ))}
         </Notes>
         <div>test</div>
-        {/* <InputField
-          ref={myRef}
-          placeholder='hello'
-          contentEditable='true'
-        />
-        <button onClick={() => alert(myRef.current?.innerText)}>click me</button> */}
       </ContentContainer>
     </Wrapper>
   );

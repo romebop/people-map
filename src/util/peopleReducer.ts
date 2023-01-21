@@ -80,6 +80,12 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
         const connectionIdx2 = person2.connections.findIndex(c => c.id === payload.personId);
         person2.connections.splice(connectionIdx2!, 1);
       });
+    case PeopleActionType.EDIT_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const note = person.notes.find(n => n.id === payload.noteId)!;
+        note.content = payload.content;
+      });
     case PeopleActionType.ADD_NOTE:
       return produce(people, draftState => {
         const person = draftState.find(p => p.id === payload.id)!;

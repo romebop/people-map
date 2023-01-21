@@ -132,7 +132,7 @@ const Graph: FC = () => {
       width={width}
       height={height}
       viewBox={`${-width / 5} ${-height / 5} ${width} ${height}`}
-    ></RootSvg>
+    />
   );
 };
 
