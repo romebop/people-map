@@ -127,11 +127,10 @@ const EditIconPath = styled.path`
 
 interface ViewContentProps {
   person: Person;
-  transitionDuration: number;
   isShadow: boolean;
 }
 
-const ViewContent: FC<ViewContentProps> = ({ person, transitionDuration, isShadow }) => {
+const ViewContent: FC<ViewContentProps> = ({ person, isShadow }) => {
   const { search } = useLocation();
   return (
     <Wrapper {...{ isShadow }}>

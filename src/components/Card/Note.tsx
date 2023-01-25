@@ -84,12 +84,12 @@ const DeleteNoteIcon = styled.svg`
 `;
 
 interface NoteProps {
-  note: NoteType;
   personId: string;
-  dragConstraintsRef: MutableRefObject<null>;
+  note: NoteType;
+  notesRef: MutableRefObject<HTMLUListElement | null>;
 }
 
-const Note: FC<NoteProps> = ({ note, personId, dragConstraintsRef }) => {
+const Note: FC<NoteProps> = ({ personId, note, notesRef }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [isFocused, setIsFocused] = useState(false);
@@ -106,14 +106,15 @@ const Note: FC<NoteProps> = ({ note, personId, dragConstraintsRef }) => {
       }}
       dragListener={false}
       dragControls={dragControls}
-      dragConstraints={dragConstraintsRef}
+      dragConstraints={notesRef}
       dragElastic={0}
       whileDrag={{ scale: 1.02 }}
     >
       <DragNoteHandle
         {...{ isFocused }}
-        onPointerDown={e => dragControls.start(e)
-        }>
+        onPointerDown={e => dragControls.start(e)}
+        title='Drag note'
+      >
         <DragNoteIcon viewBox='0 0 17 28'>
           <path d='M6.5293 3.52937C6.5293 5.18622 5.18628 6.52949 3.52942 6.52949C1.87257 6.52949 0.529297 5.18622 0.529297 3.52937C0.529297 1.87251 1.87257 0.529494 3.52942 0.529494C5.18628 0.529494 6.5293 1.87251 6.5293 3.52937Z' fill='black' />
           <path d='M6.5293 13.8235C6.5293 15.4802 5.18628 16.8235 3.52942 16.8235C1.87257 16.8235 0.529297 15.4802 0.529297 13.8235C0.529297 12.1667 1.87257 10.8235 3.52942 10.8235C5.18628 10.8235 6.5293 12.1667 6.5293 13.8235Z' fill='black' />
@@ -251,10 +252,10 @@ export {
 // interface NoteProps {
 //   note: NoteType;
 //   personId: string;
-//   dragConstraintsRef: MutableRefObject<null>;
+//   notesRef: MutableRefObject<HTMLUListElement>;
 // }
 
-// const Note: FC<NoteProps> = ({ note, personId, dragConstraintsRef }) => {
+// const Note: FC<NoteProps> = ({ note, personId, notesRef }) => {
 
 //   const { dispatch } = useContext(PeopleCtx)!;
 //   const [isFocused, setIsFocused] = useState(false);
@@ -274,7 +275,7 @@ export {
 //       }}
 //       dragListener={false}
 //       dragControls={dragControls}
-//       dragConstraints={dragConstraintsRef}
+//       dragConstraints={notesRef}
 //       dragElastic={0}
 //       whileDrag={{ scale: 1.02 }}
 //     >

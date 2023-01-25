@@ -1,14 +1,12 @@
 import { format } from 'date-fns'; 
-import { Reorder } from 'framer-motion';
 import Fuse from 'fuse.js';
-import { ChangeEvent, FC, useContext, useRef, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
-import { v4 as uuid } from 'uuid';
 
 import { Chip } from './Chip';
-import { Note } from './Note';
-import { Connection, Person, Note as NoteType, PeopleActionType } from 'src/types';
+import { Notes } from './Notes';
+import { Connection, Person, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
 import '@szhsin/react-menu/dist/index.css';
@@ -189,40 +187,11 @@ const NoConnectionsPlaceholder = styled.div`
   opacity: 0.3;
 `;
 
-const Notes = styled(Reorder.Group)`
-  margin-top: 100px;
-  margin-bottom: 100px;
-  display: flex;
-  flex-direction: column;
-  padding-inline-start: 0;
-  box-shadow: inset 0 0 0 1000px rgb(0 0 0 / 5%);
-`;
-
-const AddNoteContainer = styled.div<{ isAddNoteFocused: boolean }>`
-  display: flex;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  background-color: #fff;
-  ${({ isAddNoteFocused }) => isAddNoteFocused && `
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-  `}
-`;
-
-const AddNoteContent = styled.div`
-  outline: none;
-  width: 100%;
-  padding: 6px 0 6px 20px;
-  font-size: 14px;
-  line-height: 1.6;
-`;
-
 interface EditContentProps {
   person: Person;
-  transitionDuration: number;
 }
 
-const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
+const EditContent: FC<EditContentProps> = ({ person }) => {
 
   const { allConnections, dispatch } = useContext(PeopleCtx)!;
   
@@ -239,23 +208,6 @@ const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
       .search(connectionFilter)
       .map(result => result.item)
     : searchableConnections;
-
-  const dragConstraintsRef = useRef(null)
-
-  const [isAddNoteFocused, setIsAddNoteFocused] = useState(false);
-  const addNote = (e: ChangeEvent<HTMLDivElement>) => {
-    const newNote: NoteType = {
-      id: uuid(),
-      content: e.target.innerText,
-      createdDate: new Date(),
-    };
-    dispatch({
-      type: PeopleActionType.ADD_NOTE,
-      payload: { id: person.id, note: newNote },
-    });
-    e.target.innerText = '';
-    console.log(dragConstraintsRef);
-  };
   
   return (
     <Wrapper>
@@ -390,28 +342,7 @@ const EditContent: FC<EditContentProps> = ({ person, transitionDuration }) => {
                 : <NoConnectionsPlaceholder>None available</NoConnectionsPlaceholder>}
           </Menu>
         </Connections>
-        <Notes
-          ref={dragConstraintsRef}
-          axis='y'
-          values={person.notes}
-          onReorder={notes => dispatch({
-            type: PeopleActionType.REORDER_NOTES,
-            payload: { id: person.id, notes },
-          })}
-        >
-          {person.notes.map(note => (
-            <Note {...{ note, dragConstraintsRef }} key={note.id} personId={person.id} />
-          ))}
-        </Notes>
-        <AddNoteContainer {...{ isAddNoteFocused }}>
-          <AddNoteContent
-            onFocus={() => setIsAddNoteFocused(true)}
-            onBlur={() => setIsAddNoteFocused(false)}
-            contentEditable
-            suppressContentEditableWarning
-            onInput={addNote}
-          />
-        </AddNoteContainer>
+        <Notes personId={person.id} notes={person.notes} />
       </ContentContainer>
     </Wrapper>
   );
@@ -661,7 +592,7 @@ export {
 //       .map(result => result.item)
 //     : searchableConnections;
 
-//   const dragConstraintsRef = useRef(null)
+//   const notesRef = useRef(null)
 
 //   const [isAddNoteFocused, setIsAddNoteFocused] = useState(false);
 //   const addNote = (e: ChangeEvent<HTMLDivElement>) => {
@@ -675,7 +606,6 @@ export {
 //       payload: { id: person.id, note: newNote },
 //     });
 //     e.target.innerText = '';
-//     console.log(dragConstraintsRef);
 //   };
 
 //   return (
@@ -828,7 +758,7 @@ export {
 //           </Menu>
 //         </Connections>
 //         <Notes
-//           ref={dragConstraintsRef}
+//           ref={notesRef}
 //           axis='y'
 //           values={person.notes}
 //           onReorder={notes => dispatch({
@@ -837,7 +767,7 @@ export {
 //           })}
 //         >
 //           {person.notes.map(note => (
-//             <Note {...{ note, dragConstraintsRef }} key={note.id} personId={person.id} />
+//             <Note {...{ note, notesRef }} key={note.id} personId={person.id} />
 //           ))}
 //         </Notes>
 //         <AddNoteContainer {...{ isAddNoteFocused }}>

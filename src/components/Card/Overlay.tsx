@@ -27,10 +27,9 @@ const StyledLink = styled(Link)`
 
 interface OverlayProps {
   isSelected: boolean;
-  transitionDuration: number;
 } 
 
-const Overlay: FC<OverlayProps> = ({ isSelected, transitionDuration }) => {
+const Overlay: FC<OverlayProps> = ({ isSelected }) => {
   const { search } = useLocation();
   return (
     <StyledOverlay {...{ isSelected }}>
