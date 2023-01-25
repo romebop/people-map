@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { createContext } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import { parseDates } from 'src/util';
 import {
@@ -25,7 +25,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
     case PeopleActionType.ADD_PERSON:
       return produce(people, draftState => {
         const newPerson: Person = {
-          id: uuidv4(),
+          id: uuid(),
           name: payload.name,
           notes: [],
           createdDate: new Date(),
