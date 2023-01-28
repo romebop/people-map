@@ -1,5 +1,5 @@
 import { Reorder } from 'framer-motion';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { v4 as uuid } from 'uuid';
 
@@ -14,6 +14,13 @@ const Container = styled(Reorder.Group)`
   flex-direction: column;
   padding-inline-start: 0;
   box-shadow: inset 0 0 0 1000px rgb(0 0 0 / 5%);
+  position: relative;
+`;
+
+const DragArea = styled.div<{ height: number }>`
+  position: absolute;
+  ${({ height }) => height && `height: ${height}px`};
+  width: 100%;
 `;
 
 interface NotesProps {
@@ -29,13 +36,21 @@ interface TransientNote extends Partial<NoteType> {
 
 const Notes: FC<NotesProps> = ({ personId, notes }) => {
 
+  const { dispatch } = useContext(PeopleCtx)!;
   const [transientNotes, setTransientNotes] = useState<TransientNote[]>([
     ...notes.map(note => ({ ...note, isAdder: false })),
     { id: uuid(), content: '', isAdder: true },
   ]);
-  // console.log(transientNotes[0].id);
 
-  const { dispatch } = useContext(PeopleCtx)!;
+  const containerRef = useRef<HTMLUListElement>(null);
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const [dragAreaHeight, setDragAreaHeight] = useState<number>(0);
+  useEffect(() => {
+    if (containerRef.current) {
+      const height = (containerRef.current.offsetHeight / transientNotes.length) * (transientNotes.length - 1)
+      setDragAreaHeight(height);
+    }
+  }, [transientNotes]);
 
   const handleReorder = (transientNotes: TransientNote[]) => {
     setTransientNotes(transientNotes);
@@ -53,12 +68,13 @@ const Notes: FC<NotesProps> = ({ personId, notes }) => {
       axis='y'
       values={transientNotes}
       onReorder={handleReorder}
+      ref={containerRef}
     >
-      {transientNotes.map((transientNote, index) => (
+      <DragArea height={dragAreaHeight} ref={constraintsRef} />
+      {transientNotes.map(transientNote => (
         <Note
-          {...{ transientNote, index, personId, setTransientNotes }}
-          maxIndex={notes.length - 1}
           key={transientNote.id}
+          {...{ transientNote, constraintsRef, personId, setTransientNotes }}
         />
       ))}
     </Container>

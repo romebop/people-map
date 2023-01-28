@@ -1,13 +1,12 @@
 import { format } from 'date-fns'; 
-import { Reorder, useDragControls, useMotionValue } from 'framer-motion';
+import { Reorder, useDragControls } from 'framer-motion';
 import {
   ChangeEvent,
   Dispatch,
   FC,
+  RefObject,
   SetStateAction,
   useContext,
-  useEffect,
-  useRef,
   useState,
 } from 'react';
 import styled from 'styled-components/macro';
@@ -17,8 +16,8 @@ import { TransientNote } from './Notes';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
-const Container = styled(({ isFocused, liRef, ...props }) => (
-  <Reorder.Item {...props} ref={liRef} />
+const Container = styled(({ isFocused, ...props }) => (
+  <Reorder.Item {...props} />
 ))<{ isFocused: boolean }>`
   display: flex;
   border-top: 1px solid transparent;
@@ -102,23 +101,17 @@ const DeleteNoteIcon = styled.svg`
 
 interface NoteProps {
   transientNote: TransientNote;
-  index: number;
-  maxIndex: number;
+  constraintsRef: RefObject<HTMLDivElement>;
   personId: string;
   setTransientNotes: Dispatch<SetStateAction<TransientNote[]>>
 }
 
-const Note: FC<NoteProps> = ({ transientNote, index, maxIndex, personId, setTransientNotes }) => {
+const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTransientNotes }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [isFocused, setIsFocused] = useState(false);
   const [initialValue] = useState(transientNote.content);
   const dragControls = useDragControls();
-
-  const liRef = useRef<HTMLLIElement>(null);
-  useEffect(() => {
-    console.log('offsetHeight:', liRef.current?.offsetHeight);
-  }, []);
 
   const handleInput = (val: string) => {
     if (transientNote.isAdder) {
@@ -166,27 +159,8 @@ const Note: FC<NoteProps> = ({ transientNote, index, maxIndex, personId, setTran
     });
   };
 
-  if (transientNote.id === '0686b8fe-b9ce-4020-a938-b8b154769447') { // "one" item
-    // console.log('index:', index);
-    // console.log('maxIndex:', maxIndex);
-    // console.log('top val:', -index * liRef.current?.offsetHeight!);
-    // console.log('bottom val:', (maxIndex - index) * liRef.current?.offsetHeight!); 
-    // console.log('top val:', -index * 36);
-    // console.log('bottom val:', (maxIndex - index) * 36); 
-    console.log('top val:', -index * 36);
-    console.log('bottom val:', (maxIndex - index) * 36); 
-  }
-
-  const top = useMotionValue(-index * 36);
-  top.set(-index * 36);
-  const bottom = useMotionValue((maxIndex - index) * 36);
-  bottom.set((maxIndex - index) * 36);
-
-  console.log('we hit dis');
-
   return (
     <Container
-      liRef={liRef}
       {...{ isFocused }}
       value={transientNote}
       transition={{
@@ -195,10 +169,7 @@ const Note: FC<NoteProps> = ({ transientNote, index, maxIndex, personId, setTran
       }}
       dragListener={false}
       dragControls={dragControls}
-      dragConstraints={{
-        top,
-        bottom,
-      }}
+      dragConstraints={constraintsRef}
       dragElastic={0}
       dragMomentum={false}
       // whileDrag={{ scale: 1.02 }}

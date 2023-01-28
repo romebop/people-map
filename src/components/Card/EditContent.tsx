@@ -65,7 +65,7 @@ const PinIconPath = styled.path`
 
 const NameText = styled.div`
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
