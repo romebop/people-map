@@ -3,11 +3,14 @@ import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { v4 as uuid } from 'uuid';
 
+import { ArchiveNote } from './ArchiveNote';
 import { Note } from './Note';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
-const Container = styled(Reorder.Group)`
+const Container = styled.div``;
+
+const NotesContainer = styled(Reorder.Group)`
   margin-top: 18px;
   margin-bottom: 0px;
   display: flex;
@@ -23,9 +26,12 @@ const DragArea = styled.div<{ height: number }>`
   width: 100%;
 `;
 
-interface NotesProps {
+const ArchiveContainer = styled.div``;
+
+interface NotesAreaProps {
   personId: string;
   notes: NoteType[];
+  archive: NoteType[];
 }
 
 interface TransientNote extends Partial<NoteType> {
@@ -34,7 +40,7 @@ interface TransientNote extends Partial<NoteType> {
   isAdder: boolean;
 }
 
-const Notes: FC<NotesProps> = ({ personId, notes }) => {
+const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [transientNotes, setTransientNotes] = useState<TransientNote[]>([
@@ -47,8 +53,9 @@ const Notes: FC<NotesProps> = ({ personId, notes }) => {
   const [dragAreaHeight, setDragAreaHeight] = useState<number>(0);
   useEffect(() => {
     if (containerRef.current) {
-      const height = (containerRef.current.offsetHeight / transientNotes.length) * (transientNotes.length - 1)
-      setDragAreaHeight(height);
+      const dragAreaHeight = (containerRef.current.offsetHeight / transientNotes.length)
+        * (transientNotes.length - 1);
+      setDragAreaHeight(dragAreaHeight);
     }
   }, [transientNotes]);
 
@@ -64,26 +71,36 @@ const Notes: FC<NotesProps> = ({ personId, notes }) => {
   };
 
   return (
-    <Container
-      axis='y'
-      values={transientNotes}
-      onReorder={handleReorder}
-      ref={containerRef}
-    >
-      <DragArea height={dragAreaHeight} ref={constraintsRef} />
-      {transientNotes.map(transientNote => (
-        <Note
-          key={transientNote.id}
-          {...{ transientNote, constraintsRef, personId, setTransientNotes }}
-        />
-      ))}
+    <Container>
+      <NotesContainer
+        ref={containerRef}
+        axis='y'
+        values={transientNotes}
+        onReorder={handleReorder}
+      >
+        <DragArea ref={constraintsRef} height={dragAreaHeight} />
+        {transientNotes.map(transientNote => (
+          <Note
+            key={transientNote.id}
+            {...{ transientNote, constraintsRef, personId, setTransientNotes }}
+          />
+        ))}
+      </NotesContainer>
+      <ArchiveContainer>
+        {archive.map(note => (
+          <ArchiveNote
+            key={note.id}
+            {...{ note, personId }}
+          />
+        ))}
+      </ArchiveContainer>
     </Container>
   );
 };
 
 export {
-  Notes,
-  type NotesProps,
+  NotesArea,
+  type NotesAreaProps,
   type TransientNote,
 };
 

@@ -28,6 +28,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
           id: uuid(),
           name: payload.name,
           notes: [],
+          archive: [],
           createdDate: new Date(),
           isPinned: false,
           showConnections: false,
@@ -101,6 +102,32 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const person = draftState.find(p => p.id === payload.id)!;
         person.notes = payload.notes;
+      });
+    case PeopleActionType.ARCHIVE_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const noteIdx = person.notes.findIndex(n => n.id === payload.noteId);
+        const note = person.notes.splice(noteIdx, 1)[0];
+        person.archive.push(note);
+      });
+    case PeopleActionType.UNARCHIVE_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const archiveIdx = person.archive.findIndex(n => n.id === payload.noteId);
+        const note = person.archive.splice(archiveIdx, 1)[0];
+        person.notes.push(note);
+      });
+    case PeopleActionType.EDIT_ARCHIVED_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const note = person.archive.find(n => n.id === payload.noteId)!;
+        note.content = payload.content;
+      });
+    case PeopleActionType.DELETE_ARCHIVED_NOTE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const noteIdx = person.archive.findIndex(n => n.id === payload.noteId);
+        person.archive.splice(noteIdx, 1);
       });
     default:
       return people;

@@ -12,7 +12,7 @@ import {
 import styled from 'styled-components/macro';
 import { v4 as uuid } from 'uuid';
 
-import { TransientNote } from './Notes';
+import { TransientNote } from './NotesArea';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
@@ -30,7 +30,7 @@ const Container = styled(({ isFocused, ...props }) => (
   `}
 `;
 
-const DragNoteHandle = styled.div<{ isFocused: boolean }>`
+const DragHandle = styled.div<{ isFocused: boolean }>`
   display: ${({ isFocused }) => isFocused ? 'flex' : 'none'};;
   align-items: center;
   justify-content: center;
@@ -50,27 +50,14 @@ const DragNoteHandle = styled.div<{ isFocused: boolean }>`
   }
 `;
 
-const DragNoteIcon = styled.svg`
+const DragIcon = styled.svg`
   height: 16px;
   path {
     fill: #999;
   }
 `;
 
-const NoteContent = styled.div`
-  outline: none;
-  width: 100%;
-  padding: 6px 0 6px 20px;
-  font-size: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  &[placeholder]:empty:before {
-    content: attr(placeholder);
-    color: #aaa;
-  }
-`;
-
-const DeleteNoteButton = styled.button`
+const ArchiveButton = styled.button`
   visibility: hidden;
   display: flex;
   box-sizing: border-box;
@@ -90,11 +77,53 @@ const DeleteNoteButton = styled.button`
   }
 `;
 
-const DeleteNoteIcon = styled.svg`
+const ArchiveIcon = styled.svg`
   width: 14px;
   height: 14px;
   stroke: #777;
-  ${DeleteNoteButton}:active & {
+  ${ArchiveButton}:active & {
+    stroke: #444;
+  }
+`;
+
+const Content = styled.div`
+  outline: none;
+  width: 100%;
+  padding: 6px 0 6px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  &[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #aaa;
+  }
+`;
+
+const DeleteButton = styled.button`
+  visibility: hidden;
+  display: flex;
+  box-sizing: border-box;
+  width: 24px;
+  height: 19.6px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  ${Container}:hover & {
+    visibility: visible;
+  }
+`;
+
+const DeleteIcon = styled.svg`
+  width: 14px;
+  height: 14px;
+  stroke: #777;
+  ${DeleteButton}:active & {
     stroke: #444;
   }
 `;
@@ -145,6 +174,20 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
     }
   };
 
+  const handleArchive = () => {
+    setTransientNotes(transientNotes => {
+      const idx = transientNotes.findIndex(tn => tn.id === transientNote.id);
+      return [
+        ...transientNotes.slice(0, idx),
+        ...transientNotes.slice(idx + 1),
+      ];
+    });
+    dispatch({
+      type: PeopleActionType.ARCHIVE_NOTE,
+      payload: { personId, noteId: transientNote.id },
+    });
+  }
+
   const handleDelete = () => {
     setTransientNotes(transientNotes => {
       const idx = transientNotes.findIndex(tn => tn.id === transientNote.id);
@@ -176,22 +219,32 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
       title={transientNote.createdDate && format(transientNote.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
     >
       {!transientNote.isAdder &&
-        <DragNoteHandle
-          {...{ isFocused }}
-          onPointerDown={e => dragControls.start(e)}
-          title='Drag note'
-        >
-          <DragNoteIcon viewBox='0 0 17 28'>
-            <path d='M6.5293 3.52937C6.5293 5.18622 5.18628 6.52949 3.52942 6.52949C1.87257 6.52949 0.529297 5.18622 0.529297 3.52937C0.529297 1.87251 1.87257 0.529494 3.52942 0.529494C5.18628 0.529494 6.5293 1.87251 6.5293 3.52937Z' fill='black' />
-            <path d='M6.5293 13.8235C6.5293 15.4802 5.18628 16.8235 3.52942 16.8235C1.87257 16.8235 0.529297 15.4802 0.529297 13.8235C0.529297 12.1667 1.87257 10.8235 3.52942 10.8235C5.18628 10.8235 6.5293 12.1667 6.5293 13.8235Z' fill='black' />
-            <path d='M6.5293 24.1179C6.5293 25.7748 5.18628 27.1178 3.52942 27.1178C1.87257 27.1178 0.529297 25.7748 0.529297 24.1179C0.529297 22.4611 1.87257 21.1178 3.52942 21.1178C5.18628 21.1178 6.5293 22.4611 6.5293 24.1179Z' fill='black' />
-            <path d='M16.8236 3.52937C16.8236 5.18622 15.4803 6.52949 13.8235 6.52949C12.1666 6.52949 10.8236 5.18622 10.8236 3.52937C10.8236 1.87251 12.1666 0.529494 13.8235 0.529494C15.4803 0.529494 16.8236 1.87251 16.8236 3.52937Z' fill='black' />
-            <path d='M16.8236 13.8235C16.8236 15.4802 15.4803 16.8235 13.8235 16.8235C12.1666 16.8235 10.8236 15.4802 10.8236 13.8235C10.8236 12.1667 12.1666 10.8235 13.8235 10.8235C15.4803 10.8235 16.8236 12.1667 16.8236 13.8235Z' fill='black' />
-            <path d='M16.8236 24.1179C16.8236 25.7748 15.4803 27.1178 13.8235 27.1178C12.1666 27.1178 10.8236 25.7748 10.8236 24.1179C10.8236 22.4611 12.1666 21.1178 13.8235 21.1178C15.4803 21.1178 16.8236 22.4611 16.8236 24.1179Z' fill='black' />
-          </DragNoteIcon>
-        </DragNoteHandle>
+        <>
+          <DragHandle
+            {...{ isFocused }}
+            onPointerDown={e => dragControls.start(e)}
+            title='Drag note'
+          >
+            <DragIcon viewBox='0 0 17 28'>
+              <path d='M6.5293 3.52937C6.5293 5.18622 5.18628 6.52949 3.52942 6.52949C1.87257 6.52949 0.529297 5.18622 0.529297 3.52937C0.529297 1.87251 1.87257 0.529494 3.52942 0.529494C5.18628 0.529494 6.5293 1.87251 6.5293 3.52937Z' fill='black' />
+              <path d='M6.5293 13.8235C6.5293 15.4802 5.18628 16.8235 3.52942 16.8235C1.87257 16.8235 0.529297 15.4802 0.529297 13.8235C0.529297 12.1667 1.87257 10.8235 3.52942 10.8235C5.18628 10.8235 6.5293 12.1667 6.5293 13.8235Z' fill='black' />
+              <path d='M6.5293 24.1179C6.5293 25.7748 5.18628 27.1178 3.52942 27.1178C1.87257 27.1178 0.529297 25.7748 0.529297 24.1179C0.529297 22.4611 1.87257 21.1178 3.52942 21.1178C5.18628 21.1178 6.5293 22.4611 6.5293 24.1179Z' fill='black' />
+              <path d='M16.8236 3.52937C16.8236 5.18622 15.4803 6.52949 13.8235 6.52949C12.1666 6.52949 10.8236 5.18622 10.8236 3.52937C10.8236 1.87251 12.1666 0.529494 13.8235 0.529494C15.4803 0.529494 16.8236 1.87251 16.8236 3.52937Z' fill='black' />
+              <path d='M16.8236 13.8235C16.8236 15.4802 15.4803 16.8235 13.8235 16.8235C12.1666 16.8235 10.8236 15.4802 10.8236 13.8235C10.8236 12.1667 12.1666 10.8235 13.8235 10.8235C15.4803 10.8235 16.8236 12.1667 16.8236 13.8235Z' fill='black' />
+              <path d='M16.8236 24.1179C16.8236 25.7748 15.4803 27.1178 13.8235 27.1178C12.1666 27.1178 10.8236 25.7748 10.8236 24.1179C10.8236 22.4611 12.1666 21.1178 13.8235 21.1178C15.4803 21.1178 16.8236 22.4611 16.8236 24.1179Z' fill='black' />
+            </DragIcon>
+          </DragHandle>
+          <ArchiveButton
+            onClick={handleArchive}
+            title='Archive note'
+          >
+            <ArchiveIcon viewBox='0 0 18 18'>
+              <path d='M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0Z' fill='black' />
+            </ArchiveIcon>
+          </ArchiveButton>
+        </>
       }
-      <NoteContent
+      <Content
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         contentEditable
@@ -201,11 +254,11 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
         placeholder={transientNote.isAdder ? 'Add a note...' : undefined}
       />
       {!transientNote.isAdder &&
-        <DeleteNoteButton
+        <DeleteButton
           onClick={handleDelete}
           title='Delete note'
         >
-          <DeleteNoteIcon
+          <DeleteIcon
             fill='none'
             viewBox='0 0 24 24'
           >
@@ -215,8 +268,8 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
               strokeWidth={2}
               d='M6 18L18 6M6 6l12 12'
             />
-          </DeleteNoteIcon>
-        </DeleteNoteButton>
+          </DeleteIcon>
+        </DeleteButton>
       }
     </Container>
   );
@@ -225,6 +278,11 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
 export {
   Note,
   type NoteProps,
+  ArchiveButton,
+  ArchiveIcon,
+  Content,
+  DeleteButton,
+  DeleteIcon,
 };
 
 // import { ChangeEvent, FC, MutableRefObject, useContext, useState } from 'react';
@@ -249,7 +307,7 @@ export {
 //   `}
 // `;
 
-// const DragNoteHandle = styled.div<{ isFocused: boolean }>`
+// const DragHandle = styled.div<{ isFocused: boolean }>`
 //   display: ${({ isFocused }) => isFocused ? 'flex' : 'none'};;
 //   align-items: center;
 //   justify-content: center;
@@ -269,14 +327,14 @@ export {
 //   }
 // `;
 
-// const DragNoteIcon = styled.svg`
+// const DragIcon = styled.svg`
 //   height: 16px;
 //   path {
 //     fill: #999;
 //   }
 // `;
 
-// const NoteContent = styled.div`
+// const Content = styled.div`
 //   outline: none;
 //   width: 100%;
 //   padding: 6px 0 6px 20px;
@@ -284,7 +342,7 @@ export {
 //   line-height: 1.6;
 // `;
 
-// const DeleteNoteButton = styled.button`
+// const DeleteButton = styled.button`
 //   visibility: hidden;
 //   display: flex;
 //   box-sizing: border-box;
@@ -304,11 +362,11 @@ export {
 //   }
 // `;
 
-// const DeleteNoteIcon = styled.svg`
+// const DeleteIcon = styled.svg`
 //   width: 14px;
 //   height: 14px;
 //   stroke: #777;
-//   ${DeleteNoteButton}:active & {
+//   ${DeleteButton}:active & {
 //     stroke: #444;
 //   }
 // `;
@@ -343,20 +401,20 @@ export {
 //       dragElastic={0}
 //       whileDrag={{ scale: 1.02 }}
 //     >
-//       <DragNoteHandle
+//       <DragHandle
 //         {...{ isFocused }}
 //         onPointerDown={e => dragControls.start(e)
 //         }>
-//         <DragNoteIcon viewBox='0 0 17 28'>
+//         <DragIcon viewBox='0 0 17 28'>
 //           <path d='M6.5293 3.52937C6.5293 5.18622 5.18628 6.52949 3.52942 6.52949C1.87257 6.52949 0.529297 5.18622 0.529297 3.52937C0.529297 1.87251 1.87257 0.529494 3.52942 0.529494C5.18628 0.529494 6.5293 1.87251 6.5293 3.52937Z' fill='black' />
 //           <path d='M6.5293 13.8235C6.5293 15.4802 5.18628 16.8235 3.52942 16.8235C1.87257 16.8235 0.529297 15.4802 0.529297 13.8235C0.529297 12.1667 1.87257 10.8235 3.52942 10.8235C5.18628 10.8235 6.5293 12.1667 6.5293 13.8235Z' fill='black' />
 //           <path d='M6.5293 24.1179C6.5293 25.7748 5.18628 27.1178 3.52942 27.1178C1.87257 27.1178 0.529297 25.7748 0.529297 24.1179C0.529297 22.4611 1.87257 21.1178 3.52942 21.1178C5.18628 21.1178 6.5293 22.4611 6.5293 24.1179Z' fill='black' />
 //           <path d='M16.8236 3.52937C16.8236 5.18622 15.4803 6.52949 13.8235 6.52949C12.1666 6.52949 10.8236 5.18622 10.8236 3.52937C10.8236 1.87251 12.1666 0.529494 13.8235 0.529494C15.4803 0.529494 16.8236 1.87251 16.8236 3.52937Z' fill='black' />
 //           <path d='M16.8236 13.8235C16.8236 15.4802 15.4803 16.8235 13.8235 16.8235C12.1666 16.8235 10.8236 15.4802 10.8236 13.8235C10.8236 12.1667 12.1666 10.8235 13.8235 10.8235C15.4803 10.8235 16.8236 12.1667 16.8236 13.8235Z' fill='black' />
 //           <path d='M16.8236 24.1179C16.8236 25.7748 15.4803 27.1178 13.8235 27.1178C12.1666 27.1178 10.8236 25.7748 10.8236 24.1179C10.8236 22.4611 12.1666 21.1178 13.8235 21.1178C15.4803 21.1178 16.8236 22.4611 16.8236 24.1179Z' fill='black' />
-//         </DragNoteIcon>
-//       </DragNoteHandle>
-//       <NoteContent
+//         </DragIcon>
+//       </DragHandle>
+//       <Content
 //         onFocus={() => setIsFocused(true)}
 //         onBlur={() => setIsFocused(false)}
 //         contentEditable
@@ -367,14 +425,14 @@ export {
 //           payload: { personId, noteId: note.id, content: e.target.innerText },
 //         })}
 //       />
-//       <DeleteNoteButton
+//       <DeleteButton
 //         onClick={() => dispatch({
 //           type: PeopleActionType.DELETE_NOTE,
 //           payload: { personId, noteId: note.id },
 //         })}
 //         title='Delete note'
 //       >
-//         <DeleteNoteIcon
+//         <DeleteIcon
 //           fill='none'
 //           viewBox='0 0 24 24'
 //         >
@@ -384,8 +442,8 @@ export {
 //             strokeWidth={2}
 //             d='M6 18L18 6M6 6l12 12'
 //           />
-//         </DeleteNoteIcon>
-//       </DeleteNoteButton>
+//         </DeleteIcon>
+//       </DeleteButton>
 //     </Container>
 //   );
 // };

@@ -5,7 +5,7 @@ import styled from 'styled-components/macro';
 import { FocusableItem, Menu, MenuGroup, MenuItem } from '@szhsin/react-menu';
 
 import { Chip } from './Chip';
-import { Notes } from './Notes';
+import { NotesArea } from './NotesArea';
 import { Connection, Person, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
@@ -342,7 +342,11 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
                 : <NoConnectionsPlaceholder>None available</NoConnectionsPlaceholder>}
           </Menu>
         </Connections>
-        <Notes personId={person.id} notes={person.notes} />
+        <NotesArea
+          personId={person.id}
+          notes={person.notes}
+          archive={person.archive}
+        />
       </ContentContainer>
     </Wrapper>
   );
