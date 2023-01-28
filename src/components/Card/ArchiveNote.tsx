@@ -1,8 +1,16 @@
 import { format } from 'date-fns';
-import { ChangeEvent, FC, useContext, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
 import styled from 'styled-components/macro';
 
 import { ArchiveButton, ArchiveIcon, Content, DeleteButton, DeleteIcon } from './Note';
+import { TransientNote } from './NotesArea';
 import { Note, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
@@ -21,13 +29,26 @@ const Container = styled.div<{ isFocused: boolean }>`
 interface ArchiveNoteProps {
   note: Note;
   personId: string;
+  setTransientNotes: Dispatch<SetStateAction<TransientNote[]>>
 }
 
-const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId }) => {
+const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId, setTransientNotes }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [isFocused, setIsFocused] = useState(false);
   const [initialValue] = useState(note.content);
+
+  const handleArchive = () => {
+    setTransientNotes(transientNotes => [
+      ...transientNotes.slice(0, -1),
+      { ...note, isAdder: false },
+      ...transientNotes.slice(-1),
+    ]);
+    dispatch({
+      type: PeopleActionType.UNARCHIVE_NOTE,
+      payload: { personId, noteId: note.id },
+    });
+  };
 
   return (
     <Container
@@ -35,10 +56,7 @@ const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId }) => {
       title={note.createdDate && format(note.createdDate, "MM/dd/yyyy hh:mm aaaaa'm")}
     >
       <ArchiveButton
-        onClick={() => dispatch({
-          type: PeopleActionType.UNARCHIVE_NOTE,
-          payload: { personId, noteId: note.id },
-        })}
+        onClick={handleArchive}
         title='Unarchive note'
       >
         <ArchiveIcon viewBox='0 0 18 18'>
@@ -58,6 +76,7 @@ const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId }) => {
         })}
       />
       <DeleteButton
+        container={Container}
         onClick={() => dispatch({
           type: PeopleActionType.DELETE_ARCHIVED_NOTE,
           payload: { personId, noteId: note.id },

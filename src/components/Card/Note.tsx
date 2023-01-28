@@ -58,23 +58,19 @@ const DragIcon = styled.svg`
 `;
 
 const ArchiveButton = styled.button`
-  visibility: hidden;
-  display: flex;
-  box-sizing: border-box;
-  width: 24px;
-  height: 19.6px;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  right: 0;
-  cursor: pointer;
   flex-shrink: 0;
+  align-self: stretch;
+  cursor: grab;
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  width: 16px;
+  height: 24px;
   border: 0;
   padding: 0;
   background: transparent;
-  ${Container}:hover & {
-    visibility: visible;
-  }
 `;
 
 const ArchiveIcon = styled.svg`
@@ -89,7 +85,7 @@ const ArchiveIcon = styled.svg`
 const Content = styled.div`
   outline: none;
   width: 100%;
-  padding: 6px 0 6px 20px;
+  padding: 6px 0 6px 40px;
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -99,7 +95,7 @@ const Content = styled.div`
   }
 `;
 
-const DeleteButton = styled.button`
+const DeleteButton = styled.button<{ container: any }>`
   visibility: hidden;
   display: flex;
   box-sizing: border-box;
@@ -114,9 +110,16 @@ const DeleteButton = styled.button`
   border: 0;
   padding: 0;
   background: transparent;
-  ${Container}:hover & {
+
+  ${({ container }) => `
+    ${container}:hover & {
+      visibility: visible;
+    }
+  `}
+
+  /* ${Container}:hover & {
     visibility: visible;
-  }
+  } */
 `;
 
 const DeleteIcon = styled.svg`
@@ -186,7 +189,7 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
       type: PeopleActionType.ARCHIVE_NOTE,
       payload: { personId, noteId: transientNote.id },
     });
-  }
+  };
 
   const handleDelete = () => {
     setTransientNotes(transientNotes => {
@@ -255,6 +258,7 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
       />
       {!transientNote.isAdder &&
         <DeleteButton
+          container={Container}
           onClick={handleDelete}
           title='Delete note'
         >

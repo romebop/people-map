@@ -90,7 +90,7 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
         {archive.map(note => (
           <ArchiveNote
             key={note.id}
-            {...{ note, personId }}
+            {...{ note, personId, setTransientNotes }}
           />
         ))}
       </ArchiveContainer>
