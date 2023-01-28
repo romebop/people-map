@@ -82,6 +82,7 @@ const Note = styled.div`
   line-height: ${lineHeight};
   font-size: ${fontSize}px;
   word-break: break-word;
+  white-space: pre-wrap;
   position: relative;
   &:before {
     content: '';

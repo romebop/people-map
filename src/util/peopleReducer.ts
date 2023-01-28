@@ -4,7 +4,6 @@ import { v4 as uuid } from 'uuid';
 
 import { parseDates } from 'src/util';
 import {
-  Note,
   Person,
   PeopleAction,
   PeopleActionType,
@@ -89,13 +88,8 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       });
     case PeopleActionType.ADD_NOTE:
       return produce(people, draftState => {
-        const newNote: Note = {
-          id: uuid(),
-          content: payload.content,
-          createdDate: new Date(),
-        };
         const person = draftState.find(p => p.id === payload.id)!;
-        person.notes.push(newNote);
+        person.notes.push(payload.note);
       });
     case PeopleActionType.DELETE_NOTE:
       return produce(people, draftState => {

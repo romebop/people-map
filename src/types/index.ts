@@ -39,7 +39,7 @@ enum PeopleActionType {
 
 interface PeopleAction {
   type: PeopleActionType;
-  payload?: any;
+  payload?: any; // TODO
 }
 
 interface PeopleCtxInterface {

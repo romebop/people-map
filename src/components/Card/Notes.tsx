@@ -1,6 +1,7 @@
 import { Reorder } from 'framer-motion';
-import { FC, useContext, useRef } from 'react';
+import { FC, useContext, useState } from 'react';
 import styled from 'styled-components/macro';
+import { v4 as uuid } from 'uuid';
 
 import { Note } from './Note';
 import { Note as NoteType, PeopleActionType } from 'src/types';
@@ -20,25 +21,44 @@ interface NotesProps {
   notes: NoteType[];
 }
 
+interface TransientNote extends Partial<NoteType> {
+  id: string;
+  content: string;
+  isAdder: boolean;
+}
+
 const Notes: FC<NotesProps> = ({ personId, notes }) => {
 
+  const [transientNotes, setTransientNotes] = useState<TransientNote[]>([
+    ...notes.map(note => ({ ...note, isAdder: false })),
+    { id: uuid(), content: '', isAdder: true },
+  ]);
+  // console.log(transientNotes[0].id);
+
   const { dispatch } = useContext(PeopleCtx)!;
-  const notesRef = useRef<HTMLUListElement>(null)
+
+  const handleReorder = (transientNotes: TransientNote[]) => {
+    setTransientNotes(transientNotes);
+    const notes: NoteType[] = transientNotes
+      .filter(tn => !tn.isAdder)
+      .map(tn => ({ id: tn.id, content: tn.content, createdDate: tn.createdDate! }));
+    dispatch({
+      type: PeopleActionType.REORDER_NOTES,
+      payload: { id: personId, notes },
+    });
+  };
 
   return (
     <Container
-      ref={notesRef}
       axis='y'
-      values={notes}
-      onReorder={notes => dispatch({
-        type: PeopleActionType.REORDER_NOTES,
-        payload: { id: personId, notes },
-      })}
+      values={transientNotes}
+      onReorder={handleReorder}
     >
-      {notes.map(note => (
+      {transientNotes.map((transientNote, index) => (
         <Note
-          {...{ note, notesRef, personId }}
-          key={note.id}
+          {...{ transientNote, index, personId, setTransientNotes }}
+          maxIndex={notes.length - 1}
+          key={transientNote.id}
         />
       ))}
     </Container>
@@ -48,6 +68,7 @@ const Notes: FC<NotesProps> = ({ personId, notes }) => {
 export {
   Notes,
   type NotesProps,
+  type TransientNote,
 };
 
 // const AddNoteContainer = styled.div<{ isAddNoteFocused: boolean }>`
