@@ -299,7 +299,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
                 title='Add connection'
               >
                 <AddConnectionIcon
-                  viewBox="0 0 24 24"
+                  viewBox='0 0 24 24'
                   strokeWidth={2}
                 >
                   <path
@@ -718,7 +718,7 @@ export {
 //                 title='Add connection'
 //               >
 //                 <AddConnectionIcon
-//                   viewBox="0 0 24 24"
+//                   viewBox='0 0 24 24'
 //                   strokeWidth={2}
 //                 >
 //                   <path

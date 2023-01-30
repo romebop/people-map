@@ -122,16 +122,16 @@ const Cards: FC<CardsProps> = ({ hasQuery }) => {
       </Container>
       {/* <AddPersonLine ref={addPersonFormRef}>
         <AddPersonInput
-          type="text"
-          placeholder="Enter a name"
+          type='text'
+          placeholder='Enter a name'
           value={personInputValue}
           onChange={e => setPersonInputValue(e.target.value)}
         />
         <AddPersonButton 
-          type="submit"
+          type='submit'
           onClick={onAddPerson}
           disabled={personInputValue.trim().length === 0}
-          title="Add Person"
+          title='Add Person'
         >
           + Person
         </AddPersonButton>

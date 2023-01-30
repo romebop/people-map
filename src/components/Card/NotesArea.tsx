@@ -36,11 +36,28 @@ const ArchiveBorder = styled.div`
 
 const ArchiveToggleContainer = styled.div`
   display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
-const ToggleArchiveButton = styled.button``;
+const ToggleArchiveButton = styled.button`
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+`;
 
-const ArchiveCountText = styled.div``;
+const ToggleIcon = styled.svg<{ isActive: boolean }>`
+  width: 14px;
+  height: 14px;
+  ${({ isActive }) => isActive && `
+    transform: rotate(90deg);
+  `}
+`;
+
+const ArchiveCountText = styled.div`
+  margin-left: 10px;
+`;
 
 interface NotesAreaProps {
   personId: string;
@@ -75,15 +92,15 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
 
   const containerRef = useRef<HTMLUListElement>(null);
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const [dragAreaHeight, setDragAreaHeight] = useState<number>(0);
+  const newNoteRef = useRef<HTMLLIElement>(null);
+  const [dragAreaHeight, setDragAreaHeight] = useState(0);
   useEffect(() => {
-    if (containerRef.current) {
-      const dragAreaHeight = (containerRef.current.offsetHeight / transientNotes.length)
-        * (transientNotes.length - 1);
+    if (containerRef.current && newNoteRef.current) {
+      const dragAreaHeight = containerRef.current.offsetHeight - newNoteRef.current.offsetHeight;
       setDragAreaHeight(dragAreaHeight);
     }
   }, [transientNotes]);
-  const size = useWindowSize(); // work around dragConstraint bug on resize
+  const size = useWindowSize(); // work around dragConstraint bug on window resize
 
   const [showArchive, setShowArchive] = useState(archive.length === 0);
 
@@ -96,10 +113,11 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
         onReorder={handleReorder}
       >
         <DragArea ref={constraintsRef} height={dragAreaHeight} />
-        {transientNotes.map(transientNote => (
+        {transientNotes.map((transientNote, idx) => (
           <Note
             key={`${transientNote.id}:${JSON.stringify(size)}`}
             {...{ transientNote, constraintsRef, personId, setTransientNotes }}
+            newNoteRef={idx === transientNotes.length - 1 ? newNoteRef : null}
           />
         ))}
       </NotesContainer>
@@ -110,7 +128,12 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
             <ToggleArchiveButton
               onClick={() => setShowArchive(currentValue => !currentValue)}
             >
-              Show Archive
+              <ToggleIcon
+                viewBox='0 0 6 10'
+                isActive={showArchive}
+              >
+                <path d='M1.49994 0.5L0.439941 1.56L3.87994 5L0.439941 8.44L1.49994 9.5L5.99994 5L1.49994 0.5Z' fill='black' />
+              </ToggleIcon>
             </ToggleArchiveButton>
             <ArchiveCountText>{archive.length} Archived note{archive.length > 1 ? 's' : ''}</ArchiveCountText>
           </ArchiveToggleContainer>
@@ -127,6 +150,11 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
     </Container>
   );
 };
+
+//<svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
+//  <path d='M11.25 6.75H6.75V11.25H5.25V6.75H0.75V5.25H5.25V0.75H6.75V5.25H11.25V6.75Z' fill='black' />
+//</svg>
+
 
 export {
   NotesArea,
