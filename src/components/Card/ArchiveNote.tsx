@@ -76,7 +76,7 @@ const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId, setTransientNotes }
         })}
       />
       <DeleteButton
-        container={Container}
+        hoverContainer={Container}
         onClick={() => dispatch({
           type: PeopleActionType.DELETE_ARCHIVED_NOTE,
           payload: { personId, noteId: note.id },

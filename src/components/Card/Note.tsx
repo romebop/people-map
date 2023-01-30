@@ -9,7 +9,7 @@ import {
   useContext,
   useState,
 } from 'react';
-import styled from 'styled-components/macro';
+import styled, { StyledComponent } from 'styled-components/macro';
 import { v4 as uuid } from 'uuid';
 
 import { TransientNote } from './NotesArea';
@@ -95,7 +95,7 @@ const Content = styled.div`
   }
 `;
 
-const DeleteButton = styled.button<{ container: any }>`
+const DeleteButton = styled.button<{ hoverContainer: StyledComponent<any, any> }>`
   visibility: hidden;
   display: flex;
   box-sizing: border-box;
@@ -110,16 +110,11 @@ const DeleteButton = styled.button<{ container: any }>`
   border: 0;
   padding: 0;
   background: transparent;
-
-  ${({ container }) => `
-    ${container}:hover & {
+  ${({ hoverContainer }) => `
+    ${hoverContainer}:hover & {
       visibility: visible;
     }
   `}
-
-  /* ${Container}:hover & {
-    visibility: visible;
-  } */
 `;
 
 const DeleteIcon = styled.svg`
@@ -258,7 +253,7 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, personId, setTrans
       />
       {!transientNote.isAdder &&
         <DeleteButton
-          container={Container}
+          hoverContainer={Container}
           onClick={handleDelete}
           title='Delete note'
         >

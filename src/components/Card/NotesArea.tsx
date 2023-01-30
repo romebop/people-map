@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ArchiveNote } from './ArchiveNote';
 import { Note } from './Note';
+import { useWindowSize } from 'src/hooks';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
@@ -28,6 +29,19 @@ const DragArea = styled.div<{ height: number }>`
 
 const ArchiveContainer = styled.div``;
 
+const ArchiveBorder = styled.div`
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 5px 24px 14px 24px;
+`;
+
+const ArchiveToggleContainer = styled.div`
+  display: flex;
+`;
+
+const ToggleArchiveButton = styled.button``;
+
+const ArchiveCountText = styled.div``;
+
 interface NotesAreaProps {
   personId: string;
   notes: NoteType[];
@@ -48,17 +62,6 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
     { id: uuid(), content: '', isAdder: true },
   ]);
 
-  const containerRef = useRef<HTMLUListElement>(null);
-  const constraintsRef = useRef<HTMLDivElement>(null);
-  const [dragAreaHeight, setDragAreaHeight] = useState<number>(0);
-  useEffect(() => {
-    if (containerRef.current) {
-      const dragAreaHeight = (containerRef.current.offsetHeight / transientNotes.length)
-        * (transientNotes.length - 1);
-      setDragAreaHeight(dragAreaHeight);
-    }
-  }, [transientNotes]);
-
   const handleReorder = (transientNotes: TransientNote[]) => {
     setTransientNotes(transientNotes);
     const notes: NoteType[] = transientNotes
@@ -69,6 +72,20 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
       payload: { id: personId, notes },
     });
   };
+
+  const containerRef = useRef<HTMLUListElement>(null);
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const [dragAreaHeight, setDragAreaHeight] = useState<number>(0);
+  useEffect(() => {
+    if (containerRef.current) {
+      const dragAreaHeight = (containerRef.current.offsetHeight / transientNotes.length)
+        * (transientNotes.length - 1);
+      setDragAreaHeight(dragAreaHeight);
+    }
+  }, [transientNotes]);
+  const size = useWindowSize(); // work around dragConstraint bug on resize
+
+  const [showArchive, setShowArchive] = useState(archive.length === 0);
 
   return (
     <Container>
@@ -81,19 +98,32 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
         <DragArea ref={constraintsRef} height={dragAreaHeight} />
         {transientNotes.map(transientNote => (
           <Note
-            key={transientNote.id}
+            key={`${transientNote.id}:${JSON.stringify(size)}`}
             {...{ transientNote, constraintsRef, personId, setTransientNotes }}
           />
         ))}
       </NotesContainer>
-      <ArchiveContainer>
-        {archive.map(note => (
-          <ArchiveNote
-            key={note.id}
-            {...{ note, personId, setTransientNotes }}
-          />
-        ))}
-      </ArchiveContainer>
+      {archive.length > 0 &&
+        <ArchiveContainer>
+          <ArchiveBorder />
+          <ArchiveToggleContainer>
+            <ToggleArchiveButton
+              onClick={() => setShowArchive(currentValue => !currentValue)}
+            >
+              Show Archive
+            </ToggleArchiveButton>
+            <ArchiveCountText>{archive.length} Archived note{archive.length > 1 ? 's' : ''}</ArchiveCountText>
+          </ArchiveToggleContainer>
+          {showArchive &&
+            archive.map(note => (
+              <ArchiveNote
+                key={note.id}
+                {...{ note, personId, setTransientNotes }}
+              />
+            ))
+          }
+        </ArchiveContainer>
+      }
     </Container>
   );
 };
