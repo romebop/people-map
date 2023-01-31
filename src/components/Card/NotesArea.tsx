@@ -90,15 +90,24 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
     });
   };
 
-  const containerRef = useRef<HTMLUListElement>(null);
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const newNoteRef = useRef<HTMLLIElement>(null);
+  const notesRef = useRef<(Map<string, HTMLLIElement>) | null>(null);
+  function getNotesRefMap(): Map<string, HTMLLIElement> {
+    if (!notesRef.current) {
+      notesRef.current = new Map<string, HTMLLIElement>();
+    }
+    return notesRef.current;
+  }
   const [dragAreaHeight, setDragAreaHeight] = useState(0);
   useEffect(() => {
-    if (containerRef.current && newNoteRef.current) {
-      const dragAreaHeight = containerRef.current.offsetHeight - newNoteRef.current.offsetHeight;
-      setDragAreaHeight(dragAreaHeight);
+    const addNodeId = transientNotes.at(-1)?.id;
+    let dragAreaHeight = 0;
+    for (const [id, node] of getNotesRefMap()) {
+      if (id === addNodeId) continue;
+      dragAreaHeight += node.offsetHeight;      
     }
+    console.log('setting dragAreaHeight:', dragAreaHeight);
+    setDragAreaHeight(dragAreaHeight);
   }, [transientNotes]);
   const size = useWindowSize(); // work around dragConstraint bug on window resize
 
@@ -107,17 +116,15 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
   return (
     <Container>
       <NotesContainer
-        ref={containerRef}
         axis='y'
         values={transientNotes}
         onReorder={handleReorder}
       >
         <DragArea ref={constraintsRef} height={dragAreaHeight} />
-        {transientNotes.map((transientNote, idx) => (
+        {transientNotes.map(transientNote => (
           <Note
             key={`${transientNote.id}:${JSON.stringify(size)}`}
-            {...{ transientNote, constraintsRef, personId, setTransientNotes }}
-            newNoteRef={idx === transientNotes.length - 1 ? newNoteRef : null}
+            {...{ transientNote, constraintsRef, getNotesRefMap, personId, setTransientNotes }}
           />
         ))}
       </NotesContainer>

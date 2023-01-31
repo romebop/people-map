@@ -16,8 +16,18 @@ import { TransientNote } from './NotesArea';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
-const Container = styled(({ isFocused, newNoteRef, ...props }) => (
-  <Reorder.Item {...props} ref={newNoteRef} />
+const Container = styled(({ isFocused, getNotesRefMap, id, ...props }) => (
+  <Reorder.Item
+    {...props}
+    ref={node => {
+      const notesRefMap = getNotesRefMap();
+      if (node) {
+        notesRefMap.set(id, node);
+      } else {
+        notesRefMap.delete(id);
+      }
+    }}
+  />
 ))<{ isFocused: boolean }>`
   display: flex;
   border-top: 1px solid transparent;
@@ -132,12 +142,13 @@ const DeleteIcon = styled.svg`
 interface NoteProps {
   transientNote: TransientNote;
   constraintsRef: RefObject<HTMLDivElement>;
-  newNoteRef: RefObject<HTMLLIElement> | null;
+  // notesRef: RefObject<Map<string, HTMLLIElement>>;
+  getNotesRefMap: () => Map<string, HTMLLIElement>;
   personId: string;
   setTransientNotes: Dispatch<SetStateAction<TransientNote[]>>
 }
 
-const Note: FC<NoteProps> = ({ transientNote, constraintsRef, newNoteRef, personId, setTransientNotes }) => {
+const Note: FC<NoteProps> = ({ transientNote, constraintsRef, getNotesRefMap, personId, setTransientNotes }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [isFocused, setIsFocused] = useState(false);
@@ -206,7 +217,8 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, newNoteRef, person
 
   return (
     <Container
-      {...{ isFocused, newNoteRef }}
+      {...{ isFocused, getNotesRefMap }}
+      id={transientNote.id}
       value={transientNote}
       transition={{
         duration: 0,
