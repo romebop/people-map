@@ -91,20 +91,14 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
   };
 
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const notesRef = useRef<(Map<string, HTMLLIElement>) | null>(null);
-  function getNotesRefMap(): Map<string, HTMLLIElement> {
-    if (!notesRef.current) {
-      notesRef.current = new Map<string, HTMLLIElement>();
-    }
-    return notesRef.current;
-  }
+  const notesMapRef = useRef<Map<string, HTMLLIElement>>(new Map<string, HTMLLIElement>());
   const [dragAreaHeight, setDragAreaHeight] = useState(0);
   useEffect(() => {
     const addNodeId = transientNotes.at(-1)?.id;
     let dragAreaHeight = 0;
-    for (const [id, node] of getNotesRefMap()) {
+    for (const [id, node] of notesMapRef.current) {
       if (id === addNodeId) continue;
-      dragAreaHeight += node.offsetHeight;      
+      dragAreaHeight += node.getBoundingClientRect().height;      
     }
     console.log('setting dragAreaHeight:', dragAreaHeight);
     setDragAreaHeight(dragAreaHeight);
@@ -124,7 +118,7 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
         {transientNotes.map(transientNote => (
           <Note
             key={`${transientNote.id}:${JSON.stringify(size)}`}
-            {...{ transientNote, constraintsRef, getNotesRefMap, personId, setTransientNotes }}
+            {...{ transientNote, constraintsRef, notesMapRef, personId, setTransientNotes }}
           />
         ))}
       </NotesContainer>
