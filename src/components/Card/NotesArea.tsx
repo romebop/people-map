@@ -38,6 +38,7 @@ const ArchiveToggleContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  margin-left: 25px;
 `;
 
 const ToggleArchiveButton = styled.button`
@@ -45,11 +46,18 @@ const ToggleArchiveButton = styled.button`
   padding: 0;
   background: transparent;
   cursor: pointer;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ToggleIcon = styled.svg<{ isActive: boolean }>`
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  opacity: 0.5;
   ${({ isActive }) => isActive && `
     transform: rotate(90deg);
   `}
@@ -100,7 +108,6 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
       if (id === addNodeId) continue;
       dragAreaHeight += node.getBoundingClientRect().height;      
     }
-    console.log('setting dragAreaHeight:', dragAreaHeight);
     setDragAreaHeight(dragAreaHeight);
   }, [transientNotes]);
   const size = useWindowSize(); // work around dragConstraint bug on window resize
@@ -151,11 +158,6 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
     </Container>
   );
 };
-
-//<svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
-//  <path d='M11.25 6.75H6.75V11.25H5.25V6.75H0.75V5.25H5.25V0.75H6.75V5.25H11.25V6.75Z' fill='black' />
-//</svg>
-
 
 export {
   NotesArea,

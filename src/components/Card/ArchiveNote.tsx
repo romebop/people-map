@@ -77,6 +77,7 @@ const ArchiveNote: FC<ArchiveNoteProps> = ({ note, personId, setTransientNotes }
         isInArchive
       />
       <DeleteButton
+        {...{ isFocused }}
         hoverContainer={Container}
         onClick={() => dispatch({
           type: PeopleActionType.DELETE_ARCHIVED_NOTE,
