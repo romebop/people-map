@@ -26,13 +26,13 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const newPerson: Person = {
           id: uuid(),
+          isPinned: false,
           name: payload.name,
+          connections: [],
           notes: [],
           archive: [],
+          showArchive: true,
           createdDate: new Date(),
-          isPinned: false,
-          showConnections: false,
-          connections: [],
         };
         draftState.push(newPerson);
       });
@@ -53,16 +53,6 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const person = draftState.find(p => p.id === payload.id)!;
         person.isPinned = false;
-      });
-    case PeopleActionType.SHOW_CONNECTIONS:
-      return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id)!;
-        person.showConnections = true;
-      });
-    case PeopleActionType.HIDE_CONNECTIONS:
-      return produce(people, draftState => {
-        const person = draftState.find(p => p.id === payload.id)!;
-        person.showConnections = false;
       });
     case PeopleActionType.ADD_CONNECTION:
       return produce(people, draftState => {
@@ -129,6 +119,12 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
         const noteIdx = person.archive.findIndex(n => n.id === payload.noteId);
         person.archive.splice(noteIdx, 1);
       });
+    case PeopleActionType.TOGGLE_ARCHIVE:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.id)!;
+        person.showArchive = !person.showArchive;
+      });
+
     default:
       return people;
   }

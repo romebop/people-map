@@ -69,7 +69,7 @@ const DragHandle = styled.div<{ isFocused: boolean }>`
 
 const DragIcon = styled.svg`
   height: 16px;
-  opacity: 0.5;
+  opacity: 0.4;
 `;
 
 const ArchiveButton = styled.button`
@@ -276,7 +276,7 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, notesMapRef, perso
         suppressContentEditableWarning
         dangerouslySetInnerHTML={{ __html: initialValue }}
         onInput={(e: ChangeEvent<HTMLDivElement>) => handleInput(e.target.innerText)}
-        placeholder={transientNote.isAdder ? 'Add a note...' : undefined}
+        placeholder={transientNote.isAdder ? 'Add note' : undefined}
       />
       {!transientNote.isAdder &&
         <DeleteButton

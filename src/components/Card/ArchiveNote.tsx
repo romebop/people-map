@@ -19,7 +19,7 @@ const Container = styled.div<{ isFocused: boolean }>`
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   position: relative;
-  background-color: #fff;
+  background-color: transparent;
   ${({ isFocused }) => isFocused && `
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;

@@ -11,9 +11,12 @@ import { PeopleCtx } from 'src/util';
 
 const Container = styled.div``;
 
-const NotesContainer = styled(Reorder.Group)`
+const cardBottomPadding = 34;
+const NotesContainer = styled(({ hasArchive, ...props }) => (
+  <Reorder.Group {...props} />
+))<{ hasArchive: boolean }>`
   margin-top: 18px;
-  margin-bottom: 0px;
+  margin-bottom: ${({ hasArchive }) => hasArchive ? `0` : `${cardBottomPadding}px`};
   display: flex;
   flex-direction: column;
   padding-inline-start: 0;
@@ -27,25 +30,23 @@ const DragArea = styled.div<{ height: number }>`
   width: 100%;
 `;
 
-const ArchiveContainer = styled.div``;
-
-const ArchiveBorder = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  margin: 5px 24px 14px 24px;
+const ArchiveContainer = styled.div`
+  padding-bottom: ${cardBottomPadding}px;
+  background-color: #0095ff14;
+  border-radius: 0 0 4px 4px;
 `;
 
 const ArchiveToggleContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  margin-left: 25px;
+  padding: 10px 25px;
+  cursor: pointer;
 `;
 
 const ToggleArchiveButton = styled.button`
   border: 0;
   padding: 0;
   background: transparent;
-  cursor: pointer;
   height: 20px;
   width: 20px;
   display: flex;
@@ -65,12 +66,14 @@ const ToggleIcon = styled.svg<{ isActive: boolean }>`
 
 const ArchiveCountText = styled.div`
   margin-left: 10px;
+  user-select: none;
 `;
 
 interface NotesAreaProps {
   personId: string;
   notes: NoteType[];
   archive: NoteType[];
+  showArchive: boolean;
 }
 
 interface TransientNote extends Partial<NoteType> {
@@ -79,7 +82,7 @@ interface TransientNote extends Partial<NoteType> {
   isAdder: boolean;
 }
 
-const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
+const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive, showArchive }) => {
 
   const { dispatch } = useContext(PeopleCtx)!;
   const [transientNotes, setTransientNotes] = useState<TransientNote[]>([
@@ -112,11 +115,9 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
   }, [transientNotes]);
   const size = useWindowSize(); // work around dragConstraint bug on window resize
 
-  const [showArchive, setShowArchive] = useState(archive.length === 0);
-
   return (
     <Container>
-      <NotesContainer
+      <NotesContainer hasArchive={archive.length > 0}
         axis='y'
         values={transientNotes}
         onReorder={handleReorder}
@@ -131,11 +132,13 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive }) => {
       </NotesContainer>
       {archive.length > 0 &&
         <ArchiveContainer>
-          <ArchiveBorder />
-          <ArchiveToggleContainer>
-            <ToggleArchiveButton
-              onClick={() => setShowArchive(currentValue => !currentValue)}
-            >
+          <ArchiveToggleContainer
+            onClick={() => dispatch({
+              type: PeopleActionType.TOGGLE_ARCHIVE,
+              payload: { id: personId },
+            })}
+          >
+            <ToggleArchiveButton>
               <ToggleIcon
                 viewBox='0 0 6 10'
                 isActive={showArchive}

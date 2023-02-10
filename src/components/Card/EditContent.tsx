@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   top: 20%;
   z-index: 1;
   background-color: #fff;
-  padding: 24px 0px 34px 0px;
   box-sizing: border-box;
   width: var(--standard-width);
   display: flex;
@@ -36,7 +35,7 @@ const ContentContainer = styled.div`
 const TopSection = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 ${sidePadding}px;
+  padding: 24px ${sidePadding}px 0 ${sidePadding}px;
 `;
 
 const PinButton = styled.button`
@@ -122,9 +121,9 @@ const MoreIcon = styled.svg`
   height: 18px;
 `;
 
-const Connections = styled.div<{ show: boolean }>`
+const Connections = styled.div`
   margin-top: 12px;
-  display: ${({ show }) => show ? 'flex' : 'none'};
+  display: flex;
   flex-wrap: wrap;
   gap: 6px;
   box-sizing: border-box;
@@ -283,7 +282,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
             </StyledMenuItem>
           </StyledMenu>
         </TopSection>
-        <Connections show={person.showConnections}>
+        <Connections>
           {person.connections.map(connection =>
             <Chip
               key={connection.id}
@@ -346,6 +345,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
           personId={person.id}
           notes={person.notes}
           archive={person.archive}
+          showArchive={person.showArchive}
         />
       </ContentContainer>
     </Wrapper>
