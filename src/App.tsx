@@ -19,7 +19,7 @@ import {
 import styled from 'styled-components/macro';
 
 import { Cards, Graph } from 'src/components';
-import { Connection, Person } from 'src/types';
+import { Person } from 'src/types';
 import { init, PeopleCtx, peopleReducer } from 'src/util';
 
 const TopContainer = styled.div`
@@ -158,10 +158,6 @@ function App() {
     ];
     return sortedFilteredPeople;
   }, [stalePeople, query]);
-  const allConnections: Connection[] = useMemo(() => {
-    return people.map(({ name, id }) => ({ name, id }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [people]);
   const hasQuery = useMemo(() => {
     return query.trim().length > 0;
   }, [query]);
@@ -199,7 +195,6 @@ function App() {
     <PeopleCtx.Provider value={{
       state: people,
       staleState: sortedFilteredPeople,
-      allConnections,
       dispatch: peopleDispatch,
     }}>
       <TopContainer>

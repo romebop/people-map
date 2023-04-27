@@ -1,7 +1,6 @@
 import { Reorder } from 'framer-motion';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
-import { v4 as uuid } from 'uuid';
 
 import { ArchiveNote } from './ArchiveNote';
 import { Note } from './Note';
@@ -9,13 +8,20 @@ import { useWindowSize } from 'src/hooks';
 import { Note as NoteType, PeopleActionType } from 'src/types';
 import { PeopleCtx } from 'src/util';
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  flex-grow: 1;
+  overflow: auto;
+`;
 
 const cardBottomPadding = 34;
 const NotesContainer = styled(({ hasArchive, ...props }) => (
   <Reorder.Group {...props} />
 ))<{ hasArchive: boolean }>`
-  margin-top: 18px;
+  margin-top: 12px;
   margin-bottom: ${({ hasArchive }) => hasArchive ? `0` : `${cardBottomPadding}px`};
   display: flex;
   flex-direction: column;
@@ -31,6 +37,7 @@ const DragArea = styled.div<{ height: number }>`
 `;
 
 const ArchiveContainer = styled.div`
+  margin-top: 12px;
   padding-bottom: ${cardBottomPadding}px;
   background-color: #0095ff14;
   border-radius: 0 0 4px 4px;
@@ -39,7 +46,7 @@ const ArchiveContainer = styled.div`
 const ArchiveToggleContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 25px;
+  padding: 18px 25px 10px 25px;
   cursor: pointer;
 `;
 
@@ -87,7 +94,7 @@ const NotesArea: FC<NotesAreaProps> = ({ personId, notes, archive, showArchive }
   const { dispatch } = useContext(PeopleCtx)!;
   const [transientNotes, setTransientNotes] = useState<TransientNote[]>([
     ...notes.map(note => ({ ...note, isAdder: false })),
-    { id: uuid(), content: '', isAdder: true },
+    { id: crypto.randomUUID(), content: '', isAdder: true },
   ]);
 
   const handleReorder = (transientNotes: TransientNote[]) => {
@@ -167,69 +174,3 @@ export {
   type NotesAreaProps,
   type TransientNote,
 };
-
-// const AddNoteContainer = styled.div<{ isAddNoteFocused: boolean }>`
-//   display: flex;
-//   border-top: 1px solid transparent;
-//   border-bottom: 1px solid transparent;
-//   background-color: #fff;
-//   ${({ isAddNoteFocused }) => isAddNoteFocused && `
-//     border-top: 1px solid #ddd;
-//     border-bottom: 1px solid #ddd;
-//   `}
-// `;
-
-// const AddNoteContent = styled.div`
-//   outline: none;
-//   width: 100%;
-//   padding: 6px 0 6px 20px;
-//   font-size: 14px;
-//   line-height: 1.6;
-//   &[placeholder]:empty:before {
-//     content: attr(placeholder);
-//     color: #aaa; 
-//   }
-// `;
-
-// const [isAddNoteFocused, setIsAddNoteFocused] = useState(false);
-// const addNote = (e: ChangeEvent<HTMLDivElement>) => {
-//   dispatch({
-//     type: PeopleActionType.ADD_NOTE,
-//     payload: { id: person.id, content: e.target.innerText },
-//   });
-//   e.target.innerText = '';
-//   setTimeout(() => {
-//     const colLen = notesRef.current!.children.length;
-//     const noteLi = notesRef.current!.children[colLen - 1];
-//     const contentDiv = noteLi.children[1];
-//     (contentDiv as HTMLDivElement).focus();
-//   });
-// };
-
-// <Notes
-//   ref={notesRef}
-//   axis='y'
-//   values={person.notes}
-//   onReorder={notes => dispatch({
-//     type: PeopleActionType.REORDER_NOTES,
-//     payload: { id: person.id, notes },
-//   })}
-// >
-//   {person.notes.map(note => (
-//     <Note
-//       {...{ note, notesRef }}
-//       key={note.id}
-//       personId={person.id}
-//     />
-//   ))}
-// </Notes>
-// <AddNoteContainer {...{ isAddNoteFocused }}>
-//   <AddNoteContent
-//     onFocus={() => setIsAddNoteFocused(true)}
-//     onBlur={() => setIsAddNoteFocused(false)}
-//     contentEditable
-//     suppressContentEditableWarning
-//     onInput={addNote}
-//     placeholder='Add a note...'
-//   />
-// </AddNoteContainer>

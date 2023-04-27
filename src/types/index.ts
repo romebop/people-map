@@ -1,10 +1,5 @@
 import { Dispatch } from 'react';
 
-interface Connection {
-  id: string;
-  name: string;
-}
-
 interface Note {
   id: string;
   content: string;
@@ -19,11 +14,11 @@ interface Person {
   showArchive: boolean;
   createdDate: Date;
   isPinned: boolean;
-  connections: Connection[]
+  connections: string[]
 }
 
 enum PeopleActionType {
-  ADD_PERSON = 'ADD_PERSON',
+  NEW_PERSON = 'NEW_PERSON',
   DELETE_PERSON = 'DELETE_PERSON',
   PIN_PERSON = 'PIN_PERSON',
   UNPIN_PERSON = 'UNPIN_PERSON',
@@ -38,6 +33,7 @@ enum PeopleActionType {
   EDIT_ARCHIVED_NOTE = 'EDIT_ARCHIVED_NOTE',
   DELETE_ARCHIVED_NOTE = 'DELETE_ARCHIVED_NOTE',
   TOGGLE_ARCHIVE = 'TOGGLE_ARCHIVE',
+  EDIT_NAME = 'EDIT_NAME',
   // UPLOAD_PEOPLE = 'UPLOAD_PEOPLE',
 }
 
@@ -49,12 +45,10 @@ interface PeopleAction {
 interface PeopleCtxInterface {
   state: Person[];
   staleState: Person[];
-  allConnections: Connection[];
   dispatch: Dispatch<PeopleAction>;
 }
 
 export {
-  type Connection,
   type Note,
   type PeopleAction,
   PeopleActionType,

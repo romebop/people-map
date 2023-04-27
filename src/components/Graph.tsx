@@ -31,12 +31,12 @@ const Graph: FC = () => {
       })),
       ...people.map(
         p => p.connections.map(
-          c => ({ source: p.name, target: c.name })
+          c => ({ source: p.name, target: c })
         )
       )
       .flat()
       .map(({ source, target }) =>
-        source.localeCompare(target) < 0
+        source.localeCompare(target!) < 0
           ? { source, target }
           : { source: target, target: source }
       )

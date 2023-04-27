@@ -1,33 +1,38 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext } from 'react';
 import styled from 'styled-components/macro';
 
-import { Connection, PeopleActionType } from 'src/types';
-import { PeopleCtx } from 'src/util';
+import { PeopleActionType } from 'src/types';
+import { getNameById, PeopleCtx } from 'src/util';
 
-const Container = styled.div<{ isActivated: boolean }>`
+const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid ${({ isActivated }) => isActivated ? '#0095ff5c' : '#ccc'};
+  border: 1px solid #ccc;
   box-sizing: border-box;
   border-radius: 4px;
   user-select: none;
-  background-color: ${({ isActivated }) => isActivated ? '#0095ff08' : 'transparent'};
-  &:active {
-    background-color: var(--gray-highlight-color);
+  background-color: transparent;
+  height: 28px;
+  &:hover {
+    border: 1px solid #0095ff5c;
+    background-color: #0095ff08;
   }
 `;
 
-const ChipText = styled.div<{ isActivated: boolean }>`
-  color: ${({ isActivated }) => isActivated ? '#0095ff' : '#666'};
+const ChipText = styled.div`
+  color: #666;
   font-size: 12px;
-  padding: 2px ${({ isActivated }) => isActivated ? '0px' : '6px'} 2px 6px;
+  padding: 2px 0px 2px 8px;
   cursor: pointer;
+  ${Container}:hover & {
+    color: #0095ff;
+  }
 `;
 
-const DeleteChipButton = styled.div<{ isActivated: boolean}>`
-  display: ${({ isActivated }) => isActivated ? 'flex' : 'none'};
+const DeleteChipButton = styled.div`
+  display: flex;
   align-items: center;
   justify-content: center;
   align-self: stretch;
@@ -38,35 +43,31 @@ const DeleteChipButton = styled.div<{ isActivated: boolean}>`
 const DeleteChipIcon = styled.svg`
   width: 12px;
   height: 12px;
-  stroke: #0095ff;
+  stroke: #666;
+  ${Container}:hover & {
+    stroke: #0095ff;
+  }
 `;
 
 interface ChipProps {
   personId: string;
-  connection: Connection;
+  connectionId: string;
 } 
 
-const Chip: FC<ChipProps> = ({ personId, connection }) => {
+const Chip: FC<ChipProps> = ({ personId, connectionId }) => {
 
-  const [isActivated, setisActivated] = useState<boolean>(false);
-  const { dispatch } = useContext(PeopleCtx)!;
+  const { staleState, dispatch } = useContext(PeopleCtx)!;
+  const connectionName = getNameById(staleState, connectionId);
+  const displayName = connectionName.trim() === '' ? '（・⊝・ ∞）' : connectionName;
 
   return (
-    <Container
-      {...{ isActivated }}
-      tabIndex={0}
-      onClick={() => setisActivated(true)}
-      onBlur={() => setisActivated(false)}
-    >
-      <ChipText
-        {...{ isActivated }}
-      >{connection.name}</ChipText>
+    <Container tabIndex={0}>
+      <ChipText>{displayName}</ChipText>
       <DeleteChipButton
-        {...{ isActivated }}
         title='Delete connection'
         onClick={() => dispatch({
           type: PeopleActionType.DELETE_CONNECTION,
-          payload: { personId, connectionId: connection.id },
+          payload: { personId, connectionId },
         })}
       >
         <DeleteChipIcon

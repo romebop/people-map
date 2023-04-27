@@ -71,6 +71,10 @@ const GlobalStyle = createGlobalStyle`
     Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 
+  pre {
+    font-family: 'Helvetica Neue';
+  }
+
   input {
     all: unset;
     font-size: inherit;
