@@ -18,6 +18,8 @@ const cardViewHeight = 60;
 const Container = styled.div`
   position: fixed;
   top: ${(100 - cardViewHeight) / 2}%;
+  left: 50%;
+  transform: translateX(-50%);
   max-height: ${cardViewHeight}vh;
   z-index: 1;
   background-color: #fff;

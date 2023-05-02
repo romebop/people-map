@@ -45,6 +45,7 @@ interface PeopleAction {
 interface PeopleCtxInterface {
   state: Person[];
   staleState: Person[];
+  sortedFilteredPeople: Person[];
   dispatch: Dispatch<PeopleAction>;
 }
 
