@@ -26,6 +26,8 @@ const TopContainer = styled.div`
   display: flex;
   width: var(--standard-width);
   margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
 `;
 
 const LinksContainer = styled.div`
