@@ -29,13 +29,21 @@ const Wrapper = styled.div<{ isShadow: boolean }>`
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: var(--shadow-elevation-medium);
+  &:hover {
+    background-color: #fafdff;
+  }
+  transition: all 0.1s ease-in;
 `;
 
 const ContentContainer = styled.div``;
 
 const styledLinkLen = 34;
 const StyledLink = styled(Link)`
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
   position: absolute;
   top: 16px;
   right: 20px;
@@ -46,10 +54,10 @@ const StyledLink = styled(Link)`
     background-color: #eaf2fdd1;
   }
   ${Wrapper}:hover & {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    pointer-events: auto;
+    opacity: 1;
   }
+  transition: all 0.1s ease-in;
 `;
 
 const editIconLen = 14;
@@ -64,6 +72,7 @@ const EditIconPath = styled.path`
 
 const TitleSection = styled.div`
   display: flex;
+  margin-bottom: 12px;
 `;
 
 const pinIconLen = 18;
@@ -99,14 +108,22 @@ const NamePlaceholder = styled.div`
   }
 `;
 
-const ConnectionSection = styled.div`
-  margin-top: 12px;
+const TagsSection = styled.div`
+  margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 `;
 
-const Chip = styled.div`
+const CommunityChip = styled.div`
+  color: #1c65d2;
+  border: 1px solid #1c65d2; 
+  font-size: 12px;
+  border-radius: 2px;
+  padding: 2px 4px;
+`;
+
+const ConnectionChip = styled.div`
   background-color: #eaf2fd;
   color: #1c65d2;
   font-size: 12px;
@@ -186,14 +203,21 @@ const ViewContent: FC<ViewContentProps> = ({ person, isShadow, lastCardRef }) =>
             : <Name>{person.name}</Name>
           }
         </TitleSection>
+        {person.communities.length > 0 &&
+          <TagsSection>
+            {person.communities.map(community => {
+              return <CommunityChip key={community}>{community}</CommunityChip>
+            })}
+          </TagsSection>
+        }
         {person.connections.length > 0 &&
-          <ConnectionSection>
+          <TagsSection>
             {person.connections.map(connectionId => {
               const connectionName = getNameById(staleState, connectionId);
               const displayName = connectionName.trim() === '' ? '（・⊝・ ∞）' : connectionName;
-              return <Chip key={connectionId}>{displayName}</Chip>
+              return <ConnectionChip key={connectionId}>{displayName}</ConnectionChip>
             })}
-          </ConnectionSection>
+          </TagsSection>
         }
         {person.notes.length > 0
           ? <NoteSection>

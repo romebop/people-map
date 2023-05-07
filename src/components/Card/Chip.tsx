@@ -1,8 +1,5 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components/macro';
-
-import { PeopleActionType } from 'src/types';
-import { getNameById, PeopleCtx } from 'src/util';
 
 const Container = styled.div`
   display: flex;
@@ -50,41 +47,31 @@ const DeleteChipIcon = styled.svg`
 `;
 
 interface ChipProps {
-  personId: string;
-  connectionId: string;
+  text: string;
+  onDelete: () => void;
 } 
 
-const Chip: FC<ChipProps> = ({ personId, connectionId }) => {
-
-  const { staleState, dispatch } = useContext(PeopleCtx)!;
-  const connectionName = getNameById(staleState, connectionId);
-  const displayName = connectionName.trim() === '' ? '（・⊝・ ∞）' : connectionName;
-
-  return (
-    <Container tabIndex={0}>
-      <ChipText>{displayName}</ChipText>
-      <DeleteChipButton
-        title='Delete connection'
-        onClick={() => dispatch({
-          type: PeopleActionType.DELETE_CONNECTION,
-          payload: { personId, connectionId },
-        })}
+const Chip: FC<ChipProps> = ({ text, onDelete }) => (
+  <Container tabIndex={0}>
+    <ChipText>{text}</ChipText>
+    <DeleteChipButton
+      title='Delete connection'
+      onClick={onDelete}
+    >
+      <DeleteChipIcon
+        fill='none'
+        viewBox='0 0 24 24'
       >
-        <DeleteChipIcon
-          fill='none'
-          viewBox='0 0 24 24'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth={2}
-            d='M6 18L18 6M6 6l12 12'
-          />
-        </DeleteChipIcon>
-      </DeleteChipButton>
-    </Container>
-  );
-};
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          strokeWidth={2}
+          d='M6 18L18 6M6 6l12 12'
+        />
+      </DeleteChipIcon>
+    </DeleteChipButton>
+  </Container>
+);
 
 export {
   Chip,

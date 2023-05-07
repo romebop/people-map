@@ -61,7 +61,16 @@ const Graph: FC = () => {
     const { nodes, links } = getGraph(people);
    
     const svg = d3.select(svgRef.current);
-    svg.selectAll('g').remove();
+    svg.selectAll('*').remove();
+
+    // (svg as d3.Selection<SVGSVGElement, unknown, null, undefined>).call(d3.zoom<SVGSVGElement, unknown>()
+    //   .extent([[0, 0], [width, height]])
+    //   .scaleExtent([1, 8])
+    //   .on('zoom', zoomed));
+
+    // function zoomed({ transform }: any) {
+    //   svg.attr('transform', transform);
+    // }
 
     const color = d3.scaleOrdinal(d3.schemePastel2);
 

@@ -171,7 +171,7 @@ function App() {
   const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
       ? new Fuse(stalePeople, {
-          keys: ['name', 'notes.content'],
+          keys: ['name', 'communities', 'notes.content'],
           threshold: 0.4,
         })
         .search(query)

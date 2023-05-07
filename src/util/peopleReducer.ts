@@ -27,6 +27,7 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
           id: payload.id,
           isPinned: false,
           name: '',
+          communities: [],
           connections: [],
           notes: [],
           archive: [],
@@ -52,6 +53,17 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
       return produce(people, draftState => {
         const person = draftState.find(p => p.id === payload.id)!;
         person.isPinned = false;
+      });
+    case PeopleActionType.JOIN_COMMUNITY:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        person.communities.push(payload.community);
+      });
+    case PeopleActionType.LEAVE_COMMUNITY:
+      return produce(people, draftState => {
+        const person = draftState.find(p => p.id === payload.personId)!;
+        const communityIdx = person.communities.findIndex(c => c === payload.community);
+        person.communities.splice(communityIdx!, 1);
       });
     case PeopleActionType.ADD_CONNECTION:
       return produce(people, draftState => {

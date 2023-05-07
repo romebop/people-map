@@ -1818,13 +1818,13 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@szhsin/react-menu@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-3.0.0.tgz#918ffda4d3583372715c60311950010f28afb2c2"
-  integrity sha512-KLyIp6mqOLzDNnLVtYYy7m3IfjwVpJImqFaPbNY0oT2cScD559E8dG6jl7dzk2FBav/zjqXd54vzjyHZAB83yQ==
+"@szhsin/react-menu@3.5.3":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-3.5.3.tgz#eb20f5921265f3663ccf5eec2d3fe2dcd61f6582"
+  integrity sha512-jxo8oaRwxmVjUzkyOi/ZJiXaZiuFPMIxFzyJdUKfnhBLYiEOVTU9M2CiPuEkirILoareR2GJj2K3y8a81CBPlw==
   dependencies:
     prop-types "^15.7.2"
-    react-transition-state "^1.1.4"
+    react-transition-state "^1.1.5"
 
 "@testing-library/dom@^7.28.1":
   version "7.31.2"
@@ -8173,10 +8173,10 @@ react-scripts@^5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-transition-state@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/react-transition-state/-/react-transition-state-1.1.4.tgz#113224eaa27e0ff81661305e44d5e0348cdf61ac"
-  integrity sha512-6nQLWWx95gYazCm6OdtD1zGbRiirvVXPrDtHAGsYb4xs9spMM7bA8Vx77KCpjL8PJ8qz1lXFGz2PTboCSvt7iw==
+react-transition-state@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-transition-state/-/react-transition-state-1.1.5.tgz#22accee21d0011b1d0245be24b6262ae67f494c3"
+  integrity sha512-ITY2mZqc2dWG2eitJkYNdcSFW8aKeOlkL2A/vowRrLL8GH3J6Re/SpD/BLvQzrVOTqjsP0b5S9N10vgNNzwMUQ==
 
 react@^18.2.0:
   version "18.2.0"

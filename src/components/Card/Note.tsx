@@ -275,7 +275,7 @@ const Note: FC<NoteProps> = ({ transientNote, constraintsRef, notesMapRef, perso
         suppressContentEditableWarning
         dangerouslySetInnerHTML={{ __html: initialValue }}
         onInput={(e: ChangeEvent<HTMLDivElement>) => handleInput(e.target.innerText)}
-        placeholder={transientNote.isAdder ? 'Add note' : undefined}
+        placeholder={transientNote.isAdder ? 'New note' : undefined}
       />
       {!transientNote.isAdder &&
         <DeleteButton

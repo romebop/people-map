@@ -14,7 +14,8 @@ interface Person {
   showArchive: boolean;
   createdDate: Date;
   isPinned: boolean;
-  connections: string[]
+  connections: string[];
+  communities: string[];
 }
 
 enum PeopleActionType {
@@ -22,6 +23,9 @@ enum PeopleActionType {
   DELETE_PERSON = 'DELETE_PERSON',
   PIN_PERSON = 'PIN_PERSON',
   UNPIN_PERSON = 'UNPIN_PERSON',
+  EDIT_NAME = 'EDIT_NAME',
+  JOIN_COMMUNITY = 'JOIN_COMMUNITY',
+  LEAVE_COMMUNITY = 'LEAVE_COMMUNITY',
   ADD_CONNECTION = 'ADD_CONNECTION',
   DELETE_CONNECTION = 'DELETE_CONNECTION',
   EDIT_NOTE = 'EDIT_NOTE',
@@ -33,7 +37,6 @@ enum PeopleActionType {
   EDIT_ARCHIVED_NOTE = 'EDIT_ARCHIVED_NOTE',
   DELETE_ARCHIVED_NOTE = 'DELETE_ARCHIVED_NOTE',
   TOGGLE_ARCHIVE = 'TOGGLE_ARCHIVE',
-  EDIT_NAME = 'EDIT_NAME',
   // UPLOAD_PEOPLE = 'UPLOAD_PEOPLE',
 }
 

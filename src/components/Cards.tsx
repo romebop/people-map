@@ -91,6 +91,7 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
     });
   };
 
+  const communityCount = people.map(p => p.communities).flat().filter((c, i, a) => a.indexOf(c) === i).length;
   const connectionCount = getConnectionCount(people);
   
   const gridBreakpointCols = {
@@ -102,7 +103,7 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
   return (
     <Container>
       <TopSection>
-        <BlurbSection>{people.length} Card{people.length === 1 ? '' : 's'} · {connectionCount} Connection{connectionCount === 1 ? '' : 's'}</BlurbSection>
+        <BlurbSection>{people.length} {people.length === 1 ? 'Person' : 'People'} · {communityCount} {communityCount === 1 ? 'Community' : 'Communities'} · {connectionCount} Connection{connectionCount === 1 ? '' : 's'}</BlurbSection>
         <NewPersonButton
           onClick={onNewPerson}
           disabled={hasQuery}

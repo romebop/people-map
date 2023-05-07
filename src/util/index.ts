@@ -3,6 +3,10 @@ import { Person } from 'src/types';
 export * from './parseDates';
 export * from './peopleReducer';
 
+export function getAllCommunities(people: Person[]): string[] {
+  return people.map(p => p.communities).flat().filter((c, i, a) => a.indexOf(c) === i);
+}
+
 export function getNameById(people: Person[], id: string): string {
   const nameIdPairs = people.map(({ name, id }) => ({ name, id })); 
   const idx = nameIdPairs.sort((a, b) => a.name.localeCompare(b.name))
