@@ -57,7 +57,7 @@ const StyledLink = styled(Link)`
     pointer-events: auto;
     opacity: 1;
   }
-  transition: all 0.1s ease-in;
+  transition: opacity 0.1s ease-in;
 `;
 
 const editIconLen = 14;

@@ -6,26 +6,26 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #666;
   box-sizing: border-box;
-  border-radius: 4px;
-  user-select: none;
+  border-radius: 3px;
   background-color: transparent;
   height: 28px;
   &:hover {
-    border: 1px solid #0095ff5c;
+    border: 1px solid #0095ff;
     background-color: #0095ff08;
-  }
+  };
+  transition: all 0.1s ease-in;
 `;
 
 const ChipText = styled.div`
   color: #666;
   font-size: 12px;
   padding: 2px 0px 2px 8px;
-  cursor: pointer;
   ${Container}:hover & {
     color: #0095ff;
   }
+  transition: all 0.1s ease-in;
 `;
 
 const DeleteChipButton = styled.div`
@@ -44,19 +44,21 @@ const DeleteChipIcon = styled.svg`
   ${Container}:hover & {
     stroke: #0095ff;
   }
+  transition: all 0.1s ease-in;
 `;
 
 interface ChipProps {
   text: string;
   onDelete: () => void;
+  deleteTitle: string;
 } 
 
-const Chip: FC<ChipProps> = ({ text, onDelete }) => (
+const Chip: FC<ChipProps> = ({ text, onDelete, deleteTitle }) => (
   <Container tabIndex={0}>
     <ChipText>{text}</ChipText>
     <DeleteChipButton
-      title='Delete connection'
       onClick={onDelete}
+      title={deleteTitle}
     >
       <DeleteChipIcon
         fill='none'

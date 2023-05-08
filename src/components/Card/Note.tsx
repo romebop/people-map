@@ -110,7 +110,7 @@ const Content = styled.div<{ isInArchive?: boolean }>`
   `}
 `;
 
-const DeleteButton = styled.button < { isFocused: boolean, hoverContainer: StyledComponent<any, any> }>`
+const DeleteButton = styled.button < { isFocused: boolean, hoverContainer: StyledComponent<any, any>, isInArchive?: boolean }>`
   width: 26px;
   height: 26px;
   box-sizing: border-box;
@@ -132,10 +132,10 @@ const DeleteButton = styled.button < { isFocused: boolean, hoverContainer: Style
   border: 0;
   padding: 0;
   background: transparent;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   &:hover {
-    background-color: #eee;
+    background-color: ${({ isInArchive }) => isInArchive ? '#fff' : '#f4f4f4'}
   }
 `;
 
@@ -143,7 +143,7 @@ const DeleteIcon = styled.svg`
   height: 9px;
   opacity: 0.6;
   ${DeleteButton}:hover & {
-    opacity: 0.9;
+    opacity: 0.7;
   }
 `;
 

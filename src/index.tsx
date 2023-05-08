@@ -86,6 +86,10 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     align-items: center;
   }
+
+  .szh-menu {
+    border-radius: 3px !important;
+  }
 `;
 
 const root = ReactDOM.createRoot(

@@ -104,9 +104,9 @@ const MoreButton = styled.button<{ isOpen: boolean }>`
   display: flex;
   box-sizing: border-box;
   margin-left: auto;
-  width: 28px;
-  height: 26px;
-  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -115,12 +115,10 @@ const MoreButton = styled.button<{ isOpen: boolean }>`
   padding: 0;
   background: transparent;
   ${({ isOpen }) => isOpen && `
-    background-color: #fff;
-    border: 1px solid #ccc;  
+    background-color: #f4f4f4;
   `}
   &:hover {
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: #f4f4f4;
   }
   &:active {
     background-color: var(--gray-highlight-color);
@@ -136,10 +134,10 @@ const MoreIcon = styled.svg`
   stroke: #777;
 `;
 
-const DeleteIcon = styled.svg`
-  width: 14px;
-  margin-right: 6px;
-`;
+// const DeleteIcon = styled.svg`
+//   width: 14px;
+//   margin-right: 6px;
+// `;
 
 const TagsSection = styled.div`
   margin-top: 8px;
@@ -155,21 +153,26 @@ const AddTagButton = styled.button<{ isOpen: boolean, hasText: boolean }>`
   justify-content: center;
   align-items: center;
   padding: 0 8px;
-  border: 1px solid transparent;
   background: transparent;
   height: 28px;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  color: #aaa;
+  color: #666;
+  border: 1px solid #666;
+  opacity: 0.4;
   ${({ isOpen }) => isOpen && `
-    border: 1px solid #ccc;
+    opacity: 1;
+    background-color: #0095ff08;
+    border: 1px solid #0095ff;
+    color: #0095ff;
   `}
   &:hover {
-    border: 1px solid #ccc;
+    opacity: 1;
   }
   &:active {
     background-color: #0095ff08;
-    border: 1px solid #0095ff5c;
+    border: 1px solid #0095ff;
+    color: #0095ff;
   }
   ${TagsSection}:hover & {
     display: flex;
@@ -179,13 +182,16 @@ const AddTagButton = styled.button<{ isOpen: boolean, hasText: boolean }>`
   `}
 `;
 
-const AddTagIcon = styled.svg`
-  stroke: #aaa;
+const AddTagIcon = styled.svg<{ isOpen: boolean }>`
+  stroke: #666;
   width: 12px;
   height: 12px;
   ${AddTagButton}:active & {
     stroke: #0095ff;
   }
+  ${({ isOpen }) => isOpen && `
+    stroke: #0095ff;
+  `}
 `;
 
 const AddTagText = styled.div`
@@ -227,6 +233,8 @@ const NoTagsPlaceholder = styled.div`
 const Border = styled.div`
   height: 14px;
   box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  flex-shrink: 0;
 `;
 
 interface EditContentProps {
@@ -395,6 +403,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
             key={community}
             text={community}
             onDelete={getOnLeaveCommunity(community)}
+            deleteTitle='Remove community'
           />
         )}
         <AddTagButton
@@ -402,11 +411,12 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
           ref={communityButtonRef}
           isOpen={isCommunityMenuOpen}
           hasText={person.communities.length === 0}
-          title='Join community'
+          title='Add community'
         >
           <AddTagIcon
             viewBox='0 0 24 24'
             strokeWidth={2}
+            isOpen={isCommunityMenuOpen}
           >
             <path
               strokeLinecap='round'
@@ -437,7 +447,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
                 autoFocus
                 ref={ref}
                 type='text'
-                placeholder='Filter or add new'
+                placeholder='Filter/add communities'
                 value={communityFilter}
                 onChange={e => setCommunityFilter(e.target.value)}
                 onKeyDown={handleCommunityKeyDown}
@@ -468,6 +478,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
             key={connectionId}
             text={getConnectionDisplayName(connectionId)}
             onDelete={getOnDeleteConnection(connectionId)}
+            deleteTitle='Delete connection'
           />
         )}
         <Menu
@@ -481,6 +492,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
               <AddTagIcon
                 viewBox='0 0 24 24'
                 strokeWidth={2}
+                isOpen={open}
               >
                 <path
                   strokeLinecap='round'

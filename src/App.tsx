@@ -50,7 +50,7 @@ const ActiveRouteHighlight = styled.div<{ path: string }>`
   position: absolute;
   width: 40px;
   height: 40px;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in;
   z-index: -1;
   ${({ path }) => {
     if (path.includes('cards')) return `left: 0`;
@@ -76,7 +76,7 @@ const LinkIcon = styled.svg<{ isActive: boolean }>`
   width: 16px;
   height: 16px;
   opacity: 0.4;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in;
   ${({ isActive }) => isActive && `
     stroke: #fff;
     opacity: 1;
@@ -87,7 +87,7 @@ const GridIcon = styled.svg<{ isActive: boolean }>`
   width: 14px;
   height: 14px;
   opacity: 0.4;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in;
   stroke: unset;
   ${({ isActive }) => isActive && `
     opacity: 1;
