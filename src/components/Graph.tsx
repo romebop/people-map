@@ -63,15 +63,6 @@ const Graph: FC = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    // (svg as d3.Selection<SVGSVGElement, unknown, null, undefined>).call(d3.zoom<SVGSVGElement, unknown>()
-    //   .extent([[0, 0], [width, height]])
-    //   .scaleExtent([1, 8])
-    //   .on('zoom', zoomed));
-
-    // function zoomed({ transform }: any) {
-    //   svg.attr('transform', transform);
-    // }
-
     const color = d3.scaleOrdinal(d3.schemePastel2);
 
     const simulation = d3.forceSimulation(nodes as any)
@@ -142,6 +133,20 @@ const Graph: FC = () => {
         .on('drag', dragged)
         .on('end', dragEnded);
     }
+
+    const zoom = d3.zoom<SVGSVGElement, SVGGElement>()
+      .extent([[0, 0], [width, height]])
+      .translateExtent([[0, 0], [width, height]])
+      .scaleExtent([1, 10])
+      .on('zoom', handleZoom);
+
+    function handleZoom({ transform }: d3.D3ZoomEvent<SVGSVGElement, SVGGElement>) {
+      node.attr('transform', transform.toString());
+      link.attr('transform', transform.toString());
+    }
+
+    (svg as d3.Selection<SVGSVGElement, any, null, undefined>).call(zoom);
+
   
   }, [getGraph, people, width, height]);
 

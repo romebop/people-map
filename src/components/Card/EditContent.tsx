@@ -383,6 +383,7 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
             </MoreButton>}
           position='anchor'
         >
+          <StyledMenuItem>Copy card</StyledMenuItem>
           <StyledMenuItem
             onClick={onDeletePerson}
           > 
