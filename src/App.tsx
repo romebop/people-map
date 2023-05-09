@@ -151,6 +151,7 @@ function App() {
 
   const [people, peopleDispatch] = useReducer(peopleReducer, [], init);
   const [stalePeople, setStalePeople] = useState<Person[]>(people);
+  const [shouldHydratePeople, setShouldHydratePeople] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   let cardsLayout = localStorage.getItem('cardsLayout') as 'list' | 'grid';
   if (cardsLayout === null) {
@@ -165,8 +166,13 @@ function App() {
   const isEditing = /\/cards\/.*/.test(path);
 
   useEffect(() => {
-    if (!isEditing) setStalePeople(people);
-  }, [people, isEditing])
+    if (!isEditing || shouldHydratePeople) {
+      setStalePeople(people);
+      if (shouldHydratePeople) {
+        setShouldHydratePeople(false);
+      }
+    }
+  }, [people, isEditing, shouldHydratePeople])
 
   const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
@@ -205,14 +211,14 @@ function App() {
   //   debounce(onSearch, 150)
   // ).current;
 
-  const setSearchInputValue = (name: string) => {
-    searchInputRef.current!.value = name;
-    setQuery(name);
+  const setSearchInputValue = (inputValue: string) => {
+    searchInputRef.current!.value = inputValue;
+    setQuery(inputValue);
     const mergedParams = new URLSearchParams(searchParams);
-    if (name === '') {
+    if (inputValue === '') {
       mergedParams.delete('search');
     } else {
-      mergedParams.set('search', name);
+      mergedParams.set('search', inputValue);
     }
     setSearchParams(mergedParams);
   };
@@ -244,6 +250,7 @@ function App() {
     <PeopleCtx.Provider value={{
       state: people,
       staleState: stalePeople,
+      setShouldHydratePeople,
       sortedFilteredPeople,
       dispatch: peopleDispatch,
     }}>

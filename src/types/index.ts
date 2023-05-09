@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 interface Note {
   id: string;
@@ -20,6 +20,7 @@ interface Person {
 
 enum PeopleActionType {
   NEW_PERSON = 'NEW_PERSON',
+  COPY_PERSON = 'COPY_PERSON',
   DELETE_PERSON = 'DELETE_PERSON',
   PIN_PERSON = 'PIN_PERSON',
   UNPIN_PERSON = 'UNPIN_PERSON',
@@ -48,6 +49,7 @@ interface PeopleAction {
 interface PeopleCtxInterface {
   state: Person[];
   staleState: Person[];
+  setShouldHydratePeople: Dispatch<SetStateAction<boolean>>;
   sortedFilteredPeople: Person[];
   dispatch: Dispatch<PeopleAction>;
 }

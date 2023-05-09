@@ -1,7 +1,7 @@
 import { FC, useContext, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import Masonry from 'react-masonry-css'
-import { useMatch, useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 import { PeopleActionType, Person } from 'src/types';
@@ -46,11 +46,9 @@ const NewPersonButton = styled.button`
 const gapSize = 20;
 const CardsContainer = styled(Masonry)`
   margin-top: 20px;
-
   display: flex;
-  margin-left: -${gapSize}px; /* gutter size offset */
+  margin-left: -${gapSize}px;
   width: auto;
-
   & .masonry-grid-column {
     width: var(--standard-width) !important;
     padding-left: ${gapSize}px;
@@ -74,8 +72,14 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
 
   const { sortedFilteredPeople: people, dispatch } = useContext(PeopleCtx)!;
   const match = useMatch('/cards/:id');
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const lastCardRef = useRef<HTMLDivElement>(null);
+
+  const scrollToLastCard = () => {
+    if (!lastCardRef.current) return;
+    lastCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
 
   const onNewPerson = () => {
     const newId = crypto.randomUUID();
@@ -86,8 +90,8 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
       });
     });
     setTimeout(() => {
-      lastCardRef.current!.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      navigate(newId);
+      scrollToLastCard();
+      navigate(`${newId}${searchParams.toString() === '' ? '' : '?'}${searchParams.toString()}`);
     });
   };
 
@@ -98,7 +102,7 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
     default: 3,
     1900: 2,
     1260: 1,
-  }
+  };
 
   return (
     <Container>
@@ -118,9 +122,8 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
         {people.length > 0
           ? people.map((person: Person, idx: number) =>
             <Card
-              {...{ gapSize }}
+              {...{ person, gapSize, scrollToLastCard }}
               key={person.id}
-              person={person}
               isSelected={match?.params.id === person.id}
               lastCardRef={idx === people.length - 1 ? lastCardRef : null}
             />

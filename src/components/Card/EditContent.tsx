@@ -1,7 +1,8 @@
 // import { format } from 'date-fns'; 
 import Fuse from 'fuse.js';
 import { KeyboardEvent, FC, useContext, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { flushSync } from 'react-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { ControlledMenu, FocusableItem, Menu, MenuGroup, MenuItem, useClick } from '@szhsin/react-menu';
 
@@ -239,16 +240,18 @@ const Border = styled.div`
 
 interface EditContentProps {
   person: Person;
+  scrollToLastCard: () => void;
 }
 
-const EditContent: FC<EditContentProps> = ({ person }) => {
+const EditContent: FC<EditContentProps> = ({ person, scrollToLastCard }) => {
 
-  const { staleState, dispatch } = useContext(PeopleCtx)!;
+  const { staleState, setShouldHydratePeople, dispatch } = useContext(PeopleCtx)!;
   const [communityFilter, setCommunityFilter] = useState<string>('');
   const communityButtonRef = useRef<HTMLButtonElement>(null);
   const [isCommunityMenuOpen, setCommunityMenuOpen] = useState<boolean>(false);
   const communityButtonAnchorProps = useClick(isCommunityMenuOpen, setCommunityMenuOpen);
   const [connectionFilter, setConnectionFilter] = useState<string>('');
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
   if (!person) return null;
@@ -274,6 +277,26 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
         .search(connectionFilter)
         .map(result => result.item)
     : searchableConnections;
+
+  const onCopyPerson = () => {
+    const newPersonId = crypto.randomUUID();
+    flushSync(() => {
+      dispatch({
+        type: PeopleActionType.COPY_PERSON,
+        payload: {
+          personId: person.id,
+          newPersonId,
+          newNoteIds: person.notes.map(() => crypto.randomUUID()),
+          newArchiveIds: person.archive.map(() => crypto.randomUUID()),
+        },
+      });
+      setShouldHydratePeople(true);
+    });
+    setTimeout(() => {
+      scrollToLastCard();
+      navigate(`../cards/${newPersonId}${searchParams.toString() === '' ? '' : '?'}${searchParams.toString()}`);
+    });
+  };
 
   const onDeletePerson = () => {
     navigate(-1);
@@ -383,10 +406,10 @@ const EditContent: FC<EditContentProps> = ({ person }) => {
             </MoreButton>}
           position='anchor'
         >
-          <StyledMenuItem>Copy card</StyledMenuItem>
-          <StyledMenuItem
-            onClick={onDeletePerson}
-          > 
+          <StyledMenuItem onClick={onCopyPerson}>
+            Copy card
+          </StyledMenuItem>
+          <StyledMenuItem onClick={onDeletePerson}> 
             {/* <DeleteIcon
               viewBox='0 0 25 28'
             >

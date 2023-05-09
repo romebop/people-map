@@ -22,9 +22,10 @@ interface CardProps {
   isSelected: boolean;
   lastCardRef: RefObject<HTMLDivElement> | null;
   gapSize: number;
+  scrollToLastCard: () => void;
 }
 
-const Card: FC<CardProps> = ({ person, isSelected, lastCardRef, gapSize }) => {
+const Card: FC<CardProps> = ({ person, isSelected, lastCardRef, gapSize, scrollToLastCard }) => {
 
   const { state: people } = useContext(PeopleCtx)!;
   const livePerson = people.find(p => p.id === person.id)!;
@@ -38,9 +39,12 @@ const Card: FC<CardProps> = ({ person, isSelected, lastCardRef, gapSize }) => {
         isShadow
       />
       {isSelected
-        ? <EditContent {...{ person: livePerson }} /> 
+        ? <EditContent
+            {...{ scrollToLastCard }}
+            person={livePerson}
+          /> 
         : <ViewContent
-          {...{ person, lastCardRef }}
+            {...{ person, lastCardRef }}
             isShadow={false}
           />
       }
