@@ -8,14 +8,14 @@ interface Note {
 
 interface Person {
   id: string;
+  createdDate: Date;
+  communities: string[];
+  connections: string[];
+  isPinned: boolean;
   name: string;
   notes: Note[];
-  archive: Note[];
   showArchive: boolean;
-  createdDate: Date;
-  isPinned: boolean;
-  connections: string[];
-  communities: string[];
+  archive: Note[];
 }
 
 enum PeopleActionType {

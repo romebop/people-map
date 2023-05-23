@@ -46,7 +46,7 @@ const LinksContainer = styled.div`
 
 const ActiveRouteHighlight = styled.div<{ path: string }>`
   border-radius: 4px;
-  background-color: #0095ffa3;
+  background-color: #5cbbff;
   position: absolute;
   width: 40px;
   height: 40px;
@@ -172,7 +172,14 @@ function App() {
         setShouldHydratePeople(false);
       }
     }
-  }, [people, isEditing, shouldHydratePeople])
+  }, [people, isEditing, shouldHydratePeople]);
+
+  const topContainerRef = useRef<HTMLDivElement>(null);
+  const [topContainerWidth, setTopContainerWidth] = useState(0);
+
+  useEffect(() => {
+    setTopContainerWidth(topContainerRef.current!.offsetWidth);
+  }, []);
 
   const sortedFilteredPeople: Person[] = useMemo(() => {
     const filteredPeople: Person[] = query
@@ -254,7 +261,7 @@ function App() {
       sortedFilteredPeople,
       dispatch: peopleDispatch,
     }}>
-      <TopContainer>
+      <TopContainer ref={topContainerRef}>
         <SearchContainer>
           <SearchIcon
             isActive={hasQuery}
@@ -354,7 +361,7 @@ function App() {
         )}
         <Route
           path='/graph'
-          element={<Graph />}
+          element={<Graph {...{ topContainerWidth }} />}
         />
         <Route
           path='/'
