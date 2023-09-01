@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components/macro';
 
 const Container = styled.div`
@@ -50,8 +50,6 @@ interface CheckboxProps {
 const Checkbox: FC<CheckboxProps> = ({ label, handleChange, isChecked }) => {
 
   const hyphenatedLabel = label.replace(/\s+/g, '-');
-
-  console.log(`hi my label is ${label}. my isChecked value is: ${isChecked}`);
 
   return (
     <Container>
