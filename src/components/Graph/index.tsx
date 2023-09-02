@@ -56,7 +56,12 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
   const [graphConfig, setGraphConfig] = useState<Record<string, boolean> | null>(null);
   const [prevConfig, setPrevConfig] = useState<Record<string, boolean> | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
-
+  const nodeGRef = useRef<any>(null);
+  const hullPathRef = useRef<any>(null);
+  const curveRef = useRef<d3.Line<[number, number]>>(d3.line().curve(d3.curveCardinalClosed.tension(0.5)));
+  const colorRef = useRef<d3.ScaleOrdinal<string, string, never>>(d3.scaleOrdinal(d3.schemePastel2));
+  const nodesRef = useRef<Node[] | null>(null);
+ 
   const width = window.innerWidth;
   const height = window.innerHeight;
 
@@ -111,8 +116,6 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
     return hulls;
   }, []);
 
-  let nodeGRef = useRef<any>(null);
-
   useEffect(() => {
     const storedConfig = localStorage.getItem('graphConfig');
     if (storedConfig) {
@@ -136,6 +139,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
   useEffect(() => {
     
     const { nodes, links } = getGraph(people);
+    nodesRef.current = nodes;
      
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove();
@@ -146,30 +150,19 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .force('center', d3.forceCenter(width / 2, height / 2).strength(1))
       .on('tick', ticked);
 
-    const curve = d3.line().curve(d3.curveCardinalClosed.tension(0.5));
-
-    const color = d3.scaleOrdinal(d3.schemePastel2);
-
-    const hullsG = svg.append('g');
-
-    const hull = hullsG.selectAll('path')
-      .data(getHulls(nodes))
-      .join('path')
-        .attr('d', (d: any) => curve(d.path))
-        .style('fill', (d: any) => color(d.id))
-        .style('opacity', 0.25);
-
     const linksG = svg.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.4)
       .attr('stroke-width', 1)
-      .attr('stroke-linecap', 'round');
+      .attr('stroke-linecap', 'round')
+      .attr('class', 'links');
 
     const link = linksG.selectAll('line')
       .data(links)
       .join('line');
     
-    const nodesG = svg.append('g');
+    const nodesG = svg.append('g')
+      .attr('class', 'nodes');
 
     nodeGRef.current = nodesG.selectAll('g')
       .data(nodes)
@@ -181,13 +174,14 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .attr('stroke-opacity', 1)
       .attr('r', (d: any) => d.name === 'me' ? 24 : 16)
       .attr('stroke-width', (d: any) => d.name === 'me' ? 4 : 3)
-      .attr('fill', (d: any) => d.name === 'me' ? '#fff' : color(d.name))
+      .attr('fill', (d: any) => d.name === 'me' ? '#fff' : colorRef.current(d.name))
       .style('cursor', 'pointer');
     
     function ticked() {
-
-      hull.data(getHulls(nodes))
-        .attr('d', (d: any) => curve(d.path));
+      if (hullPathRef.current) {
+        hullPathRef.current.data(getHulls(nodes))
+          .attr('d', (d: any) => curveRef.current(d.path));
+      }
 
       link.attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
@@ -195,7 +189,6 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .attr('y2', (d: any) => d.target.y);
     
       nodeGRef.current.attr('transform', (d: any) => `translate(${d.x} ${d.y})`);
-
     }
 
     function drag(simulation: any) {
@@ -226,8 +219,11 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .on('zoom', handleZoom);
 
     function handleZoom({ transform }: d3.D3ZoomEvent<SVGSVGElement, SVGGElement>) {
-      nodesG.attr('transform', transform.toString());
+      if (hullPathRef.current) {
+        hullPathRef.current.attr('transform', transform.toString());
+      }
       linksG.attr('transform', transform.toString());
+      nodesG.attr('transform', transform.toString());
     }
 
     (svg as d3.Selection<SVGSVGElement, any, null, undefined>).call(zoom);
@@ -236,10 +232,9 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       simulation.stop();
     };
   
-  }, [getGraph, getHulls, people, width, height]);
+  }, [people, getGraph, getHulls, width, height]);
 
   useEffect(() => {
-
     if (graphConfig === null || nodeGRef.current === null) return;
 
     if (!prevConfig?.name && graphConfig.name) {
@@ -253,7 +248,6 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .attr('y', -22)
         .attr('font-size', 14);
     }
-    
     if (prevConfig?.name && !graphConfig.name) {
       nodeGRef.current.selectAll('text').remove();
     }
@@ -265,12 +259,27 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .attr('transform', 'translate(-25, -38)')
         .style('fill', '#0095ff99');
     }
-
     if (prevConfig?.pin && !graphConfig.pin) {
       nodeGRef.current.selectAll('path').remove();
     }
 
-  }, [graphConfig, prevConfig, people, width, height]);
+    if (!prevConfig?.community && graphConfig.community) {
+      const hullsG = d3.select(svgRef.current).insert('g', ':first-child')
+        .attr('class', 'hulls');
+
+      hullPathRef.current = hullsG.selectAll('path.hull')
+        .data(getHulls(nodesRef.current!))
+        .join('path')
+        .attr('class', 'hull')
+        .attr('d', (d: any) => curveRef.current(d.path))
+        .style('fill', (d: any) => colorRef.current(d.id))
+        .style('opacity', 0.3);
+    }
+    if (prevConfig?.community && !graphConfig.community) {
+      d3.select(svgRef.current).select('g.hulls').remove();
+      hullPathRef.current = null;
+    }
+  }, [graphConfig, prevConfig, people, width, height, getHulls]);
 
   return (
     <>
