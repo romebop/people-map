@@ -54,7 +54,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
 
   const { sortedFilteredPeople: people, state: allPeople } = useContext(PeopleCtx)!;
   const [graphConfig, setGraphConfig] = useState<Record<string, boolean> | null>(null);
-  const [prevConfig, setPrevConfig] = useState<Record<string, boolean> | null>(null);
+  const prevConfigRef = useRef<Record<string, boolean> | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const nodeGRef = useRef<any>(null);
   const hullPathRef = useRef<any>(null);
@@ -235,9 +235,13 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
   }, [people, getGraph, getHulls, width, height]);
 
   useEffect(() => {
+    prevConfigRef.current = null;
+  }, [people]);
+
+  useEffect(() => {
     if (graphConfig === null || nodeGRef.current === null) return;
 
-    if (!prevConfig?.name && graphConfig.name) {
+    if (!prevConfigRef.current?.name && graphConfig.name) {
       nodeGRef.current.filter((d: any) => d.name !== 'me')
         .append('text')
         .text((d: any) => d.name)
@@ -248,22 +252,22 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .attr('y', -22)
         .attr('font-size', 14);
     }
-    if (prevConfig?.name && !graphConfig.name) {
+    if (prevConfigRef.current?.name && !graphConfig.name) {
       nodeGRef.current.selectAll('text').remove();
     }
 
-    if (!prevConfig?.pin && graphConfig.pin) {
+    if (!prevConfigRef.current?.pin && graphConfig.pin) {
       nodeGRef.current.filter((d: any) => d.isPinned)
         .append('path')
         .attr('d', 'M17 4a2 2 0 0 0-2-2H9c-1.1 0-2 .9-2 2v7l-2 3v2h6v5l1 1 1-1v-5h6v-2l-2-3V4z')
         .attr('transform', 'translate(-25, -38)')
         .style('fill', '#0095ff99');
     }
-    if (prevConfig?.pin && !graphConfig.pin) {
+    if (prevConfigRef.current?.pin && !graphConfig.pin) {
       nodeGRef.current.selectAll('path').remove();
     }
 
-    if (!prevConfig?.community && graphConfig.community) {
+    if (!prevConfigRef.current?.community && graphConfig.community) {
       const hullsG = d3.select(svgRef.current).insert('g', ':first-child')
         .attr('class', 'hulls');
 
@@ -275,11 +279,12 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .style('fill', (d: any) => colorRef.current(d.id))
         .style('opacity', 0.3);
     }
-    if (prevConfig?.community && !graphConfig.community) {
+    if (prevConfigRef.current?.community && !graphConfig.community) {
       d3.select(svgRef.current).select('g.hulls').remove();
       hullPathRef.current = null;
     }
-  }, [graphConfig, prevConfig, people, width, height, getHulls]);
+
+  }, [graphConfig, people, width, height, getHulls]);
 
   return (
     <>
@@ -296,7 +301,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
             key={key}
             label={`${key.charAt(0).toUpperCase() + key.slice(1)}`}
             handleChange={isChecked => setGraphConfig(prevConfig => {
-              setPrevConfig({ ...prevConfig });
+              prevConfigRef.current = { ...prevConfig };
               return { ...prevConfig, [key]: isChecked }; 
             })}
             isChecked={val}
