@@ -1,0 +1,675 @@
+[
+  {
+    "id": "7bfcacff-6e6c-4ebe-b13a-d7d8e8f11b03",
+    "isPinned": true,
+    "name": "Samantha Mitchell",
+    "communities": [
+      "Work"
+    ],
+    "connections": [
+      "a12215f4-cab6-4536-a98b-add081016462",
+      "56c5d1ac-e2c3-4939-a60b-6e409cb58ed1"
+    ],
+    "notes": [
+      {
+        "id": "15df5c5b-10f2-48c8-8f5a-d696554cbaeb",
+        "content": "is an adventurous soul who has traveled to over 20 countries",
+        "createdDate": "2023-04-12T22:27:46.690Z"
+      },
+      {
+        "id": "fc8143ca-8072-4218-9ff6-871aa45c2933",
+        "content": "her works have been exhibited in several prestigious galleries",
+        "createdDate": "2023-04-12T22:29:55.053Z"
+      },
+      {
+        "id": "25c15369-cdb8-422c-9744-909db4bf42c5",
+        "content": "actively involved in local conservation efforts to protect the natural beauty of her hometown.",
+        "createdDate": "2023-06-28T05:16:07.167Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-04-12T20:08:07.151Z"
+  },
+  {
+    "id": "7a121315-4a51-4dd7-ac0d-e537b5321825",
+    "isPinned": true,
+    "name": "Emma Johnson",
+    "communities": [],
+    "connections": [],
+    "notes": [
+      {
+        "id": "9981c044-15e2-4836-a0a0-c4ef70dac2b0",
+        "content": "A dedicated nurse with over a decade of experience.\n",
+        "createdDate": "2023-09-24T19:44:08.863Z"
+      },
+      {
+        "id": "8b39c0fc-2f6d-4fb5-a6b6-aa4d37c9c0dc",
+        "content": "Known for unwavering compassion and commitment to patient care.\n",
+        "createdDate": "2023-09-24T19:44:22.616Z"
+      },
+      {
+        "id": "ad775b20-aed1-4c58-9718-a5b0c1b9383c",
+        "content": "Specializes in the pediatric ward, helping young patients and their families.\n",
+        "createdDate": "2023-09-24T19:44:26.248Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:39:33.499Z"
+  },
+  {
+    "id": "fa54f7e7-5ff1-4514-b26d-9685f99417d6",
+    "isPinned": false,
+    "name": "Liam Davis",
+    "communities": [
+      "Hiking"
+    ],
+    "connections": [
+      "29bcf303-e2c7-4eae-a8be-f563fa6b035a"
+    ],
+    "notes": [
+      {
+        "id": "fa9a712a-757a-473c-ac4f-7cc9e5796ae1",
+        "content": "A talented musician celebrated for soulful guitar melodies.",
+        "createdDate": "2023-09-24T19:44:58.362Z"
+      },
+      {
+        "id": "11df769b-ffe3-4f1d-b4f7-da4aef1795a1",
+        "content": "Holds a degree in music theory.\n",
+        "createdDate": "2023-09-24T19:45:02.070Z"
+      },
+      {
+        "id": "5549364c-033c-497d-8147-610d6181e7f1",
+        "content": "Regularly performs at local music festivals, leaving audiences in awe.\n\n",
+        "createdDate": "2023-09-24T19:45:05.435Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:39:39.905Z"
+  },
+  {
+    "id": "099ae86e-e54f-43ab-b290-e065aa1b16f8",
+    "isPinned": false,
+    "name": "Olivia Wilson",
+    "communities": [
+      "High School"
+    ],
+    "connections": [],
+    "notes": [
+      {
+        "id": "0085d4ab-ac35-4908-946a-23372bd41b58",
+        "content": "An avid bookworm with an insatiable appetite for literature.\n",
+        "createdDate": "2023-09-24T19:46:35.770Z"
+      },
+      {
+        "id": "ae11376e-0d45-45fc-bc5a-c882fcea7f90",
+        "content": "Explores diverse literary landscapes, from classics to contemporary works.\n",
+        "createdDate": "2023-09-24T19:46:38.635Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:39:45.028Z"
+  },
+  {
+    "id": "29bcf303-e2c7-4eae-a8be-f563fa6b035a",
+    "isPinned": false,
+    "name": "Noah Brown",
+    "communities": [
+      "Hiking"
+    ],
+    "connections": [
+      "fa54f7e7-5ff1-4514-b26d-9685f99417d6"
+    ],
+    "notes": [
+      {
+        "id": "dcb9bbd2-309e-4e92-83f3-8f97aa68e2f8",
+        "content": "A passionate chef whose culinary creations earn accolades.\n",
+        "createdDate": "2023-09-24T19:46:42.886Z"
+      },
+      {
+        "id": "0db5c32f-ce82-46e1-8b0a-02c07fe4cf85",
+        "content": "Honed skills in Michelin-starred restaurants.\n",
+        "createdDate": "2023-09-24T19:46:45.586Z"
+      },
+      {
+        "id": "61b08cf4-5429-4e1f-9229-2734c8825d17",
+        "content": "Known for artful presentation and exquisite taste.\n",
+        "createdDate": "2023-09-24T19:46:48.370Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:39:51.510Z"
+  },
+  {
+    "id": "e5bf32f8-1b90-4512-9ccb-28ab5f04cdaf",
+    "isPinned": false,
+    "name": "Ava Smith",
+    "communities": [
+      "Hiking"
+    ],
+    "connections": [
+      "f7954059-913f-4a1b-adbd-a2e5e546606a"
+    ],
+    "notes": [
+      {
+        "id": "8824c5a3-4993-4086-b121-e0237bbf2238",
+        "content": "An adventurous traveler and photographer.\n",
+        "createdDate": "2023-09-24T19:46:54.765Z"
+      },
+      {
+        "id": "7bfd372f-8c8e-4a73-9c73-561522156a86",
+        "content": "Explored remote regions of the Amazon rainforest, capturing nature's beauty.\n",
+        "createdDate": "2023-09-24T19:46:59.458Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:03.511Z"
+  },
+  {
+    "id": "1caf435b-ea3f-4461-aed2-e1eccef589aa",
+    "isPinned": false,
+    "name": "William Taylor",
+    "communities": [
+      "College"
+    ],
+    "connections": [
+      "07e0a8f5-469e-4c11-b896-0f94adc76a9d",
+      "3df1883d-ac65-411d-b036-cbe7d66c91eb",
+      "54b388d8-75fd-4871-a0ed-4012cdafc1a8"
+    ],
+    "notes": [
+      {
+        "id": "a7133abc-5399-4200-924d-167e78eb621b",
+        "content": "A dedicated educator shaping young minds.\n",
+        "createdDate": "2023-09-24T19:47:05.266Z"
+      },
+      {
+        "id": "486f917a-c0f8-4bce-b630-ef40fc160d76",
+        "content": "Instills a love for learning beyond the classroom.\n",
+        "createdDate": "2023-09-24T19:47:07.761Z"
+      },
+      {
+        "id": "250fe6ff-a11f-4a0b-befa-8df866e97eaf",
+        "content": "William enjoys stargazing and often takes his telescope to remote areas for better views.",
+        "createdDate": "2023-09-24T19:55:07.273Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:08.447Z"
+  },
+  {
+    "id": "56c5d1ac-e2c3-4939-a60b-6e409cb58ed1",
+    "isPinned": false,
+    "name": "Isabella Anderson",
+    "communities": [
+      "Work"
+    ],
+    "connections": [
+      "7bfcacff-6e6c-4ebe-b13a-d7d8e8f11b03"
+    ],
+    "notes": [
+      {
+        "id": "7295e3a6-39d2-4f93-ba18-9508825551ef",
+        "content": "An environmental activist leading local preservation initiatives.\n",
+        "createdDate": "2023-09-24T19:47:11.837Z"
+      },
+      {
+        "id": "42766249-78d3-4209-9f79-fe14bc1eef5f",
+        "content": "Founded a community clean-up program, engaging volunteers.\n",
+        "createdDate": "2023-09-24T19:47:14.644Z"
+      },
+      {
+        "id": "983928a5-6683-4876-92c4-c2abf7e913d2",
+        "content": "Isabella is known for her culinary experiments and hosts themed dinner parties.",
+        "createdDate": "2023-09-24T19:54:57.290Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:14.786Z"
+  },
+  {
+    "id": "07e0a8f5-469e-4c11-b896-0f94adc76a9d",
+    "isPinned": true,
+    "name": "James Martinez",
+    "communities": [
+      "College"
+    ],
+    "connections": [
+      "1caf435b-ea3f-4461-aed2-e1eccef589aa",
+      "3df1883d-ac65-411d-b036-cbe7d66c91eb",
+      "54b388d8-75fd-4871-a0ed-4012cdafc1a8"
+    ],
+    "notes": [
+      {
+        "id": "c0454721-7849-46cf-a5ec-399bbb07b2f7",
+        "content": "A software engineer excelling in complex coding challenges.\n",
+        "createdDate": "2023-09-24T19:47:19.116Z"
+      },
+      {
+        "id": "729ab9e4-cf3b-41c7-9229-6bd2b32eb4be",
+        "content": "James is a connoisseur of coffee and enjoys trying beans from around the world.",
+        "createdDate": "2023-09-24T19:54:49.273Z"
+      }
+    ],
+    "archive": [
+      {
+        "id": "c42173fb-a943-4bdf-a019-e97fa8714adb",
+        "content": "Developed a popular open-source library, embraced globally.\n",
+        "createdDate": "2023-09-24T19:47:27.091Z"
+      }
+    ],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:19.412Z"
+  },
+  {
+    "id": "15675ea4-d499-44aa-a296-2ef045ed91f9",
+    "isPinned": false,
+    "name": "Sophia White",
+    "communities": [
+      "Work"
+    ],
+    "connections": [],
+    "notes": [
+      {
+        "id": "ff037198-4e90-46f7-be6a-520c999f105c",
+        "content": "A skilled equestrian winning numerous competitions.\n",
+        "createdDate": "2023-09-24T19:47:34.042Z"
+      },
+      {
+        "id": "57de8e75-e934-4ad8-966e-202cda8a6fac",
+        "content": "Known for graceful and precise performances.\n",
+        "createdDate": "2023-09-24T19:47:36.443Z"
+      },
+      {
+        "id": "82eca8da-b8de-4478-91d3-f607de41f6ff",
+        "content": "Sophia is a dedicated yoga practitioner and recently completed her instructor certification.",
+        "createdDate": "2023-09-24T19:54:42.625Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:23.951Z"
+  },
+  {
+    "id": "d5351eef-77ad-4ece-8190-bc36d97e026e",
+    "isPinned": true,
+    "name": "Benjamin Miller",
+    "communities": [
+      "Work"
+    ],
+    "connections": [
+      "6787e00b-33dd-4859-8903-78a886690816"
+    ],
+    "notes": [
+      {
+        "id": "aa865d12-a6dd-4c31-99b7-23e7ead2aaae",
+        "content": "A volunteer firefighter protecting his community.\n",
+        "createdDate": "2023-09-24T19:47:42.531Z"
+      },
+      {
+        "id": "251d877b-3bd8-4800-b59a-a7ed2f2533c4",
+        "content": "Demonstrates bravery and quick thinking in emergencies.\n",
+        "createdDate": "2023-09-24T19:47:45.428Z"
+      },
+      {
+        "id": "fec6a137-801b-43f9-9611-a6ca6a7961d9",
+        "content": "Benjamin enjoys playing the piano and often composes his own music.",
+        "createdDate": "2023-09-24T19:54:30.329Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:30.004Z"
+  },
+  {
+    "id": "d9a3a03d-e02c-4855-a064-49bb91970033",
+    "isPinned": false,
+    "name": "Mia Harris",
+    "communities": [
+      "Book Club"
+    ],
+    "connections": [
+      "fba64f57-f5b8-4146-9b6f-57e7eb4158e6",
+      "6d5ddcd8-bee4-42f2-9910-d7a46fb4f00d",
+      "27189922-3ec7-4148-b4d7-aa363ceb54ce"
+    ],
+    "notes": [
+      {
+        "id": "8b3ffae2-b878-4bf9-90e6-3ece7bbfe29b",
+        "content": "An aspiring actress known for versatility on stage.\n",
+        "createdDate": "2023-09-24T19:47:50.820Z"
+      },
+      {
+        "id": "f7eeff4e-a0a0-417f-bcd5-ccaa318fae70",
+        "content": "Performs in Shakespearean classics and modern productions.\n",
+        "createdDate": "2023-09-24T19:47:54.107Z"
+      },
+      {
+        "id": "b2ce0f14-dfd8-4737-bf87-6d79f9ae9b69",
+        "content": "Mia is an outdoor enthusiast and enjoys camping and hiking in national parks.",
+        "createdDate": "2023-09-24T19:54:20.656Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:34.984Z"
+  },
+  {
+    "id": "3df1883d-ac65-411d-b036-cbe7d66c91eb",
+    "isPinned": false,
+    "name": "Samuel Clark",
+    "communities": [
+      "College"
+    ],
+    "connections": [
+      "1caf435b-ea3f-4461-aed2-e1eccef589aa",
+      "07e0a8f5-469e-4c11-b896-0f94adc76a9d",
+      "54b388d8-75fd-4871-a0ed-4012cdafc1a8"
+    ],
+    "notes": [
+      {
+        "id": "b0cacbc4-7324-4c78-ad9c-27b790f2975a",
+        "content": "A distinguished scientist conducting groundbreaking renewable energy research.\n",
+        "createdDate": "2023-09-24T19:47:59.495Z"
+      },
+      {
+        "id": "c4db38a1-2ee8-467d-8372-046c04a27ca8",
+        "content": "Published innovative findings in prestigious journals.\n",
+        "createdDate": "2023-09-24T19:48:01.708Z"
+      },
+      {
+        "id": "c8682491-8bf2-4d0c-889d-eec58406c9b9",
+        "content": "Samuel is an advocate for sustainable seafood practices and works with local fisheries.",
+        "createdDate": "2023-09-24T19:53:58.791Z"
+      },
+      {
+        "id": "1226aac3-ac29-4f09-afef-117e3926c89c",
+        "content": "He's conducted research expeditions to study marine life in remote atolls.",
+        "createdDate": "2023-09-24T19:54:03.896Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:40.685Z"
+  },
+  {
+    "id": "6d5ddcd8-bee4-42f2-9910-d7a46fb4f00d",
+    "isPinned": false,
+    "name": "Charlotte Lee",
+    "communities": [
+      "Book Club"
+    ],
+    "connections": [
+      "d9a3a03d-e02c-4855-a064-49bb91970033",
+      "fba64f57-f5b8-4146-9b6f-57e7eb4158e6",
+      "27189922-3ec7-4148-b4d7-aa363ceb54ce"
+    ],
+    "notes": [
+      {
+        "id": "3238c144-5ffa-4a44-9153-a53ea841f06b",
+        "content": "Blends classic elegance with modern sensibilities.\n",
+        "createdDate": "2023-09-24T19:48:10.156Z"
+      },
+      {
+        "id": "910e5c19-933e-4efc-95e6-73ae015843ca",
+        "content": "Charlotte is a voracious reader and often participates in book clubs in her community.",
+        "createdDate": "2023-09-24T19:53:50.231Z"
+      }
+    ],
+    "archive": [
+      {
+        "id": "c1df1cac-37fa-4837-9423-b7d0512392e6",
+        "content": "A renowned fashion designer known for stylish creations.\n",
+        "createdDate": "2023-09-24T19:48:07.444Z"
+      }
+    ],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:44.369Z"
+  },
+  {
+    "id": "6787e00b-33dd-4859-8903-78a886690816",
+    "isPinned": false,
+    "name": "Elijah Moore",
+    "communities": [
+      "Work"
+    ],
+    "connections": [
+      "d5351eef-77ad-4ece-8190-bc36d97e026e"
+    ],
+    "notes": [
+      {
+        "id": "abc2ede0-f7f6-4fcd-ba2d-3e3f4fef1061",
+        "content": "A passionate animal rights advocate.\n",
+        "createdDate": "2023-09-24T19:48:16.148Z"
+      },
+      {
+        "id": "77045f05-5614-47eb-9844-df17b7bc3914",
+        "content": "Organizes awareness campaigns and lobbies for stronger protection laws.\n",
+        "createdDate": "2023-09-24T19:48:18.324Z"
+      },
+      {
+        "id": "904d5127-b822-4284-b913-b376a195f93d",
+        "content": "is an amateur photographer, capturing candid moments in nature and wildlife.",
+        "createdDate": "2023-09-24T19:53:41.439Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:49.597Z"
+  },
+  {
+    "id": "a12215f4-cab6-4536-a98b-add081016462",
+    "isPinned": false,
+    "name": "Amelia Thomas",
+    "communities": [
+      "Work"
+    ],
+    "connections": [
+      "7bfcacff-6e6c-4ebe-b13a-d7d8e8f11b03"
+    ],
+    "notes": [
+      {
+        "id": "5681c403-3a51-4d66-a5b1-7146f77caf80",
+        "content": "An accomplished architect specializing in sustainable designs.\n",
+        "createdDate": "2023-09-24T19:48:24.633Z"
+      },
+      {
+        "id": "5b813a37-de71-4780-8b07-56bc594384ce",
+        "content": "Creates buildings that harmonize with natural surroundings.\n",
+        "createdDate": "2023-09-24T19:48:27.349Z"
+      },
+      {
+        "id": "819c17d2-c739-446c-a61f-cdccec512c55",
+        "content": "She volunteers with Habitat for Humanity, designing homes for low-income families.",
+        "createdDate": "2023-09-24T19:53:23.382Z"
+      },
+      {
+        "id": "0a9725c4-3b00-4021-ad0b-6b920e291deb",
+        "content": "Amelia enjoys traveling to historic cities to study and appreciate architectural marvels.",
+        "createdDate": "2023-09-24T19:53:28.006Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:53.138Z"
+  },
+  {
+    "id": "e82982d2-cd5d-430e-85df-90281d4b1291",
+    "isPinned": false,
+    "name": "Daniel Jackson",
+    "communities": [
+      "High School",
+      "College"
+    ],
+    "connections": [],
+    "notes": [
+      {
+        "id": "038f295a-7547-44f2-9d2b-ceac350a2544",
+        "content": "Expertise in strength training, nutrition, and mental well-being.\n",
+        "createdDate": "2023-09-24T19:48:35.465Z"
+      },
+      {
+        "id": "9fb6d89c-bd97-4865-8b57-4795cf3f8a7e",
+        "content": "an aspiring novelist and is currently working on his first book.",
+        "createdDate": "2023-09-24T19:53:05.573Z"
+      }
+    ],
+    "archive": [
+      {
+        "id": "3398e742-e1ee-451b-9bdd-26f7bfb135a0",
+        "content": "A dedicated personal trainer.\n",
+        "createdDate": "2023-09-24T19:48:32.485Z"
+      }
+    ],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:40:56.993Z"
+  },
+  {
+    "id": "fba64f57-f5b8-4146-9b6f-57e7eb4158e6",
+    "isPinned": true,
+    "name": "Harper Garcia",
+    "communities": [
+      "Book Club"
+    ],
+    "connections": [
+      "d9a3a03d-e02c-4855-a064-49bb91970033",
+      "6d5ddcd8-bee4-42f2-9910-d7a46fb4f00d",
+      "27189922-3ec7-4148-b4d7-aa363ceb54ce"
+    ],
+    "notes": [
+      {
+        "id": "a4400591-b62c-4dce-8a28-f600a5844845",
+        "content": "A gifted poet celebrated for evocative verses.\n",
+        "createdDate": "2023-09-24T19:48:52.891Z"
+      },
+      {
+        "id": "2ffcb4a5-a474-416d-91a1-2a373ca77fce",
+        "content": "Her poetry touches hearts and inspires introspection.\n",
+        "createdDate": "2023-09-24T19:48:57.122Z"
+      },
+      {
+        "id": "1d5685c0-e2d9-4bef-8db9-e9aec0672515",
+        "content": "Harper is a meditation enthusiast and often leads meditation sessions for friends and neighbors.\n",
+        "createdDate": "2023-09-24T19:52:41.606Z"
+      },
+      {
+        "id": "1a3f6bd6-23ee-4949-8b11-f50bb519a0df",
+        "content": "She's involved in community art projects, creating murals that inspire unity and hope.\n",
+        "createdDate": "2023-09-24T19:52:49.408Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:41:00.893Z"
+  },
+  {
+    "id": "54b388d8-75fd-4871-a0ed-4012cdafc1a8",
+    "isPinned": false,
+    "name": "Alexander Rodriguez",
+    "communities": [
+      "College"
+    ],
+    "connections": [
+      "1caf435b-ea3f-4461-aed2-e1eccef589aa",
+      "07e0a8f5-469e-4c11-b896-0f94adc76a9d",
+      "3df1883d-ac65-411d-b036-cbe7d66c91eb"
+    ],
+    "notes": [
+      {
+        "id": "e57644ca-d3d9-4a7e-8f5b-1df8c37a3416",
+        "content": "A respected marine biologist specializing in deep-sea mysteries.\n",
+        "createdDate": "2023-09-24T19:49:03.317Z"
+      },
+      {
+        "id": "aadf1b27-5bf7-4997-9d5b-446c926f68c0",
+        "content": "Discovered a new species of bioluminescent fish.\n",
+        "createdDate": "2023-09-24T19:49:06.329Z"
+      },
+      {
+        "id": "82e710a2-2230-4013-b89a-c2d12b82f411",
+        "content": "Alexander is also an amateur underwater photographer, capturing the beauty of the ocean depths.\n",
+        "createdDate": "2023-09-24T19:51:44.126Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:41:06.954Z"
+  },
+  {
+    "id": "f7954059-913f-4a1b-adbd-a2e5e546606a",
+    "isPinned": false,
+    "name": "Evelyn Walker",
+    "communities": [
+      "Hiking"
+    ],
+    "connections": [
+      "e5bf32f8-1b90-4512-9ccb-28ab5f04cdaf"
+    ],
+    "notes": [
+      {
+        "id": "9f2f89fe-b6a5-487a-bb7b-ccf35ba43a1a",
+        "content": "A compassionate humanitarian providing aid worldwide.\n",
+        "createdDate": "2023-09-24T19:49:11.998Z"
+      },
+      {
+        "id": "5952595f-396b-422a-9a78-0b48afa47bc7",
+        "content": "Engages in disaster relief efforts and healthcare initiatives.\n",
+        "createdDate": "2023-09-24T19:49:14.621Z"
+      },
+      {
+        "id": "1dd71711-b9fa-452d-8cb3-7680230f3586",
+        "content": "Evelyn is an accomplished violinist and occasionally performs in local orchestras.",
+        "createdDate": "2023-09-24T19:51:31.397Z"
+      }
+    ],
+    "archive": [],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:41:11.590Z"
+  },
+  {
+    "id": "27189922-3ec7-4148-b4d7-aa363ceb54ce",
+    "isPinned": false,
+    "name": "Michael Lewis",
+    "communities": [
+      "Book Club"
+    ],
+    "connections": [
+      "d9a3a03d-e02c-4855-a064-49bb91970033",
+      "6d5ddcd8-bee4-42f2-9910-d7a46fb4f00d",
+      "fba64f57-f5b8-4146-9b6f-57e7eb4158e6"
+    ],
+    "notes": [
+      {
+        "id": "5c6b315c-cbc3-412a-9b74-949eaec1ab40",
+        "content": "A visionary entrepreneur with a track record of innovative startups.\n",
+        "createdDate": "2023-09-24T19:49:20.041Z"
+      },
+      {
+        "id": "cdc45fc7-49d6-432f-9e20-f1f4cb835686",
+        "content": "Founded a successful tech company that went public.\n",
+        "createdDate": "2023-09-24T19:49:22.513Z"
+      },
+      {
+        "id": "741f4637-cea9-4adf-b7ef-ff0d3ed1fc47",
+        "content": "He's a mentor at a startup incubator, guiding aspiring entrepreneurs in their ventures.\n",
+        "createdDate": "2023-09-24T19:51:01.574Z"
+      }
+    ],
+    "archive": [
+      {
+        "id": "ea59028b-d7c0-4a83-a676-9858e4e1439e",
+        "content": "avid collector of vintage cars and enjoys restoring classic automobiles.",
+        "createdDate": "2023-09-24T19:51:09.815Z"
+      }
+    ],
+    "showArchive": true,
+    "createdDate": "2023-09-24T19:41:15.820Z"
+  }
+]

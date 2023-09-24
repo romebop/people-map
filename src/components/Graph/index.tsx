@@ -44,7 +44,7 @@ const ControlsLabel = styled.div`
   color: #555;
   text-decoration: underline;
   margin-bottom: 8px;
-  `;
+`;
 
 interface GraphProps {
   topContainerWidth: number;
@@ -150,7 +150,10 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .force('center', d3.forceCenter(width / 2, height / 2).strength(1))
       .on('tick', ticked);
 
-    const linksG = svg.append('g')
+    const containerG = svg.append('g')
+      .attr('class', 'container');
+
+    const linksG = containerG.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.4)
       .attr('stroke-width', 1)
@@ -161,7 +164,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .data(links)
       .join('line');
     
-    const nodesG = svg.append('g')
+    const nodesG = containerG.append('g')
       .attr('class', 'nodes');
 
     nodeGRef.current = nodesG.selectAll('g')
@@ -219,11 +222,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
       .on('zoom', handleZoom);
 
     function handleZoom({ transform }: d3.D3ZoomEvent<SVGSVGElement, SVGGElement>) {
-      if (hullPathRef.current) {
-        hullPathRef.current.attr('transform', transform.toString());
-      }
-      linksG.attr('transform', transform.toString());
-      nodesG.attr('transform', transform.toString());
+      containerG.attr('transform', transform.toString());
     }
 
     (svg as d3.Selection<SVGSVGElement, any, null, undefined>).call(zoom);
@@ -268,7 +267,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
     }
 
     if (!prevConfigRef.current?.community && graphConfig.community) {
-      const hullsG = d3.select(svgRef.current).insert('g', ':first-child')
+      const hullsG = d3.select(svgRef.current).select('g.container').insert('g', ':first-child')
         .attr('class', 'hulls');
 
       hullPathRef.current = hullsG.selectAll('path.hull')
@@ -280,7 +279,7 @@ const Graph: FC<GraphProps> = ({ topContainerWidth }) => {
         .style('opacity', 0.3);
     }
     if (prevConfigRef.current?.community && !graphConfig.community) {
-      d3.select(svgRef.current).select('g.hulls').remove();
+      d3.select(svgRef.current).select('g.container').select('g.hulls').remove();
       hullPathRef.current = null;
     }
 

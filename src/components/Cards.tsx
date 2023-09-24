@@ -6,12 +6,13 @@ import styled from 'styled-components/macro';
 
 import { PeopleActionType, Person } from 'src/types';
 import { Card } from 'src/components';
-import { getConnectionCount, PeopleCtx } from 'src/util';
+import { getConnectionCount, getDemoData, PeopleCtx } from 'src/util';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-grow: 1;
   width: 100%;
   position: relative;
 `;
@@ -58,9 +59,16 @@ const CardsContainer = styled(Masonry)`
 
 const Placeholder = styled.div`
   font-style: italic;
-  opacity: 0.4;
-  font-size: 16px;
-  margin: 40px 20px;
+  font-size: 14px;
+  margin-top: 80px;
+  color: #bbb;
+`;
+
+const DemoDataText = styled.span`
+  cursor: pointer;
+  &:hover {
+    color: #0095ff; 
+  }
 `;
 
 interface CardsProps {
@@ -130,7 +138,17 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
           )
           : hasQuery
             ? <Placeholder>We didn't find anything</Placeholder>
-            : <Placeholder>Add a new person!</Placeholder>}
+            : <Placeholder>
+                <span>Add a new person or </span>
+                <DemoDataText onClick={() => dispatch({
+                  type: PeopleActionType.SET_PEOPLE,
+                  payload: { newPeople: getDemoData() },
+                })}>load demo data</DemoDataText>
+                {/* <DemoDataText onClick={() => {
+                  console.log(generateDemoData());
+                }}>generate demo data</DemoDataText> */}
+                <span>!</span>
+              </Placeholder>}
       </CardsContainer>
     </Container>
   )

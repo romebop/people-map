@@ -197,6 +197,13 @@ function peopleReducer(people: Person[], { type, payload }: PeopleAction): Perso
         person.showArchive = !person.showArchive;
       });
     }
+    case PeopleActionType.SET_PEOPLE: {
+      const { newPeople } = payload;
+      return newPeople;
+    }
+    case PeopleActionType.CLEAR_PEOPLE: {
+      return [];
+    }
     default:
       return people;
   }

@@ -85,6 +85,7 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1;
   }
 
   .szh-menu {

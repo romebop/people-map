@@ -1,5 +1,6 @@
 import { Person } from 'src/types';
 
+export * from './getDemoData';
 export * from './parseDates';
 export * from './peopleReducer';
 
@@ -23,8 +24,14 @@ export function getConnectionCount(people: Person[]): number {
   for (const person of people) {
     for (const connectionId of person.connections) {
       const link = serializeLink([person.id, connectionId]);
-      links.add(link);
+      if (people.find(p => p.id === person.id) && people.find(p => p.id === connectionId)) {
+        links.add(link);
+      }
     }
   }
   return links.size;
+}
+
+export function getRandomInteger(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
