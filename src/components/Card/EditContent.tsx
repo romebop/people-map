@@ -233,7 +233,7 @@ const NoTagsPlaceholder = styled.div`
 
 const Border = styled.div`
   height: 18px;
-  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.2);
   z-index: 1;
   flex-shrink: 0;
 `;

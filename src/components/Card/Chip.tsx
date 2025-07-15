@@ -21,6 +21,7 @@ const Container = styled.div`
 const ChipText = styled.div`
   color: #666;
   font-size: 12px;
+  font-weight: 500;
   padding: 2px 0px 2px 8px;
   ${Container}:hover & {
     color: #0095ff;

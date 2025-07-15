@@ -32,7 +32,7 @@ const Wrapper = styled.div`
 const TopContainer = styled.div`
   display: flex;
   width: var(--standard-width);
-  margin-bottom: 40px;
+  margin-bottom: 60px;
   position: relative;
   z-index: 1;
 `;
@@ -164,7 +164,7 @@ const Footer = styled.div<{ shouldFlow: boolean }>`
   justify-content: space-between;
   flex-shrink: 0;
   margin-top: 140px;
-  height: 68px;
+  height: 80px;
 `;
 
 const DataManagementRow = styled.div`
@@ -457,7 +457,7 @@ function App() {
           />
         </Routes>
       </Wrapper>
-      <Footer shouldFlow={path === '/cards'}>
+      <Footer shouldFlow={path.includes('/cards')}>
         <DataManagementRow>
           <ExportA
             href={`data:text/json;charset=utf-8,${encodeURIComponent(
