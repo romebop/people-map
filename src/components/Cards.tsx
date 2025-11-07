@@ -58,16 +58,29 @@ const CardsContainer = styled(Masonry)`
 `;
 
 const Placeholder = styled.div`
-  font-style: italic;
   font-size: 14px;
   margin-top: 80px;
   color: #bbb;
 `;
 
-const DemoDataText = styled.span`
+const DemoDataText = styled.button`
+  border: unset;
+  background-color: #0095ff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 14px;
   cursor: pointer;
+  border-bottom: 3px solid #0066b3;
+  margin-left: 2px;
+  transition: all 0.1s ease-in-out;
   &:hover {
-    color: #0095ff; 
+    background-color: #00a5ff;
+  }
+  &:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
   }
 `;
 
@@ -147,7 +160,6 @@ const Cards: FC<CardsProps> = ({ hasQuery, layout }) => {
                 {/* <DemoDataText onClick={() => {
                   console.log(generateDemoData());
                 }}>generate demo data</DemoDataText> */}
-                <span>!</span>
               </Placeholder>}
       </CardsContainer>
     </Container>

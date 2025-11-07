@@ -164,7 +164,9 @@ const Footer = styled.div<{ shouldFlow: boolean }>`
   justify-content: space-between;
   flex-shrink: 0;
   margin-top: 140px;
-  height: 80px;
+  > *:not(:first-child) {
+    margin-top: 12px;
+  }
 `;
 
 const DataManagementRow = styled.div`
@@ -477,7 +479,7 @@ function App() {
           <ClearButton onClick={onClear}>Clear</ClearButton>
         </DataManagementRow>
         <DataDisclaimerText>All data is saved locally in your browser.</DataDisclaimerText>
-        <CopyrightText>© 2023 People Map</CopyrightText>
+        <CopyrightText>© 2024 People Map</CopyrightText>
       </Footer>
     </PeopleCtx.Provider>
   );
