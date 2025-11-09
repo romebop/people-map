@@ -5,6 +5,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   z-index: 1;
+  cursor: pointer;
   &:not(:first-child) {
     margin-top: 12px;
   }
@@ -39,6 +40,7 @@ const StyledInput = styled.input`
 const StyledLabel = styled.label`
   color: #777;
   user-select: none;
+  cursor: pointer;
 `;
 
 interface CheckboxProps {
